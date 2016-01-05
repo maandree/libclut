@@ -66,8 +66,6 @@ to install. This rules are available:
 ├─────────────┼─────────────────────┼────────────────────────────────────────────┤
 │ base        │ install-base        │ Install the basics:                        │
 │             │   install-lib       │   Install the libclut library.             │
-│             │   install-librarian │   Install the librarian file.              │
-│             │   install-pc        │   Install the pkg-config file.             │
 │             │   install-copyright │   Install the Expat License.               │
 │ doc         │ install-doc         │ Include all manuals:                       │
 │   info      │   install-info      │   Include info manual. (Texinfo)           │
