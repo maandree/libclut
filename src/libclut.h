@@ -18,117 +18,9 @@
 #define LIBCLUT_H
 
 #include <stddef.h>
+#include <string.h>
 #include <math.h>
 
-
-
-/**
- * Modify a ramp.
- * 
- * None of the parameter may have side-effects.
- * 
- * This is intended for internal use.
- * 
- * @param  ramp     Pointer to the gamma ramps, must have and array
- *                  named `channel` and a scalar named `channel` followed
- *                  by "_size".
- * @param  channel  The channel, must be either "red", "green", or "blue".
- * @param  type     The data type used for each stop in the ramps.
- * @param  expr     Expression that evalutes the value a stop should have.
- *                  It can use the variable `LIBCLUT_VALUE` to get the
- *                  current value of the stop.
- */
-#define libclut__(ramp, channel, type, expr)		\
-  do							\
-    {							\
-      size_t i__, n__ = (ramp)->channel##_size;		\
-      type LIBCLUT_VALUE;				\
-      for (i__ = 0; i__ < n__; i__++)			\
-	{						\
-	  LIBCLUT_VALUE = (ramp)->channel[i__];		\
-	  (ramp)->channel[i__] = (type)(expr);		\
-	}						\
-    }							\
-  while (0)
-
-
-/**
- * A ramp set in CIE xyY.
- * 
- * None of the parameter may have side-effects.
- * 
- * This is intended for internal use.
- * 
- * @param  ramp   Pointer to the gamma ramps, must have the arrays
- *                `red`, `green`, and `blue`, and the scalars
- *                `red_size`, `green_size`, and `blue_size`. Ramp
- *                structures from libgamma can be used.
- * @param  max    The maximum value on each stop in the ramps.
- * @param  type   The data type used for each stop in the ramps.
- * @param  utest  Whether all channels can be modified at the same time.
- *                This test does not have to include the ramp size.
- * @param  rtest  Whether the red channel have to be modified.
- * @param  gtest  Whether the green channel have to be modified.
- * @param  btest  Whether the blue channel have to be modified.
- * @param  rexpr  Expression calculating the intensity of the red channel.
- *                The current value is stored in `Y__`.
- * @param  gexpr  Expression calculating the intensity of the green channel.
- *                The current value is stored in `Y__`.
- * @param  bexpr  Expression calculating the intensity of the blue channel.
- *                The current value is stored in `Y__`.
- */
-#define libclut_cie__(ramp, max, type, utest, rtest, gtest, btest, rexpr, gexpr, bexpr)			\
-  do													\
-    {													\
-      size_t rn__ = (ramp)->red_size;									\
-      size_t gn__ = (ramp)->green_size;									\
-      size_t bn__ = (ramp)->blue_size;									\
-      size_t i__;											\
-      double x__, y__, Y__, r__, g__, b__;								\
-      type* rs__ = (ramp)->red;										\
-      type* gs__ = (ramp)->green;									\
-      type* bs__ = (ramp)->blue;									\
-      if ((rn__ == gn__) && (gn__ == bn__) && (utest))							\
-	{												\
-	  if (!(rtest))											\
-	    break;											\
-	  for (i__ = 0; i__ < rn__; i__)								\
-	    {												\
-	      libclut_model_srgb_to_ciexyy(rs__[i__] / ((double)(max)), gs__[i__] / ((double)(max)),	\
-					   bs__[i__] / ((double)(max)), &x__, &y__, &Y__);		\
-	      libclut_model_ciexyy_to_srgb(x__, y__, rexpr, &r__, &g__, &b__);				\
-	      rs__[i__] = (type)(r__ * (double)(max));							\
-	      gs__[i__] = (type)(g__ * (double)(max));							\
-	      bs__[i__] = (type)(b__ * (double)(max));							\
-	    }												\
-	}												\
-      else												\
-	{												\
-	  if (!(rtest) && !(gtest) && !(btest))								\
-	    break;											\
-	  libclut_model_srgb_to_ciexyy(rs__[i__] / ((double)(max)), gs__[i__] / ((double)(max)),	\
-				       bs__[i__] / ((double)(max)), &x__, &y__, &Y__);			\
-	  if (rtest)											\
-	    for (i__ = 0; i__ < rn__; i__)								\
-	      {												\
-		libclut_model_ciexyy_to_srgb(x__, y__, rexpr, &r__, &g__, &b__);			\
-		rs__[i__] = (type)((r__ * (double)(max));						\
-	      }												\
-	  if (gtest)											\
-	    for (i__ = 0; i__ < gn__; i__)								\
-	      {												\
-		libclut_model_ciexyy_to_srgb(x__, y__, gexpr, &r__, &g__, &b__);			\
-		gs__[i__] = (type)(g__ * (double)(max));						\
-	      }												\
-	  if (btest)											\
-	    for (i__ = 0; i__ < bn__; i__)								\
-	      {												\
-		libclut_model_ciexyy_to_srgb(x__, y__, nexpr, &r__, &g__, &b__);			\
-		bs__[i__] = (type)(b__ * (double)(max));						\
-	      }												\
-	}												\
-    }													\
-  while (0)
 
 
 /**
@@ -525,6 +417,8 @@
 /**
  * Manipulate the colour curves using a function on the sRGB colour space.
  * 
+ * None of the parameter may have side-effects.
+ * 
  * @param  ramp  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
@@ -554,6 +448,8 @@
 /**
  * Manipulate the colour curves using a function on the CIE xyY colour space.
  * 
+ * None of the parameter may have side-effects.
+ * 
  * @param  ramp  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
@@ -576,6 +472,8 @@
 /**
  * Resets colour curvers to linear mappings.
  * (Identity mapping if imaginged to map from [0, 1] to [0, 1].)
+ * 
+ * None of the parameter may have side-effects.
  * 
  * @param  ramp  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
@@ -623,6 +521,8 @@
  * 
  * Values below 0 are set to 0, and values above `max` are set to `max`.
  * 
+ * None of the parameter may have side-effects.
+ * 
  * @param  ramp  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
@@ -647,6 +547,8 @@
 /**
  * Truncates a value to fit a boundary.
  * 
+ * None of the parameter may have side-effects.
+ * 
  * Intended for internal use.
  * 
  * @param   min  The minimum allowed value.
@@ -655,7 +557,194 @@
  * @return       The value truncated into its boundary.
  */
 #define libclut_clip__(min, val, max)						\
-    (LIBCLUT_VALUE < min ? min : LIBCLUT_VALUE > max ? max : LIBCLUT_VALUE)
+  (LIBCLUT_VALUE < min ? min : LIBCLUT_VALUE > max ? max : LIBCLUT_VALUE)
+
+
+/**
+ * Emulates low colour resolution.
+ * 
+ * None of the parameter may have side-effects.
+ * 
+ * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ *               `red`, `green`, and `blue`, and the scalars
+ *               `red_size`, `green_size`, and `blue_size`. Ramp
+ *               structures from libgamma can be used.
+ * @param  max   The maximum value on each stop in the ramps.
+ *               This parameter is not used, it is just a dummy, to unify
+ *               the API with the other functions.
+ * @param  type  The data type used for each stop in the ramps.
+ * @param  x     The desired emulated red encoding resolution, 0 for unchanged.
+ * @param  y     The desired emulated red output resolution, 0 for unchanged.
+ * @param  x     The desired emulated green encoding resolution, 0 for unchanged.
+ * @param  y     The desired emulated green output resolution, 0 for unchanged.
+ * @param  x     The desired emulated blue encoding resolution, 0 for unchanged.
+ * @param  y     The desired emulated blue output resolution, 0 for unchanged.
+ */
+#define libclut_lower_resolution(ramp, max, type, rx, ry, gx, gy, bx, by)	\
+  do										\
+    {										\
+      libclut_lower_resolution__(ramp, red,   max, type, rx, ry);		\
+      libclut_lower_resolution__(ramp, green, max, type, gx, gy);		\
+      libclut_lower_resolution__(ramp, blue,  max, type, bx, by);		\
+    }										\
+  while (0)
+
+
+/**
+ * Emulates low colour resolution of a channel.
+ * 
+ * None of the parameter may have side-effects.
+ * 
+ * Intended for internal use.
+ * 
+ * @param  ramp     Pointer to the gamma ramps, must have the arrays
+ *                  `red`, `green`, and `blue`, and the scalars
+ *                  `red_size`, `green_size`, and `blue_size`. Ramp
+ *                  structures from libgamma can be used.
+ * @param  channel  The channel, must be either "red", "green", or "blue".
+ * @param  max      The maximum value on each stop in the ramps.
+ *                  This parameter is not used, it is just a dummy, to unify
+ *                  the API with the other functions.
+ * @param  type     The data type used for each stop in the ramps.
+ * @param  x        The desired emulated encoding resolution, 0 for unchanged.
+ * @param  y        The desired emulated output resolution, 0 for unchanged.
+ */
+#define libclut_lower_resolution__(ramp, channel, max, type, x, y)			\
+  do											\
+    {											\
+      if ((x) || (y))									\
+	{										\
+	  size_t x__, y__, i__, n__ = (ramp)->channel##_size;				\
+	  double xm__ = (double)((x) - 1), ym__ = (double)((y) - 1);			\
+	  type c__[n__]; /* Do not use alloca! */					\
+	  for (i__ = 0; i__ < n__; i__++)						\
+	    {										\
+	      if ((x__ = i__), (x))							\
+		{									\
+		  x__ = (size_t)((double)i__ * (x) / n__);				\
+		  x__ = (size_t)((double)x__ * i__ / xm__);				\
+		}									\
+	      if (!(y))									\
+		c__[i__] = (ramp)->channel[x__];					\
+	      else									\
+		{									\
+		  y__ = (size_t)((double)((ramp)->channel[x__]) / (max) * ym__ + 0.5);	\
+		  c__[i__] = (type)((double)y__ / ym__ * (max));			\
+		}									\
+	    }										\
+	  memcpy((ramp)->channel, c__, n__ * sizeof(type));				\
+	}										\
+    }											\
+  while (0)
+
+
+/**
+ * Modify a ramp.
+ * 
+ * None of the parameter may have side-effects.
+ * 
+ * This is intended for internal use.
+ * 
+ * @param  ramp     Pointer to the gamma ramps, must have and array
+ *                  named `channel` and a scalar named `channel` followed
+ *                  by "_size".
+ * @param  channel  The channel, must be either "red", "green", or "blue".
+ * @param  type     The data type used for each stop in the ramps.
+ * @param  expr     Expression that evalutes the value a stop should have.
+ *                  It can use the variable `LIBCLUT_VALUE` to get the
+ *                  current value of the stop.
+ */
+#define libclut__(ramp, channel, type, expr)		\
+  do							\
+    {							\
+      size_t i__, n__ = (ramp)->channel##_size;		\
+      type LIBCLUT_VALUE;				\
+      for (i__ = 0; i__ < n__; i__++)			\
+	{						\
+	  LIBCLUT_VALUE = (ramp)->channel[i__];		\
+	  (ramp)->channel[i__] = (type)(expr);		\
+	}						\
+    }							\
+  while (0)
+
+
+/**
+ * A ramp set in CIE xyY.
+ * 
+ * None of the parameter may have side-effects.
+ * 
+ * This is intended for internal use.
+ * 
+ * @param  ramp   Pointer to the gamma ramps, must have the arrays
+ *                `red`, `green`, and `blue`, and the scalars
+ *                `red_size`, `green_size`, and `blue_size`. Ramp
+ *                structures from libgamma can be used.
+ * @param  max    The maximum value on each stop in the ramps.
+ * @param  type   The data type used for each stop in the ramps.
+ * @param  utest  Whether all channels can be modified at the same time.
+ *                This test does not have to include the ramp size.
+ * @param  rtest  Whether the red channel have to be modified.
+ * @param  gtest  Whether the green channel have to be modified.
+ * @param  btest  Whether the blue channel have to be modified.
+ * @param  rexpr  Expression calculating the intensity of the red channel.
+ *                The current value is stored in `Y__`.
+ * @param  gexpr  Expression calculating the intensity of the green channel.
+ *                The current value is stored in `Y__`.
+ * @param  bexpr  Expression calculating the intensity of the blue channel.
+ *                The current value is stored in `Y__`.
+ */
+#define libclut_cie__(ramp, max, type, utest, rtest, gtest, btest, rexpr, gexpr, bexpr)			\
+  do													\
+    {													\
+      size_t rn__ = (ramp)->red_size;									\
+      size_t gn__ = (ramp)->green_size;									\
+      size_t bn__ = (ramp)->blue_size;									\
+      size_t i__;											\
+      double x__, y__, Y__, r__, g__, b__;								\
+      type* rs__ = (ramp)->red;										\
+      type* gs__ = (ramp)->green;									\
+      type* bs__ = (ramp)->blue;									\
+      if ((rn__ == gn__) && (gn__ == bn__) && (utest))							\
+	{												\
+	  if (!(rtest))											\
+	    break;											\
+	  for (i__ = 0; i__ < rn__; i__)								\
+	    {												\
+	      libclut_model_srgb_to_ciexyy(rs__[i__] / ((double)(max)), gs__[i__] / ((double)(max)),	\
+					   bs__[i__] / ((double)(max)), &x__, &y__, &Y__);		\
+	      libclut_model_ciexyy_to_srgb(x__, y__, rexpr, &r__, &g__, &b__);				\
+	      rs__[i__] = (type)(r__ * (double)(max));							\
+	      gs__[i__] = (type)(g__ * (double)(max));							\
+	      bs__[i__] = (type)(b__ * (double)(max));							\
+	    }												\
+	}												\
+      else												\
+	{												\
+	  if (!(rtest) && !(gtest) && !(btest))								\
+	    break;											\
+	  libclut_model_srgb_to_ciexyy(rs__[i__] / ((double)(max)), gs__[i__] / ((double)(max)),	\
+				       bs__[i__] / ((double)(max)), &x__, &y__, &Y__);			\
+	  if (rtest)											\
+	    for (i__ = 0; i__ < rn__; i__)								\
+	      {												\
+		libclut_model_ciexyy_to_srgb(x__, y__, rexpr, &r__, &g__, &b__);			\
+		rs__[i__] = (type)((r__ * (double)(max));						\
+	      }												\
+	  if (gtest)											\
+	    for (i__ = 0; i__ < gn__; i__)								\
+	      {												\
+		libclut_model_ciexyy_to_srgb(x__, y__, gexpr, &r__, &g__, &b__);			\
+		gs__[i__] = (type)(g__ * (double)(max));						\
+	      }												\
+	  if (btest)											\
+	    for (i__ = 0; i__ < bn__; i__)								\
+	      {												\
+		libclut_model_ciexyy_to_srgb(x__, y__, nexpr, &r__, &g__, &b__);			\
+		bs__[i__] = (type)(b__ * (double)(max));						\
+	      }												\
+	}												\
+    }													\
+  while (0)
 
 
 
