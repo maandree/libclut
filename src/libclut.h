@@ -18,6 +18,7 @@
 #define LIBCLUT_H
 
 #include <stddef.h>
+#include <math.h>
 
 
 
@@ -307,6 +308,32 @@
       if (b)												\
 	libclut__(ramp, blue,  type, m__ * libclut_model_linear_to_standard1(LIBCLUT_VALUE / m__));	\
     }													\
+  while (0)
+
+
+/**
+ * Apply gamma correction on the colour curves.
+ * 
+ * None of the parameter may have side-effects.
+ * 
+ * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ *               `red`, `green`, and `blue`, and the scalars
+ *               `red_size`, `green_size`, and `blue_size`. Ramp
+ *               structures from libgamma can be used.
+ * @param  max   The maximum value on each stop in the ramps.
+ * @param  type  The data type used for each stop in the ramps.
+ * @param  r     The gamma parameter the red colour curve.
+ * @param  g     The gamma parameter the green colour curve.
+ * @param  b     The gamma parameter the blue colour curve.
+ */
+#define libclut_gamma(ramp, max, type, r, g, b)							\
+  do												\
+    {												\
+      double m__ = (double)(max);								\
+      if (r != 1.0)  libclut__(ramp, red,   type, m__ * pow(LIBCLUT_VALUE / m__, 1.0 / r));	\
+      if (g != 1.0)  libclut__(ramp, green, type, m__ * pow(LIBCLUT_VALUE / m__, 1.0 / g));	\
+      if (b != 1.0)  libclut__(ramp, blue,  type, m__ * pow(LIBCLUT_VALUE / m__, 1.0 / b));	\
+    }												\
   while (0)
 
 
