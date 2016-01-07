@@ -748,5 +748,170 @@
 
 
 
+#if __GNUC__
+#define LIBCLUT_GCC_ONLY__(x)  x
+#else
+#define LIBCLUT_GCC_ONLY__(x)  /* do nothing */
+#endif
+
+
+/**
+ * Convert one component from [0, 1] linear RGB to [0, 1] sRGB.
+ * 
+ * @param   c  The linear RGB value.
+ * @return     Corresponding sRGB value.
+ */
+LIBCLUT_GCC_ONLY__(__attribute__((const, leaf)))
+double libclut_model_linear_to_standard1(double c);
+
+/**
+ * Convert [0, 1] linear RGB to [0, 1] sRGB.
+ * 
+ * @param  r  Pointer to the linear red component,
+ *            and output parameter for the red component.
+ * @param  g  Pointer to the linear green component,
+ *            and output parameter for the green component.
+ * @param  b  Pointer to the linear blue component,
+ *            and output parameter for the blue component.
+ */
+void libclut_model_linear_to_standard(double* r, double* g, double* b);
+
+/**
+ * Convert one component from [0, 1] sRGB to [0, 1] linear RGB.
+ * 
+ * @param   c  The sRGB value.
+ * @return     Corresponding linear RGB value.
+ */
+LIBCLUT_GCC_ONLY__(__attribute__((const, leaf)))
+double libclut_model_standard_to_linear1(double c);
+
+/**
+ * Convert [0, 1] sRGB to [0, 1] linear RGB.
+ * 
+ * 
+ * @param  r  Pointer to the red component, and output
+ *            parameter for the linear red component.
+ * @param  g  Pointer to the green component, and output
+ *            parameter for the linear green component.
+ * @param  b  Pointer to the blue component, and output
+ *            parameter for the linear blue component.
+ */
+void libclut_model_standard_to_linear(double* r, double* g, double* b);
+
+/**
+ * Convert CIE xyY to CIE XYZ.
+ * 
+ * @param  x  The x parameter.
+ * @param  y  The y parameter.
+ * @param  Y  The Y parameter. This is also the Y (middle) parameter for the CIE XYZ colour.
+ * @param  X  Output parameter for the X parameter.
+ * @param  Z  Output parameter for the Z parameter.
+ */
+LIBCLUT_GCC_ONLY__(__attribute__((leaf)))
+void libclut_model_ciexyy_to_ciexyz(double x, double y, double Y, double* X, double* Z);
+
+/**
+ * Convert CIE XYZ to CIE xyY.
+ * 
+ * @param  X  The X parameter.
+ * @param  Y  The Y parameter. This is also the Y (last) parameter for the CIE xyY colour.
+ * @param  Z  The Z parameter.
+ * @param  x  Output parameter for the x parameter.
+ * @param  y  Output parameter for the y parameter.
+ */
+LIBCLUT_GCC_ONLY__(__attribute__((leaf)))
+void libclut_model_ciexyz_to_ciexyy(double X, double Y, double Z, double* x, double* y);
+
+/**
+ * Convert CIE XYZ to [0, 1] linear RGB.
+ * 
+ * @param  X  The X parameter.
+ * @param  Y  The Y parameter.
+ * @param  Z  The Z parameter.
+ * @param  r  Output parameter for the red component.
+ * @param  g  Output parameter for the green component.
+ * @param  b  Output parameter for the blue component.
+ */
+LIBCLUT_GCC_ONLY__(__attribute__((leaf)))
+void libclut_model_ciexyz_to_linear(double X, double Y, double Z, double* r, double* g, double* b);
+
+/**
+ * Convert [0, 1] linear RGB to CIE XYZ.
+ * 
+ * @param  r  The red component.
+ * @param  g  The green component.
+ * @param  b  The blue component.
+ * @param  X  Output parameter for the X parameter.
+ * @param  Y  Output parameter for the Y parameter.
+ * @param  Z  Output parameter for the Z parameter.
+ */
+LIBCLUT_GCC_ONLY__(__attribute__((leaf)))
+void libclut_model_linear_to_ciexyz(double r, double g, double b, double* X, double* Y, double* Z);
+
+/**
+ * Convert [0, 1] linear RGB to CIE xyY.
+ * 
+ * @param  r  The red component.
+ * @param  g  The green component.
+ * @param  b  The blue component.
+ * @param  x  Output parameter for the x parameter.
+ * @param  y  Output parameter for the y parameter.
+ * @param  Y  Output parameter for the Y parameter.
+ */
+void libclut_model_srgb_to_ciexyy(double r, double g, double b, double* x, double* y, double* Y);
+
+/**
+ * Convert CIE xyY to [0, 1] sRGB.
+ * 
+ * @param  x  The x parameter.
+ * @param  y  The y parameter.
+ * @param  Y  The Y parameter.
+ * @param  r  Output parameter for the red component.
+ * @param  g  Output parameter for the green component.
+ * @param  b  Output parameter for the blue component.
+ */
+void libclut_model_ciexyy_to_srgb(double x, double y, double Y, double* r, double* g, double* b);
+
+/**
+ * Convert from CIE XYZ to CIE L*a*b*.
+ * 
+ * @param  X  The X parameter.
+ * @param  Y  The Y parameter.
+ * @param  Z  The Z parameter.
+ * @param  L  Output parameter for the L* component.
+ * @param  a  Output parameter for the a* component.
+ * @param  b  Output parameter for the b* component.
+ */
+LIBCLUT_GCC_ONLY__(__attribute__((leaf)))
+void libclut_model_ciexyz_to_cielab(double X, double Y, double Z, double* L, double* a, double* b);
+
+/**
+ * Convert from CIE L*a*b* to CIE XYZ.
+ * 
+ * @param  L  The L* component.
+ * @param  a  The a component.
+ * @param  b  The b component.
+ * @param  X  Output parameter for the X parameter.
+ * @param  Y  Output parameter for the Y parameter.
+ * @param  Z  Output parameter for the Z parameter.
+ */
+LIBCLUT_GCC_ONLY__(__attribute__((leaf)))
+void libclut_model_cielab_to_xiexyz(double L, double a, double b, double* X, double* Y, double* Z);
+
+/**
+ * Convert the distance (∆E*_ab) between two [0, 1] sRGB colours.
+ * 
+ * @param   r1  The red component of the first colour.
+ * @param   g1  The green component of the first colour.
+ * @param   b1  The blue component of the first colour.
+ * @param   r2  The red component of the second colour.
+ * @param   g2  The green component of the second colour.
+ * @param   b2  The blue component of the second colour.
+ * @return      The difference.
+ */
+double libclut_model_delta_e(double r1, double g1, double b1, double r2, double g2, double b2);
+
+
+
 #endif
 
