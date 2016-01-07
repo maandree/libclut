@@ -219,6 +219,8 @@
  *               `red_size`, `green_size`, and `blue_size`. Ramp
  *               structures from libgamma can be used.
  * @param  max   The maximum value on each stop in the ramps.
+ *               This parameter is not used, it is just a dummy, to unify
+ *               the API with the other functions.
  * @param  type  The data type used for each stop in the ramps.
  * @param  r     Whether to invert the red colour curve.
  * @param  g     Whether to invert the green colour curve.
@@ -424,8 +426,6 @@
  *               `red_size`, `green_size`, and `blue_size`. Ramp
  *               structures from libgamma can be used.
  * @param  max   The maximum value on each stop in the ramps.
- *               This parameter is not used, it is just a dummy, to unify
- *               the API with the other functions.
  * @param  type  The data type used for each stop in the ramps.
  * @param  r     Function to manipulate the red colour curve, should either
  *               be `NULL` or map a [0, 1] `double` to a [0, 1] `double`.
@@ -455,8 +455,6 @@
  *               `red_size`, `green_size`, and `blue_size`. Ramp
  *               structures from libgamma can be used.
  * @param  max   The maximum value on each stop in the ramps.
- *               This parameter is not used, it is just a dummy, to unify
- *               the API with the other functions.
  * @param  type  The data type used for each stop in the ramps.
  * @param  r     Function to manipulate the red colour curve, should either
  *               be `NULL` or map a [0, 1] `double` to a [0, 1] `double`.
@@ -480,8 +478,6 @@
  *               `red_size`, `green_size`, and `blue_size`. Ramp
  *               structures from libgamma can be used.
  * @param  max   The maximum value on each stop in the ramps.
- *               This parameter is not used, it is just a dummy, to unify
- *               the API with the other functions.
  * @param  type  The data type used for each stop in the ramps.
  * @param  r     Whether to reset the red colour curve.
  * @param  g     Whether to reset the green colour curve.
@@ -528,8 +524,6 @@
  *               `red_size`, `green_size`, and `blue_size`. Ramp
  *               structures from libgamma can be used.
  * @param  max   The maximum value on each stop in the ramps.
- *               This parameter is not used, it is just a dummy, to unify
- *               the API with the other functions.
  * @param  type  The data type used for each stop in the ramps.
  * @param  r     Whether to clip the red colour curve.
  * @param  g     Whether to clip the green colour curve.
@@ -570,8 +564,6 @@
  *               `red_size`, `green_size`, and `blue_size`. Ramp
  *               structures from libgamma can be used.
  * @param  max   The maximum value on each stop in the ramps.
- *               This parameter is not used, it is just a dummy, to unify
- *               the API with the other functions.
  * @param  type  The data type used for each stop in the ramps.
  * @param  x     The desired emulated red encoding resolution, 0 for unchanged.
  * @param  y     The desired emulated red output resolution, 0 for unchanged.
@@ -603,8 +595,6 @@
  *                  structures from libgamma can be used.
  * @param  channel  The channel, must be either "red", "green", or "blue".
  * @param  max      The maximum value on each stop in the ramps.
- *                  This parameter is not used, it is just a dummy, to unify
- *                  the API with the other functions.
  * @param  type     The data type used for each stop in the ramps.
  * @param  x        The desired emulated encoding resolution, 0 for unchanged.
  * @param  y        The desired emulated output resolution, 0 for unchanged.
@@ -633,6 +623,66 @@
 		}									\
 	    }										\
 	  memcpy((ramp)->channel, c__, n__ * sizeof(type));				\
+	}										\
+    }											\
+  while (0)
+
+
+/**
+ * Applies a filter or calibration.
+ * 
+ * None of the parameter may have side-effects.
+ * 
+ * @param  ramp    Pointer to the gamma ramps, must have the arrays
+ *                 `red`, `green`, and `blue`, and the scalars
+ *                 `red_size`, `green_size`, and `blue_size`. Ramp
+ *                 structures from libgamma can be used.
+ * @param  max     The maximum value on each stop in the ramps.
+ * @param  type    The data type used for each stop in the ramps.
+ * @param  filter  Same as `ramp`, but for the filter to apply.
+ * @param  fmax    Same as `max`, but for the filter to apply.
+ * @param  ftype   Same as `type`, but for the filter to apply. (Not actually used).
+ * @param  r       Whether to apply the filter for the red curve.
+ * @param  g       Whether to apply the filter for the green curve.
+ * @param  b       Whether to apply the filter for the blue curve.
+ */
+#define libclut_apply(ramp, max, type, filter, fmax, ftype, r, g, b)
+  do											\
+    {											\
+      if (r)  libclut_apply__(ramp, max, type, filter, fmax, ftype, red);		\
+      if (g)  libclut_apply__(ramp, max, type, filter, fmax, ftype, green);		\
+      if (b)  libclut_apply__(ramp, max, type, filter, fmax, ftype, blue);		\
+    }											\
+  while (0)
+
+
+/**
+ * Applies a filter or calibration for one channel.
+ * 
+ * None of the parameter may have side-effects.
+ * 
+ * Intended for internal use.
+ * 
+ * @param  ramp     Pointer to the gamma ramps, must have the arrays
+ *                  `red`, `green`, and `blue`, and the scalars
+ *                  `red_size`, `green_size`, and `blue_size`. Ramp
+ *                  structures from libgamma can be used.
+ * @param  max      The maximum value on each stop in the ramps.
+ * @param  type     The data type used for each stop in the ramps.
+ * @param  filter   Same as `ramp`, but for the filter to apply.
+ * @param  fmax     Same as `max`, but for the filter to apply.
+ * @param  ftype    Same as `type`, but for the filter to apply. (Not actually used).
+ * @param  channel  The channel, must be either "red", "green", or "blue".
+ */
+#define libclut_apply__(ramp, max, type, filter, fmax, ftype, channel)
+  do											\
+    {											\
+      size_t i__, rn__ = (ramp)->channel##_size, fn__ = (filter)->channel##_size;	\
+      size_t x__, rm__ = (double)(max), m__ = (double)(max) / (double)(fmax);		\
+      for (i__ = 0; i__ < rn__; i__++)							\
+	{										\
+	  x__ = (size_t)((double)((ramp)->channel[i__]) / rm__ * fn__);			\
+	  (ramp)->channel[i__] = (type)((double)((filter)->channel[x__]) * m__);	\
 	}										\
     }											\
   while (0)
