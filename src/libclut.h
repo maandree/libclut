@@ -70,11 +70,11 @@
  * @param  rtest  Whether the red channel have to be modified.
  * @param  gtest  Whether the green channel have to be modified.
  * @param  btest  Whether the blue channel have to be modified.
- * @parma  rexpr  Expression calculating the intensity of the red channel.
+ * @param  rexpr  Expression calculating the intensity of the red channel.
  *                The current value is stored in `Y__`.
- * @parma  gexpr  Expression calculating the intensity of the green channel.
+ * @param  gexpr  Expression calculating the intensity of the green channel.
  *                The current value is stored in `Y__`.
- * @parma  bexpr  Expression calculating the intensity of the blue channel.
+ * @param  bexpr  Expression calculating the intensity of the blue channel.
  *                The current value is stored in `Y__`.
  */
 #define libclut_cie__(ramp, max, type, utest, rtest, gtest, btest, rexpr, gexpr, bexpr)			\
@@ -520,6 +520,142 @@
 		    Y__ * rd__ + rmin, Y__ * gd__ + gmin, Y__ * bd__ + bmin);		\
     }											\
   while (0)
+
+
+/**
+ * Manipulate the colour curves using a function on the sRGB colour space.
+ * 
+ * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ *               `red`, `green`, and `blue`, and the scalars
+ *               `red_size`, `green_size`, and `blue_size`. Ramp
+ *               structures from libgamma can be used.
+ * @param  max   The maximum value on each stop in the ramps.
+ *               This parameter is not used, it is just a dummy, to unify
+ *               the API with the other functions.
+ * @param  type  The data type used for each stop in the ramps.
+ * @param  r     Function to manipulate the red colour curve, should either
+ *               be `NULL` or map a [0, 1] `double` to a [0, 1] `double`.
+ * @param  g     Function to manipulate the green colour curve, should either
+ *               be `NULL` or map a [0, 1] `double` to a [0, 1] `double`.
+ * @param  b     Function to manipulate the blue colour curve, should either
+ *               be `NULL` or map a [0, 1] `double` to a [0, 1] `double`.
+ */
+#define libclut_manipulate(ramp, max, type, r, g, b)				\
+  do										\
+    {										\
+      double m__ = (double)(max);						\
+      if (r)  libclut__(ramp, red,   type, m__ * r(LIBCLUT_VALUE / m__));	\
+      if (g)  libclut__(ramp, green, type, m__ * g(LIBCLUT_VALUE / m__));	\
+      if (b)  libclut__(ramp, blue,  type, m__ * b(LIBCLUT_VALUE / m__));	\
+    }										\
+  while (0)
+
+
+/**
+ * Manipulate the colour curves using a function on the CIE xyY colour space.
+ * 
+ * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ *               `red`, `green`, and `blue`, and the scalars
+ *               `red_size`, `green_size`, and `blue_size`. Ramp
+ *               structures from libgamma can be used.
+ * @param  max   The maximum value on each stop in the ramps.
+ *               This parameter is not used, it is just a dummy, to unify
+ *               the API with the other functions.
+ * @param  type  The data type used for each stop in the ramps.
+ * @param  r     Function to manipulate the red colour curve, should either
+ *               be `NULL` or map a [0, 1] `double` to a [0, 1] `double`.
+ * @param  g     Function to manipulate the green colour curve, should either
+ *               be `NULL` or map a [0, 1] `double` to a [0, 1] `double`.
+ * @param  b     Function to manipulate the blue colour curve, should either
+ *               be `NULL` or map a [0, 1] `double` to a [0, 1] `double`.
+ */
+#define libclut_cie_manipulate(ramp, max, type, r, g, b)			\
+  libclut_cie__(ramp, max, type, r && g && b, r, g, b, r(Y__), g(Y__), b(Y__))
+
+
+/**
+ * Resets colour curvers to linear mappings.
+ * (Identity mapping if imaginged to map from [0, 1] to [0, 1].)
+ * 
+ * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ *               `red`, `green`, and `blue`, and the scalars
+ *               `red_size`, `green_size`, and `blue_size`. Ramp
+ *               structures from libgamma can be used.
+ * @param  max   The maximum value on each stop in the ramps.
+ *               This parameter is not used, it is just a dummy, to unify
+ *               the API with the other functions.
+ * @param  type  The data type used for each stop in the ramps.
+ * @param  r     Whether to reset the red colour curve.
+ * @param  g     Whether to reset the green colour curve.
+ * @param  b     Whether to reset the blue colour curve.
+ */
+#define libclut_start_over(ramp, max, type, r, g, b)		\
+  do								\
+    {								\
+      size_t i__;						\
+      double m__;						\
+      if (r)							\
+	{							\
+	  m__ = (double)((ramp)->red_size - 1);			\
+	  for (i__ = 0; i__ < (ramp)->red_size; i__)		\
+	    (ramp)->red[i__] = (type)((i__ / m__) * (max));	\
+	}							\
+      if (g)							\
+	{							\
+	  m__ = (double)((ramp)->green_size - 1);		\
+	  for (i__ = 0; i__ < (ramp)->green_size; i__)		\
+	    (ramp)->green[i__] = (type)((i__ / m__) * (max));	\
+	}							\
+      if (b)							\
+	{							\
+	  m__ = (double)((ramp)->blue_size - 1);		\
+	  for (i__ = 0; i__ < (ramp)->blue_size; i__)		\
+	    (ramp)->blue[i__] = (type)((i__ / m__) * (max));	\
+	}							\
+    }								\
+  while (0)
+
+
+/**
+ * Clip colour curves to only map to values between the minimum and maximum.
+ * This should be done, before apply the curves, and before applying changes
+ * with limited domain.
+ * 
+ * Values below 0 are set to 0, and values above `max` are set to `max`.
+ * 
+ * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ *               `red`, `green`, and `blue`, and the scalars
+ *               `red_size`, `green_size`, and `blue_size`. Ramp
+ *               structures from libgamma can be used.
+ * @param  max   The maximum value on each stop in the ramps.
+ *               This parameter is not used, it is just a dummy, to unify
+ *               the API with the other functions.
+ * @param  type  The data type used for each stop in the ramps.
+ * @param  r     Whether to clip the red colour curve.
+ * @param  g     Whether to clip the green colour curve.
+ * @param  b     Whether to clip the blue colour curve.
+ */
+#define libclut_clip(ramp, max, type, r, g, b)						\
+  do											\
+    {											\
+      if (r)  libclut__(ramp, red,   type, libclut_clip__(0, LIBCLUT_VALUE, max));	\
+      if (g)  libclut__(ramp, green, type, libclut_clip__(0, LIBCLUT_VALUE, max));	\
+      if (b)  libclut__(ramp, blue,  type, libclut_clip__(0, LIBCLUT_VALUE, max));	\
+    }											\
+  while (0)
+
+/**
+ * Truncates a value to fit a boundary.
+ * 
+ * Intended for internal use.
+ * 
+ * @param   min  The minimum allowed value.
+ * @param   val  The current value.
+ * @param   max  The maximum allowed value.
+ * @return       The value truncated into its boundary.
+ */
+#define libclut_clip__(min, val, max)						\
+    (LIBCLUT_VALUE < min ? min : LIBCLUT_VALUE > max ? max : LIBCLUT_VALUE)
 
 
 
