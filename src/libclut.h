@@ -131,24 +131,24 @@
 	    break;											\
 	  libclut_model_srgb_to_ciexyy(rs__[i__] / ((double)(max)), gs__[i__] / ((double)(max)),	\
 				       bs__[i__] / ((double)(max)), &x__, &y__, &Y__);			\
-	  for (i__ = 0; i__ < rn__; i__)								\
-	    {												\
-	      if (r != 1.0)										\
-		{											\
-		  libclut_model_ciexyy_to_srgb(x__, y__, (Y__ - 0.5) * r + 0.5, &r__, &g__, &b__);	\
-		  rs__[i__] = (type)(r__ * (double)(max));						\
-		}											\
-	      if (g != 1.0)										\
-		{											\
-		  libclut_model_ciexyy_to_srgb(x__, y__, (Y__ - 0.5) * g + 0.5, &r__, &g__, &b__);	\
-		  gs__[i__] = (type)(g__ * (double)(max));						\
-		}											\
-	      if (b != 1.0)										\
-		{											\
-		  libclut_model_ciexyy_to_srgb(x__, y__, (Y__ - 0.5) * b + 0.5, &r__, &g__, &b__);	\
-		  bs__[i__] = (type)(b__ * (double)(max));						\
-		}											\
-	    }												\
+	  if (r != 1.0)											\
+	    for (i__ = 0; i__ < rn__; i__)								\
+	      {												\
+		libclut_model_ciexyy_to_srgb(x__, y__, (Y__ - 0.5) * r + 0.5, &r__, &g__, &b__);	\
+		rs__[i__] = (type)(r__ * (double)(max));						\
+	      }												\
+	  if (g != 1.0)											\
+	    for (i__ = 0; i__ < gn__; i__)								\
+	      {												\
+		libclut_model_ciexyy_to_srgb(x__, y__, (Y__ - 0.5) * g + 0.5, &r__, &g__, &b__);	\
+		gs__[i__] = (type)(g__ * (double)(max));						\
+	      }												\
+	  if (b != 1.0) 										\
+	    for (i__ = 0; i__ < bn__; i__)								\
+	      {												\
+		libclut_model_ciexyy_to_srgb(x__, y__, (Y__ - 0.5) * b + 0.5, &r__, &g__, &b__);	\
+		bs__[i__] = (type)(b__ * (double)(max));						\
+	      }												\
 	}												\
     }													\
   while (0)
@@ -229,27 +229,28 @@
 	    break;											\
 	  libclut_model_srgb_to_ciexyy(rs__[i__] / ((double)(max)), gs__[i__] / ((double)(max)),	\
 				       bs__[i__] / ((double)(max)), &x__, &y__, &Y__);			\
-	  for (i__ = 0; i__ < rn__; i__)								\
-	    {												\
-	      if (r != 1.0)										\
-		{											\
-		  libclut_model_ciexyy_to_srgb(x__, y__, Y__ * r, &r__, &g__, &b__);			\
-		  rs__[i__] = (type)(r__ * (double)(max));						\
-		}											\
-	      if (g != 1.0)										\
-		{											\
-		  libclut_model_ciexyy_to_srgb(x__, y__, Y__ * g, &r__, &g__, &b__);			\
-		  gs__[i__] = (type)(g__ * (double)(max));						\
-		}											\
-	      if (b != 1.0)										\
-		{											\
-		  libclut_model_ciexyy_to_srgb(x__, y__, Y__ * b, &r__, &g__, &b__);			\
-		  bs__[i__] = (type)(b__ * (double)(max));						\
-		}											\
-	    }												\
+	  if (r != 1.0)											\
+	    for (i__ = 0; i__ < rn__; i__)								\
+	      {												\
+		libclut_model_ciexyy_to_srgb(x__, y__, Y__ * r, &r__, &g__, &b__);			\
+		rs__[i__] = (type)(r__ * (double)(max));						\
+	      }												\
+	  if (g != 1.0)											\
+	    for (i__ = 0; i__ < gn__; i__)								\
+	      {												\
+		libclut_model_ciexyy_to_srgb(x__, y__, Y__ * g, &r__, &g__, &b__);			\
+		gs__[i__] = (type)(g__ * (double)(max));						\
+	      }												\
+	  if (b != 1.0)											\
+	    for (i__ = 0; i__ < bn__; i__)								\
+	      {												\
+		libclut_model_ciexyy_to_srgb(x__, y__, Y__ * b, &r__, &g__, &b__);			\
+		bs__[i__] = (type)(b__ * (double)(max));						\
+	      }												\
 	}												\
     }													\
   while (0)
+
 
 
 #endif
