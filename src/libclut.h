@@ -337,6 +337,143 @@
   while (0)
 
 
+/**
+ * Reverse the colour curves (negative image with gamma preservation.)
+ * 
+ * None of the parameter may have side-effects.
+ * 
+ * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ *               `red`, `green`, and `blue`, and the scalars
+ *               `red_size`, `green_size`, and `blue_size`. Ramp
+ *               structures from libgamma can be used.
+ * @param  max   The maximum value on each stop in the ramps.
+ * @param  type  The data type used for each stop in the ramps.
+ * @param  r     Whether to invert the red colour curve.
+ * @param  g     Whether to invert the green colour curve.
+ * @param  b     Whether to invert the blue colour curve.
+ */
+#define libclut_negative(ramp, max, type, r, g, b)
+  do
+    {
+      size_t i__, n__;
+      type t__;
+      if (r)
+	for (i__ = 0, n__ = (ramp)->red_size; i__ < (n__ >> 1); i__)
+	  {
+	    t__ = (ramp)->red[i__];
+	    (ramp)->red[i__] = (ramp)->red[n__ - i__ - 1];
+	    (ramp)->red[n__ - i__ - 1] = t__;
+	  }
+      if (g)
+	for (i__ = 0, n__ = (ramp)->green_size; i__ < (n__ >> 1); i__)
+	  {
+	    t__ = (ramp)->green[i__];
+	    (ramp)->green[i__] = (ramp)->green[n__ - i__ - 1];
+	    (ramp)->green[n__ - i__ - 1] = t__;
+	  }
+      if (b)
+	for (i__ = 0, n__ = (ramp)->blue_size; i__ < (n__ >> 1); i__)
+	  {
+	    t__ = (ramp)->blue[i__];
+	    (ramp)->blue[i__] = (ramp)->blue[n__ - i__ - 1];
+	    (ramp)->blue[n__ - i__ - 1] = t__;
+	  }
+    }
+  while (0)
+
+
+/**
+ * Invert the colour curves (negative image with gamma invertion), using sRGB.
+ * 
+ * None of the parameter may have side-effects.
+ * 
+ * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ *               `red`, `green`, and `blue`, and the scalars
+ *               `red_size`, `green_size`, and `blue_size`. Ramp
+ *               structures from libgamma can be used.
+ * @param  max   The maximum value on each stop in the ramps.
+ * @param  type  The data type used for each stop in the ramps.
+ * @param  r     Whether to invert the red colour curve.
+ * @param  g     Whether to invert the green colour curve.
+ * @param  b     Whether to invert the blue colour curve.
+ */
+#define libclut_rgb_invert(ramp, max, type, r, g, b)			\
+  do									\
+    {									\
+      if (r)  libclut__(ramp, red,   type, (max) - LIBCLUT_VALUE);	\
+      if (g)  libclut__(ramp, green, type, (max) - LIBCLUT_VALUE);	\
+      if (b)  libclut__(ramp, blue,  type, (max) - LIBCLUT_VALUE);	\
+    }									\
+  while (0)
+
+
+/**
+ * Invert the colour curves (negative image with gamma invertion), using CIE xyY.
+ * 
+ * None of the parameter may have side-effects.
+ * 
+ * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ *               `red`, `green`, and `blue`, and the scalars
+ *               `red_size`, `green_size`, and `blue_size`. Ramp
+ *               structures from libgamma can be used.
+ * @param  max   The maximum value on each stop in the ramps.
+ * @param  type  The data type used for each stop in the ramps.
+ * @param  r     Whether to invert the red colour curve.
+ * @param  g     Whether to invert the green colour curve.
+ * @param  b     Whether to invert the blue colour curve.
+ */
+#define libclut_cie_invert(ramp, max, type, r, g, b)							\
+  do													\
+    {													\
+      size_t rn__ = (ramp)->red_size;									\
+      size_t gn__ = (ramp)->green_size;									\
+      size_t bn__ = (ramp)->blue_size;									\
+      size_t i__;											\
+      double x__, y__, Y__, r__, g__, b__;								\
+      type* rs__ = (ramp)->red;										\
+      type* gs__ = (ramp)->green;									\
+      type* bs__ = (ramp)->blue;									\
+      if (r && g && b && (rn__ == gn__) && (gn__ == bn__))						\
+	{												\
+	  for (i__ = 0; i__ < rn__; i__)								\
+	    {												\
+	      libclut_model_srgb_to_ciexyy(rs__[i__] / ((double)(max)), gs__[i__] / ((double)(max)),	\
+					   bs__[i__] / ((double)(max)), &x__, &y__, &Y__);		\
+	      libclut_model_ciexyy_to_srgb(x__, y__, 1.0 - Y__, &r__, &g__, &b__);			\
+	      rs__[i__] = (type)(r__ * (double)(max));							\
+	      gs__[i__] = (type)(g__ * (double)(max));							\
+	      bs__[i__] = (type)(b__ * (double)(max));							\
+	    }												\
+	}												\
+      else												\
+	{												\
+	  if (!r && !g && !b)										\
+	    break;											\
+	  libclut_model_srgb_to_ciexyy(rs__[i__] / ((double)(max)), gs__[i__] / ((double)(max)),	\
+				       bs__[i__] / ((double)(max)), &x__, &y__, &Y__);			\
+	  if (r)											\
+	    for (i__ = 0; i__ < rn__; i__)								\
+	      {												\
+		libclut_model_ciexyy_to_srgb(x__, y__, 1.0 - Y__, &r__, &g__, &b__);			\
+		rs__[i__] = (type)((r__ * (double)(max));						\
+	      }												\
+	  if (g)											\
+	    for (i__ = 0; i__ < gn__; i__)								\
+	      {												\
+		libclut_model_ciexyy_to_srgb(x__, y__, 1.0 - Y__, &r__, &g__, &b__);			\
+		gs__[i__] = (type)(g__ * (double)(max));						\
+	      }												\
+	  if (b)											\
+	    for (i__ = 0; i__ < bn__; i__)								\
+	      {												\
+		libclut_model_ciexyy_to_srgb(x__, y__, 1.0 - Y__, &r__, &g__, &b__);			\
+		bs__[i__] = (type)(b__ * (double)(max));						\
+	      }												\
+	}												\
+    }													\
+  while (0)
+
+
 
 #endif
 
