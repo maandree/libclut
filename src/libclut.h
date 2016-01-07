@@ -909,8 +909,8 @@
  * @param   c  The linear RGB value.
  * @return     Corresponding sRGB value.
  */
-LIBCLUT_GCC_ONLY__(__attribute__((const, leaf)))
-double libclut_model_linear_to_standard1(double c);
+LIBCLUT_GCC_ONLY__(__attribute__((__const__, __leaf__)))
+double libclut_model_linear_to_standard1(double);
 
 /**
  * Convert [0, 1] linear RGB to [0, 1] sRGB.
@@ -922,7 +922,7 @@ double libclut_model_linear_to_standard1(double c);
  * @param  b  Pointer to the linear blue component,
  *            and output parameter for the blue component.
  */
-void libclut_model_linear_to_standard(double* r, double* g, double* b);
+void libclut_model_linear_to_standard(double*, double*, double*);
 
 /**
  * Convert one component from [0, 1] sRGB to [0, 1] linear RGB.
@@ -930,12 +930,11 @@ void libclut_model_linear_to_standard(double* r, double* g, double* b);
  * @param   c  The sRGB value.
  * @return     Corresponding linear RGB value.
  */
-LIBCLUT_GCC_ONLY__(__attribute__((const, leaf)))
-double libclut_model_standard_to_linear1(double c);
+LIBCLUT_GCC_ONLY__(__attribute__((__const__, __leaf__)))
+double libclut_model_standard_to_linear1(double);
 
 /**
  * Convert [0, 1] sRGB to [0, 1] linear RGB.
- * 
  * 
  * @param  r  Pointer to the red component, and output
  *            parameter for the linear red component.
@@ -944,7 +943,7 @@ double libclut_model_standard_to_linear1(double c);
  * @param  b  Pointer to the blue component, and output
  *            parameter for the linear blue component.
  */
-void libclut_model_standard_to_linear(double* r, double* g, double* b);
+void libclut_model_standard_to_linear(double*, double*, double*);
 
 /**
  * Convert CIE xyY to CIE XYZ.
@@ -955,8 +954,8 @@ void libclut_model_standard_to_linear(double* r, double* g, double* b);
  * @param  X  Output parameter for the X parameter.
  * @param  Z  Output parameter for the Z parameter.
  */
-LIBCLUT_GCC_ONLY__(__attribute__((leaf)))
-void libclut_model_ciexyy_to_ciexyz(double x, double y, double Y, double* X, double* Z);
+LIBCLUT_GCC_ONLY__(__attribute__((__leaf__)))
+void libclut_model_ciexyy_to_ciexyz(double, double, double, double*, double*);
 
 /**
  * Convert CIE XYZ to CIE xyY.
@@ -967,8 +966,8 @@ void libclut_model_ciexyy_to_ciexyz(double x, double y, double Y, double* X, dou
  * @param  x  Output parameter for the x parameter.
  * @param  y  Output parameter for the y parameter.
  */
-LIBCLUT_GCC_ONLY__(__attribute__((leaf)))
-void libclut_model_ciexyz_to_ciexyy(double X, double Y, double Z, double* x, double* y);
+LIBCLUT_GCC_ONLY__(__attribute__((__leaf__)))
+void libclut_model_ciexyz_to_ciexyy(double, double, double, double*, double*);
 
 /**
  * Convert CIE XYZ to [0, 1] linear RGB.
@@ -980,8 +979,8 @@ void libclut_model_ciexyz_to_ciexyy(double X, double Y, double Z, double* x, dou
  * @param  g  Output parameter for the green component.
  * @param  b  Output parameter for the blue component.
  */
-LIBCLUT_GCC_ONLY__(__attribute__((leaf)))
-void libclut_model_ciexyz_to_linear(double X, double Y, double Z, double* r, double* g, double* b);
+LIBCLUT_GCC_ONLY__(__attribute__((__leaf__)))
+void libclut_model_ciexyz_to_linear(double, double, double, double*, double*, double*);
 
 /**
  * Convert [0, 1] linear RGB to CIE XYZ.
@@ -993,8 +992,8 @@ void libclut_model_ciexyz_to_linear(double X, double Y, double Z, double* r, dou
  * @param  Y  Output parameter for the Y parameter.
  * @param  Z  Output parameter for the Z parameter.
  */
-LIBCLUT_GCC_ONLY__(__attribute__((leaf)))
-void libclut_model_linear_to_ciexyz(double r, double g, double b, double* X, double* Y, double* Z);
+LIBCLUT_GCC_ONLY__(__attribute__((__leaf__)))
+void libclut_model_linear_to_ciexyz(double, double, double, double*, double*, double*);
 
 /**
  * Convert [0, 1] linear RGB to CIE xyY.
@@ -1006,7 +1005,7 @@ void libclut_model_linear_to_ciexyz(double r, double g, double b, double* X, dou
  * @param  y  Output parameter for the y parameter.
  * @param  Y  Output parameter for the Y parameter.
  */
-void libclut_model_srgb_to_ciexyy(double r, double g, double b, double* x, double* y, double* Y);
+void libclut_model_srgb_to_ciexyy(double, double, double, double*, double*, double*);
 
 /**
  * Convert CIE xyY to [0, 1] sRGB.
@@ -1018,7 +1017,7 @@ void libclut_model_srgb_to_ciexyy(double r, double g, double b, double* x, doubl
  * @param  g  Output parameter for the green component.
  * @param  b  Output parameter for the blue component.
  */
-void libclut_model_ciexyy_to_srgb(double x, double y, double Y, double* r, double* g, double* b);
+void libclut_model_ciexyy_to_srgb(double, double, double, double*, double*, double*);
 
 /**
  * Convert from CIE XYZ to CIE L*a*b*.
@@ -1030,8 +1029,8 @@ void libclut_model_ciexyy_to_srgb(double x, double y, double Y, double* r, doubl
  * @param  a  Output parameter for the a* component.
  * @param  b  Output parameter for the b* component.
  */
-LIBCLUT_GCC_ONLY__(__attribute__((leaf)))
-void libclut_model_ciexyz_to_cielab(double X, double Y, double Z, double* L, double* a, double* b);
+LIBCLUT_GCC_ONLY__(__attribute__((__leaf__)))
+void libclut_model_ciexyz_to_cielab(double, double, double, double*, double*, double*);
 
 /**
  * Convert from CIE L*a*b* to CIE XYZ.
@@ -1043,8 +1042,8 @@ void libclut_model_ciexyz_to_cielab(double X, double Y, double Z, double* L, dou
  * @param  Y  Output parameter for the Y parameter.
  * @param  Z  Output parameter for the Z parameter.
  */
-LIBCLUT_GCC_ONLY__(__attribute__((leaf)))
-void libclut_model_cielab_to_xiexyz(double L, double a, double b, double* X, double* Y, double* Z);
+LIBCLUT_GCC_ONLY__(__attribute__((__leaf__)))
+void libclut_model_cielab_to_xiexyz(double, double, double, double*, double*, double*);
 
 /**
  * Convert the distance (∆E*_ab) between two [0, 1] sRGB colours.
@@ -1057,7 +1056,8 @@ void libclut_model_cielab_to_xiexyz(double L, double a, double b, double* X, dou
  * @param   b2  The blue component of the second colour.
  * @return      The difference.
  */
-double libclut_model_delta_e(double r1, double g1, double b1, double r2, double g2, double b2);
+LIBCLUT_GCC_ONLY__(__attribute__((__const__)))
+double libclut_model_delta_e(double, double, double, double, double, double);
 
 
 

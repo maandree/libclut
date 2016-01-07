@@ -63,7 +63,6 @@ double libclut_model_standard_to_linear1(double c)
 /**
  * Convert [0, 1] sRGB to [0, 1] linear RGB.
  * 
- * 
  * @param  r  Pointer to the red component, and output
  *            parameter for the linear red component.
  * @param  g  Pointer to the green component, and output
