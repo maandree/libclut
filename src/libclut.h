@@ -45,9 +45,9 @@
 #define libclut_rgb_contrast(ramp, max, type, r, g, b)							\
   do													\
     {													\
-      if (r != 1.0)  libclut__(ramp, red,   type, LIBCLUT_VALUE - (max) / 2.0 * r + (max) / 2.0);	\
-      if (g != 1.0)  libclut__(ramp, green, type, LIBCLUT_VALUE - (max) / 2.0 * g + (max) / 2.0);	\
-      if (b != 1.0)  libclut__(ramp, blue,  type, LIBCLUT_VALUE - (max) / 2.0 * b + (max) / 2.0);	\
+      if ((r) != 1.0)  libclut__(ramp, red,   type, LIBCLUT_VALUE - (max) * 0.5 * (r) + (max) * 0.5);	\
+      if ((g) != 1.0)  libclut__(ramp, green, type, LIBCLUT_VALUE - (max) * 0.5 * (g) + (max) * 0.5);	\
+      if ((b) != 1.0)  libclut__(ramp, blue,  type, LIBCLUT_VALUE - (max) * 0.5 * (b) + (max) * 0.5);	\
     }													\
   while (0)
 
@@ -71,9 +71,9 @@
  * @param  g     The contrast parameter for the green curve.
  * @param  b     The contrast parameter for the blue curve.
  */
-#define libclut_cie_contrast(ramp, max, type, r, g, b)					\
-  libclut_cie__(ramp, max, type, (r == g) && (g == b), r != 1.0, g != 1.0, b != 1.0,	\
-		(Y__ - 0.5) * r + 0.5, (Y__ - 0.5) * g + 0.5, (Y__ - 0.5) * b + 0.5)
+#define libclut_cie_contrast(ramp, max, type, r, g, b)						\
+  libclut_cie__(ramp, max, type, (r == g) && (g == b), (r) != 1.0, (g) != 1.0, (b) != 1.0,	\
+		(Y__ - 0.5) * (r) + 0.5, (Y__ - 0.5) * (g) + 0.5, (Y__ - 0.5) * (b) + 0.5)
 
 
 /**
@@ -93,13 +93,13 @@
  * @param  g     The brightness parameter for the green curve.
  * @param  b     The brightness parameter for the blue curve.
  */
-#define libclut_rgb_brightness(ramp, max, type, r, g, b)		\
-  do									\
-    {									\
-      if (r != 1.0)  libclut__(ramp, red,   type, LIBCLUT_VALUE * r);	\
-      if (g != 1.0)  libclut__(ramp, green, type, LIBCLUT_VALUE * g);	\
-      if (b != 1.0)  libclut__(ramp, blue,  type, LIBCLUT_VALUE * b);	\
-    }									\
+#define libclut_rgb_brightness(ramp, max, type, r, g, b)			\
+  do										\
+    {										\
+      if ((r) != 1.0)  libclut__(ramp, red,   type, LIBCLUT_VALUE * (r));	\
+      if ((g) != 1.0)  libclut__(ramp, green, type, LIBCLUT_VALUE * (g));	\
+      if ((b) != 1.0)  libclut__(ramp, blue,  type, LIBCLUT_VALUE * (b));	\
+    }										\
   while (0)
 
 
@@ -121,8 +121,8 @@
  * @param  b     The brightness parameter for the blue curve.
  */
 #define libclut_cie_brightness(ramp, max, type, r, g, b)				\
-  libclut_cie__(ramp, max, type, (r == g) && (g == b), r != 1.0, g != 1.0, b != 1.0,	\
-		Y__ * r, Y__ * g, Y__ * b)
+  libclut_cie__(ramp, max, type, ((r) == (g)) && ((g) == (b)),				\
+		(r) != 1.0, (g) != 1.0, (b) != 1.0, Y__ * (r), Y__ * (g), Y__ * (b))
 
 
 /**
@@ -202,9 +202,9 @@
   do												\
     {												\
       double m__ = (double)(max);								\
-      if (r != 1.0)  libclut__(ramp, red,   type, m__ * pow(LIBCLUT_VALUE / m__, 1.0 / r));	\
-      if (g != 1.0)  libclut__(ramp, green, type, m__ * pow(LIBCLUT_VALUE / m__, 1.0 / g));	\
-      if (b != 1.0)  libclut__(ramp, blue,  type, m__ * pow(LIBCLUT_VALUE / m__, 1.0 / b));	\
+      if (r != 1.0)  libclut__(ramp, red,   type, m__ * pow(LIBCLUT_VALUE / m__, 1.0 / (r)));	\
+      if (g != 1.0)  libclut__(ramp, green, type, m__ * pow(LIBCLUT_VALUE / m__, 1.0 / (g)));	\
+      if (b != 1.0)  libclut__(ramp, blue,  type, m__ * pow(LIBCLUT_VALUE / m__, 1.0 / (b)));	\
     }												\
   while (0)
 
@@ -226,33 +226,33 @@
  * @param  g     Whether to invert the green colour curve.
  * @param  b     Whether to invert the blue colour curve.
  */
-#define libclut_negative(ramp, max, type, r, g, b)
-  do
-    {
-      size_t i__, n__;
-      type t__;
-      if (r)
-	for (i__ = 0, n__ = (ramp)->red_size; i__ < (n__ >> 1); i__)
-	  {
-	    t__ = (ramp)->red[i__];
-	    (ramp)->red[i__] = (ramp)->red[n__ - i__ - 1];
-	    (ramp)->red[n__ - i__ - 1] = t__;
-	  }
-      if (g)
-	for (i__ = 0, n__ = (ramp)->green_size; i__ < (n__ >> 1); i__)
-	  {
-	    t__ = (ramp)->green[i__];
-	    (ramp)->green[i__] = (ramp)->green[n__ - i__ - 1];
-	    (ramp)->green[n__ - i__ - 1] = t__;
-	  }
-      if (b)
-	for (i__ = 0, n__ = (ramp)->blue_size; i__ < (n__ >> 1); i__)
-	  {
-	    t__ = (ramp)->blue[i__];
-	    (ramp)->blue[i__] = (ramp)->blue[n__ - i__ - 1];
-	    (ramp)->blue[n__ - i__ - 1] = t__;
-	  }
-    }
+#define libclut_negative(ramp, max, type, r, g, b)			\
+  do									\
+    {									\
+      size_t i__, n__;							\
+      type t__;								\
+      if (r)								\
+	for (i__ = 0, n__ = (ramp)->red_size; i__ < (n__ >> 1); i__)	\
+	  {								\
+	    t__ = (ramp)->red[i__];					\
+	    (ramp)->red[i__] = (ramp)->red[n__ - i__ - 1];		\
+	    (ramp)->red[n__ - i__ - 1] = t__;				\
+	  }								\
+      if (g)								\
+	for (i__ = 0, n__ = (ramp)->green_size; i__ < (n__ >> 1); i__)	\
+	  {								\
+	    t__ = (ramp)->green[i__];					\
+	    (ramp)->green[i__] = (ramp)->green[n__ - i__ - 1];		\
+	    (ramp)->green[n__ - i__ - 1] = t__;				\
+	  }								\
+      if (b)								\
+	for (i__ = 0, n__ = (ramp)->blue_size; i__ < (n__ >> 1); i__)	\
+	  {								\
+	    t__ = (ramp)->blue[i__];					\
+	    (ramp)->blue[i__] = (ramp)->blue[n__ - i__ - 1];		\
+	    (ramp)->blue[n__ - i__ - 1] = t__;				\
+	  }								\
+    }									\
   while (0)
 
 
@@ -296,8 +296,8 @@
  * @param  g     Whether to invert the green colour curve.
  * @param  b     Whether to invert the blue colour curve.
  */
-#define libclut_cie_invert(ramp, max, type, r, g, b)					\
-  libclut_cie__(ramp, max, type, r && g && b, r, g, b, 1.0 - Y__, 1.0 - Y__, 1.0 - Y__)
+#define libclut_cie_invert(ramp, max, type, r, g, b)						\
+  libclut_cie__(ramp, max, type, (r) && (g) && (b), r, g, b, 1.0 - Y__, 1.0 - Y__, 1.0 - Y__)
 
 
 /**
@@ -404,15 +404,15 @@
  * @param  bmin  The blue component value of the blackpoint.
  * @param  bmax  The blue component value of the whitepoint.
  */
-#define libclut_cie_limits(ramp, max, type, rmin, rmax, gmin, gmax, bmin, bmax)		\
-  do											\
-    {											\
-      double rd__ = (rmax) - (rmin), gd__ = (gmax) - (gmin), bd__ = (bmax) - (bmin);	\
-      libclut_cie__(ramp, max, type, (rmin == gmin) && (gmin == bmin) &&		\
-		    (rmax == gmax) && (gmax == bmax), (rmin != 0.0) || (rmax != 1.0),	\
-		    (gmin != 0.0) || (gmax != 1.0), (bmin != 0.0) || (bmax != 1.0),	\
-		    Y__ * rd__ + rmin, Y__ * gd__ + gmin, Y__ * bd__ + bmin);		\
-    }											\
+#define libclut_cie_limits(ramp, max, type, rmin, rmax, gmin, gmax, bmin, bmax)				\
+  do													\
+    {													\
+      double rd__ = (rmax) - (rmin), gd__ = (gmax) - (gmin), bd__ = (bmax) - (bmin);			\
+      libclut_cie__(ramp, max, type, ((rmin) == (gmin)) && ((gmin) == (bmin)) &&			\
+		    ((rmax) == (gmax)) && ((gmax) == (bmax)), ((rmin) != 0.0) || ((rmax) != 1.0),	\
+		    ((gmin) != 0.0) || ((gmax) != 1.0), ((bmin) != 0.0) || ((bmax) != 1.0),		\
+		    Y__ * rd__ + (rmin), Y__ * gd__ + (gmin), Y__ * bd__ + (bmin));			\
+    }													\
   while (0)
 
 
@@ -438,9 +438,9 @@
   do										\
     {										\
       double m__ = (double)(max);						\
-      if (r)  libclut__(ramp, red,   type, m__ * r(LIBCLUT_VALUE / m__));	\
-      if (g)  libclut__(ramp, green, type, m__ * g(LIBCLUT_VALUE / m__));	\
-      if (b)  libclut__(ramp, blue,  type, m__ * b(LIBCLUT_VALUE / m__));	\
+      if (r)  libclut__(ramp, red,   type, m__ * (r)(LIBCLUT_VALUE / m__));	\
+      if (g)  libclut__(ramp, green, type, m__ * (g)(LIBCLUT_VALUE / m__));	\
+      if (b)  libclut__(ramp, blue,  type, m__ * (b)(LIBCLUT_VALUE / m__));	\
     }										\
   while (0)
 
@@ -463,8 +463,8 @@
  * @param  b     Function to manipulate the blue colour curve, should either
  *               be `NULL` or map a [0, 1] `double` to a [0, 1] `double`.
  */
-#define libclut_cie_manipulate(ramp, max, type, r, g, b)			\
-  libclut_cie__(ramp, max, type, r && g && b, r, g, b, r(Y__), g(Y__), b(Y__))
+#define libclut_cie_manipulate(ramp, max, type, r, g, b)					\
+  libclut_cie__(ramp, max, type, (r) && (g) && (b), r, g, b, (r)(Y__), (g)(Y__), (b)(Y__))
 
 
 /**
@@ -550,8 +550,8 @@
  * @param   max  The maximum allowed value.
  * @return       The value truncated into its boundary.
  */
-#define libclut_clip__(min, val, max)						\
-  (LIBCLUT_VALUE < min ? min : LIBCLUT_VALUE > max ? max : LIBCLUT_VALUE)
+#define libclut_clip__(min, val, max)							\
+  (LIBCLUT_VALUE < (min) ? (min) : LIBCLUT_VALUE > (max) ? (max) : LIBCLUT_VALUE)
 
 
 /**
@@ -606,6 +606,7 @@
 	{										\
 	  size_t x__, y__, i__, n__ = (ramp)->channel##_size;				\
 	  double xm__ = (double)((x) - 1), ym__ = (double)((y) - 1);			\
+	  double m__ = (double)(max);							\
 	  type c__[n__]; /* Do not use alloca! */					\
 	  for (i__ = 0; i__ < n__; i__++)						\
 	    {										\
@@ -619,7 +620,7 @@
 	      else									\
 		{									\
 		  y__ = (size_t)((double)((ramp)->channel[x__]) / (max) * ym__ + 0.5);	\
-		  c__[i__] = (type)((double)y__ / ym__ * (max));			\
+		  c__[i__] = (type)((double)y__ / ym__ * m__);				\
 		}									\
 	    }										\
 	  memcpy((ramp)->channel, c__, n__ * sizeof(type));				\
@@ -646,7 +647,7 @@
  * @param  g       Whether to apply the filter for the green curve.
  * @param  b       Whether to apply the filter for the blue curve.
  */
-#define libclut_apply(ramp, max, type, filter, fmax, ftype, r, g, b)
+#define libclut_apply(ramp, max, type, filter, fmax, ftype, r, g, b)			\
   do											\
     {											\
       if (r)  libclut_apply__(ramp, max, type, filter, fmax, ftype, red);		\
@@ -674,7 +675,7 @@
  * @param  ftype    Same as `type`, but for the filter to apply. (Not actually used).
  * @param  channel  The channel, must be either "red", "green", or "blue".
  */
-#define libclut_apply__(ramp, max, type, filter, fmax, ftype, channel)
+#define libclut_apply__(ramp, max, type, filter, fmax, ftype, channel)			\
   do											\
     {											\
       size_t i__, rn__ = (ramp)->channel##_size, fn__ = (filter)->channel##_size;	\
@@ -685,6 +686,38 @@
 	  (ramp)->channel[i__] = (type)((double)((filter)->channel[x__]) * m__);	\
 	}										\
     }											\
+  while (0)
+
+
+/**
+ * Applies a filter or calibration, using CIE xyY.
+ * 
+ * None of the parameter may have side-effects.
+ * 
+ * @param  ramp    Pointer to the gamma ramps, must have the arrays
+ *                 `red`, `green`, and `blue`, and the scalars
+ *                 `red_size`, `green_size`, and `blue_size`. Ramp
+ *                 structures from libgamma can be used.
+ * @param  max     The maximum value on each stop in the ramps.
+ * @param  type    The data type used for each stop in the ramps.
+ * @param  filter  Same as `ramp`, but for the filter to apply.
+ * @param  fmax    Same as `max`, but for the filter to apply.
+ * @param  ftype   Same as `type`, but for the filter to apply. (Not actually used).
+ * @param  r       Whether to apply the filter for the red curve.
+ * @param  g       Whether to apply the filter for the green curve.
+ * @param  b       Whether to apply the filter for the blue curve.
+ */
+#define libclut_cie_apply(ramp, max, type, filter, fmax, ftype, r, g, b)				\
+  do													\
+    {													\
+      size_t rfn__ = (filter)->red_size, gfn__ = (filter)->green_size;					\
+      size_t bfn__ = (filter)->blue_size, x__;								\
+      size_t rm__ = (double)(max), fm__ = (double)(fmax);						\
+      libclut_cie__(ramp, max, type, 0, r, g, b,							\
+		    (x__ = (size_t)(Y__ / rm__ * rfn__), (double)((filter)->red[x__])   / fm__),	\
+		    (x__ = (size_t)(Y__ / rm__ * gfn__), (double)((filter)->green[x__]) / fm__),	\
+		    (x__ = (size_t)(Y__ / rm__ * bfn__), (double)((filter)->blue[x__])  / fm__));	\
+    }													\
   while (0)
 
 
@@ -719,7 +752,7 @@
 
 
 /**
- * A ramp set in CIE xyY.
+ * Modify a ramp set in CIE xyY.
  * 
  * None of the parameter may have side-effects.
  * 
@@ -743,58 +776,123 @@
  * @param  bexpr  Expression calculating the intensity of the blue channel.
  *                The current value is stored in `Y__`.
  */
-#define libclut_cie__(ramp, max, type, utest, rtest, gtest, btest, rexpr, gexpr, bexpr)			\
-  do													\
-    {													\
-      size_t rn__ = (ramp)->red_size;									\
-      size_t gn__ = (ramp)->green_size;									\
-      size_t bn__ = (ramp)->blue_size;									\
-      size_t i__;											\
-      double x__, y__, Y__, r__, g__, b__;								\
-      type* rs__ = (ramp)->red;										\
-      type* gs__ = (ramp)->green;									\
-      type* bs__ = (ramp)->blue;									\
-      if ((rn__ == gn__) && (gn__ == bn__) && (utest))							\
-	{												\
-	  if (!(rtest))											\
-	    break;											\
-	  for (i__ = 0; i__ < rn__; i__)								\
-	    {												\
-	      libclut_model_srgb_to_ciexyy(rs__[i__] / ((double)(max)), gs__[i__] / ((double)(max)),	\
-					   bs__[i__] / ((double)(max)), &x__, &y__, &Y__);		\
-	      libclut_model_ciexyy_to_srgb(x__, y__, rexpr, &r__, &g__, &b__);				\
-	      rs__[i__] = (type)(r__ * (double)(max));							\
-	      gs__[i__] = (type)(g__ * (double)(max));							\
-	      bs__[i__] = (type)(b__ * (double)(max));							\
-	    }												\
-	}												\
-      else												\
-	{												\
-	  if (!(rtest) && !(gtest) && !(btest))								\
-	    break;											\
-	  libclut_model_srgb_to_ciexyy(rs__[i__] / ((double)(max)), gs__[i__] / ((double)(max)),	\
-				       bs__[i__] / ((double)(max)), &x__, &y__, &Y__);			\
-	  if (rtest)											\
-	    for (i__ = 0; i__ < rn__; i__)								\
-	      {												\
-		libclut_model_ciexyy_to_srgb(x__, y__, rexpr, &r__, &g__, &b__);			\
-		rs__[i__] = (type)((r__ * (double)(max));						\
-	      }												\
-	  if (gtest)											\
-	    for (i__ = 0; i__ < gn__; i__)								\
-	      {												\
-		libclut_model_ciexyy_to_srgb(x__, y__, gexpr, &r__, &g__, &b__);			\
-		gs__[i__] = (type)(g__ * (double)(max));						\
-	      }												\
-	  if (btest)											\
-	    for (i__ = 0; i__ < bn__; i__)								\
-	      {												\
-		libclut_model_ciexyy_to_srgb(x__, y__, nexpr, &r__, &g__, &b__);			\
-		bs__[i__] = (type)(b__ * (double)(max));						\
-	      }												\
-	}												\
-    }													\
+#define libclut_cie__(ramp, max, type, utest, rtest, gtest, btest, rexpr, gexpr, bexpr)	\
+  do											\
+    {											\
+      size_t rn__ = (ramp)->red_size;							\
+      size_t gn__ = (ramp)->green_size;							\
+      size_t bn__ = (ramp)->blue_size;							\
+      size_t i__;									\
+      double x__, y__, Y__, r__, g__, b__;						\
+      double m__ = (double)(max);							\
+      type* rs__ = (ramp)->red;								\
+      type* gs__ = (ramp)->green;							\
+      type* bs__ = (ramp)->blue;							\
+      if ((rn__ == gn__) && (gn__ == bn__) && (utest))					\
+	{										\
+	  if (!(rtest))									\
+	    break;									\
+	  for (i__ = 0; i__ < rn__; i__)						\
+	    {										\
+	      libclut_model_srgb_to_ciexyy(rs__[i__] / m__, gs__[i__] / m__,		\
+					   bs__[i__] / m__, &x__, &y__, &Y__);		\
+	      libclut_model_ciexyy_to_srgb(x__, y__, rexpr, &r__, &g__, &b__);		\
+	      rs__[i__] = (type)(r__ * m__);						\
+	      gs__[i__] = (type)(g__ * m__);						\
+	      bs__[i__] = (type)(b__ * m__);						\
+	    }										\
+	}										\
+      else if ((rn__ == gn__) && (gn__ == bn__))					\
+	{										\
+	  if (!(rtest) && !(gtest) && !(btest))						\
+	    break;									\
+	  for (i__ = 0; i__ < rn__; i__)						\
+	    {										\
+	      libclut_model_srgb_to_ciexyy(rs__[i__] / m__, gs__[i__] / m__,		\
+					   bs__[i__] / m__, &x__, &y__, &Y__);		\
+	      if (rtest)								\
+		{									\
+		  libclut_model_ciexyy_to_srgb(x__, y__, rexpr, &r__, &g__, &b__);	\
+		  rs__[i__] = (type)(r__ * m__);					\
+		}									\
+	      if (gtest)								\
+		{									\
+		  libclut_model_ciexyy_to_srgb(x__, y__, gexpr, &r__, &g__, &b__);	\
+		  gs__[i__] = (type)(g__ * m__);					\
+		}									\
+	      if (btest)								\
+		{									\
+		  libclut_model_ciexyy_to_srgb(x__, y__, nexpr, &r__, &g__, &b__);	\
+		  bs__[i__] = (type)(b__ * m__);					\
+		}									\
+	    }										\
+	}										\
+      else										\
+	{										\
+	  if (rtest)									\
+	    for (i__ = 0; i__ < rn__; i__)						\
+	    libclut_cie___(ramp, max, type, rexpr, i__,					\
+			   libclut_i__(i__, rn__, gn__),				\
+			   libclut_i__(i__, rn__, bn__));				\
+	  if (gtest)									\
+	    for (i__ = 0; i__ < rn__; i__)						\
+	    libclut_cie___(ramp, max, type, gexpr,					\
+			   libclut_i__(i__, gn__, rn__), i__,				\
+			   libclut_i__(i__, gn__, bn__));				\
+	  if (btest)									\
+	    for (i__ = 0; i__ < rn__; i__)						\
+	    libclut_cie___(ramp, max, type, bexpr, i__,					\
+			   libclut_i__(i__, bn__, rn__),				\
+			   libclut_i__(i__, bn__, gn__), i__);				\
+	}										\
+    }											\
   while (0)
+
+
+/**
+ * Modify a ramp stop in CIE xyY.
+ * 
+ * None of the parameter may have side-effects.
+ * 
+ * This is intended for internal use.
+ * Assumes the existence of variables defined in `libclut_cie__`.
+ * 
+ * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ *               `red`, `green`, and `blue`, and the scalars
+ *               `red_size`, `green_size`, and `blue_size`. Ramp
+ *               structures from libgamma can be used.
+ * @param  max   The maximum value on each stop in the ramps.
+ * @param  type  The data type used for each stop in the ramps.
+ * @param  c     Either "r" for red, "g" for green, or "b" for blue.
+ * @param  expr  Expression calculating the intensity of the channel.
+ * @param  ri    The index of the stop translated to the red channel.
+ * @param  gi    The index of the stop translated to the green channel.
+ * @param  bi    The index of the stop translated to the blue channel.
+ */
+#define libclut_cie___(ramp, max, type, c, expr, ri, gi, bi)			\
+  do										\
+    {										\
+      for (i__ = 0; i__ < c##n__; i__)						\
+	{									\
+	  libclut_model_srgb_to_ciexyy(rs__[(ri)] / m__, gs__[(gi)] / m__,	\
+				       bs__[(bi)] / m__, &x__, &y__, &Y__);	\
+	  libclut_model_ciexyy_to_srgb(x__, y__, expr, &r__, &g__, &b__);	\
+	  c##s__[i__] = (type)(c##__ * m__);					\
+	}									\
+    }										\
+  while (0)
+
+
+/**
+ * Translate an index from one channel to another.
+ * 
+ * @param   i    The index in the input channel.
+ * @param   in   The size of the input channel.
+ * @param   out  The size of the output channel.
+ * @return       The index in the output channel.
+ */
+#define libclut_i__(i, in, out)				\
+  (size_t)((double)(i) * (double)(out) / (double)(in))
 
 
 
