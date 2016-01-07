@@ -252,6 +252,64 @@
   while (0)
 
 
+/**
+ * Convert the curves from formatted in standard RGB to linear RGB.
+ * 
+ * None of the parameter may have side-effects.
+ * 
+ * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ *               `red`, `green`, and `blue`, and the scalars
+ *               `red_size`, `green_size`, and `blue_size`. Ramp
+ *               structures from libgamma can be used.
+ * @param  max   The maximum value on each stop in the ramps.
+ * @param  type  The data type used for each stop in the ramps.
+ * @param  r     Whether to convert the red colour curve.
+ * @param  g     Whether to convert the green colour curve.
+ * @param  b     Whether to convert the blue colour curve.
+ */
+#define libclut_linearise(ramp, max, type, r, g, b)							\
+  do													\
+    {													\
+      double m__ = (double)(max);									\
+      if (r)												\
+	libclut__(ramp, red,   type, m__ * libclut_model_standard_to_linear1(LIBCLUT_VALUE / m__));	\
+      if (g)												\
+	libclut__(ramp, green, type, m__ * libclut_model_standard_to_linear1(LIBCLUT_VALUE / m__));	\
+      if (b)												\
+	libclut__(ramp, blue,  type, m__ * libclut_model_standard_to_linear1(LIBCLUT_VALUE / m__));	\
+    }													\
+  while (0)
+
+
+/**
+ * Convert the curves from formatted in linear RGB to standard RGB.
+ * 
+ * None of the parameter may have side-effects.
+ * 
+ * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ *               `red`, `green`, and `blue`, and the scalars
+ *               `red_size`, `green_size`, and `blue_size`. Ramp
+ *               structures from libgamma can be used.
+ * @param  max   The maximum value on each stop in the ramps.
+ * @param  type  The data type used for each stop in the ramps.
+ * @param  r     Whether to convert the red colour curve.
+ * @param  g     Whether to convert the green colour curve.
+ * @param  b     Whether to convert the blue colour curve.
+ */
+#define libclut_standardise(ramp, max, type, r, g, b)							\
+  do													\
+    {													\
+      double m__ = (double)(max);									\
+      if (r)												\
+	libclut__(ramp, red,   type, m__ * libclut_model_linear_to_standard1(LIBCLUT_VALUE / m__));	\
+      if (g)												\
+	libclut__(ramp, green, type, m__ * libclut_model_linear_to_standard1(LIBCLUT_VALUE / m__));	\
+      if (b)												\
+	libclut__(ramp, blue,  type, m__ * libclut_model_linear_to_standard1(LIBCLUT_VALUE / m__));	\
+    }													\
+  while (0)
+
+
 
 #endif
 
