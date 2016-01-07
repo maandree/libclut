@@ -135,17 +135,17 @@
 	    {												\
 	      if (r != 1.0)										\
 		{											\
-		  libclut_model_ciexyy_to_srgb(x__, y__, (Y__ - 0.5) * r * 0.5, &r__, &g__, &b__);	\
+		  libclut_model_ciexyy_to_srgb(x__, y__, (Y__ - 0.5) * r + 0.5, &r__, &g__, &b__);	\
 		  rs__[i__] = (type)(r__ * (double)(max));						\
 		}											\
 	      if (g != 1.0)										\
 		{											\
-		  libclut_model_ciexyy_to_srgb(x__, y__, (Y__ - 0.5) * g * 0.5, &r__, &g__, &b__);	\
+		  libclut_model_ciexyy_to_srgb(x__, y__, (Y__ - 0.5) * g + 0.5, &r__, &g__, &b__);	\
 		  gs__[i__] = (type)(g__ * (double)(max));						\
 		}											\
 	      if (b != 1.0)										\
 		{											\
-		  libclut_model_ciexyy_to_srgb(x__, y__, (Y__ - 0.5) * b * 0.5, &r__, &g__, &b__);	\
+		  libclut_model_ciexyy_to_srgb(x__, y__, (Y__ - 0.5) * b + 0.5, &r__, &g__, &b__);	\
 		  bs__[i__] = (type)(b__ * (double)(max));						\
 		}											\
 	    }												\
@@ -153,6 +153,103 @@
     }													\
   while (0)
 
+
+/**
+ * Apply brightness correction on the colour curves using sRGB.
+ *  
+ * In this context, brightness is a measure of the whiteness of the whitepoint.
+ * 
+ * None of the parameter may have side-effects.
+ * 
+ * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ *               `red`, `green`, and `blue`, and the scalars
+ *               `red_size`, `green_size`, and `blue_size`. Ramp
+ *               structures from libgamma can be used.
+ * @param  max   The maximum value on each stop in the ramps.
+ * @param  type  The data type used for each stop in the ramps.
+ * @param  r     The brightness parameter for the red curve.
+ * @param  g     The brightness parameter for the green curve.
+ * @param  b     The brightness parameter for the blue curve.
+ */
+#define libclut_rgb_brightness(ramp, max, type, r, g, b)		\
+  do									\
+    {									\
+      if (r != 1.0)  libclut__(ramp, red,   type, LIBCLUT_VALUE * r);	\
+      if (g != 1.0)  libclut__(ramp, green, type, LIBCLUT_VALUE * g);	\
+      if (b != 1.0)  libclut__(ramp, blue,  type, LIBCLUT_VALUE * b);	\
+    }									\
+  while (0)
+
+
+/**
+ * Apply brightness correction on the colour curves using CIE xyY.
+ *  
+ * In this context, brightness is a measure of the whiteness of the whitepoint.
+ * 
+ * None of the parameter may have side-effects.
+ * 
+ * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ *               `red`, `green`, and `blue`, and the scalars
+ *               `red_size`, `green_size`, and `blue_size`. Ramp
+ *               structures from libgamma can be used.
+ * @param  max   The maximum value on each stop in the ramps.
+ * @param  type  The data type used for each stop in the ramps.
+ * @param  r     The contrast parameter for the red curve.
+ * @param  g     The contrast parameter for the green curve.
+ * @param  b     The contrast parameter for the blue curve.
+ */
+#define libclut_cie_contrast(ramp, max, type, r, g, b)							\
+  do													\
+    {													\
+      size_t rn__ = (ramp)->red_size;									\
+      size_t gn__ = (ramp)->green_size;									\
+      size_t bn__ = (ramp)->blue_size;									\
+      size_t i__;											\
+      double x__, y__, Y__, r__, g__, b__;								\
+      type* rs__ = (ramp)->red;										\
+      type* gs__ = (ramp)->green;									\
+      type* bs__ = (ramp)->blue;									\
+      if ((r == g) && (g == b) && (rn__ == gn__) && (gn__ == bn__))					\
+	{												\
+	  if (r == 1.0)											\
+	    break;											\
+	  for (i__ = 0; i__ < rn__; i__)								\
+	    {												\
+	      libclut_model_srgb_to_ciexyy(rs__[i__] / ((double)(max)), gs__[i__] / ((double)(max)),	\
+					   bs__[i__] / ((double)(max)), &x__, &y__, &Y__);		\
+	      libclut_model_ciexyy_to_srgb(x__, y__, Y__ * r, &r__, &g__, &b__);			\
+	      rs__[i__] = (type)(r__ * (double)(max));							\
+	      gs__[i__] = (type)(g__ * (double)(max));							\
+	      bs__[i__] = (type)(b__ * (double)(max));							\
+	    }												\
+	}												\
+      else												\
+	{												\
+	  if ((r == 1.0) && (g == 1.0) && (b == 1.0))							\
+	    break;											\
+	  libclut_model_srgb_to_ciexyy(rs__[i__] / ((double)(max)), gs__[i__] / ((double)(max)),	\
+				       bs__[i__] / ((double)(max)), &x__, &y__, &Y__);			\
+	  for (i__ = 0; i__ < rn__; i__)								\
+	    {												\
+	      if (r != 1.0)										\
+		{											\
+		  libclut_model_ciexyy_to_srgb(x__, y__, Y__ * r, &r__, &g__, &b__);			\
+		  rs__[i__] = (type)(r__ * (double)(max));						\
+		}											\
+	      if (g != 1.0)										\
+		{											\
+		  libclut_model_ciexyy_to_srgb(x__, y__, Y__ * g, &r__, &g__, &b__);			\
+		  gs__[i__] = (type)(g__ * (double)(max));						\
+		}											\
+	      if (b != 1.0)										\
+		{											\
+		  libclut_model_ciexyy_to_srgb(x__, y__, Y__ * b, &r__, &g__, &b__);			\
+		  bs__[i__] = (type)(b__ * (double)(max));						\
+		}											\
+	    }												\
+	}												\
+    }													\
+  while (0)
 
 
 #endif
