@@ -474,6 +474,51 @@
   while (0)
 
 
+/**
+ * Apply S-curve correction on the colour curves.
+ * This is intended for fine tuning LCD monitors,
+ * 4.5 is good value start start testing at.
+ * You would probably like to use rgb_limits before
+ * this to adjust the black point as that is the
+ * only why to adjust the black point on many LCD
+ * monitors.
+ * 
+ * None of the parameter may have side-effects.
+ * 
+ * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ *               `red`, `green`, and `blue`, and the scalars
+ *               `red_size`, `green_size`, and `blue_size`. Ramp
+ *               structures from libgamma can be used.
+ * @param  max   The maximum value on each stop in the ramps.
+ * @param  type  The data type used for each stop in the ramps.
+ * @param  rp    Pointer to the sigmoid parameter for the red curve. `NULL` for no adjustment.
+ * @param  gp    Pointer to the sigmoid parameter for the green curve. `NULL` for no adjustment.
+ * @param  bp    Pointer to the sigmoid parameter for the blue curve. `NULL` for no adjustment.
+ */
+#define libclut_sigmoid(ramp, max, type, rp, gp, bp)							\
+  do													\
+    {													\
+      double r__ = (rp) ? *(rp) : 0.0;									\
+      double g__ = (gp) ? *(gp) : 0.0;									\
+      double b__ = (bp) ? *(bp) : 0.0;									\
+      double m__ = (double)(max);									\
+      size_t i__;											\
+      if (rp)												\
+	for (i__ = 0; i++ < (ramp)->red_size; i__++)							\
+	  if ((ramp)->red[i__] && ((ramp)->red[i__] != (max)))						\
+	    (ramp)->red[i__] = (type)(m__ * (0.5 - log(m__ / (ramp)->red[i__] - 1.0) / r__));		\
+      if (gp)												\
+	for (i__ = 0; i++ < (ramp)->green_size; i__++)							\
+	  if ((ramp)->green[i__] && ((ramp)->green[i__] != (max)))					\
+	    (ramp)->green[i__] = (type)(m__ * (0.5 - log(m__ / (ramp)->green[i__] - 1.0) / g__));	\
+      if (bp)												\
+	for (i__ = 0; i++ < (ramp)->blue_size; i__++)							\
+	  if ((ramp)->blue[i__] && ((ramp)->blue[i__] != (max)))					\
+	    (ramp)->blue[i__] = (type)(m__ * (0.5 - log(m__ / (ramp)->blue[i__] - 1.0) / b__));		\
+    }													\
+  while (0)
+
+
 
 #endif
 
