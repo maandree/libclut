@@ -194,11 +194,11 @@
  *               structures from libgamma can be used.
  * @param  max   The maximum value on each stop in the ramps.
  * @param  type  The data type used for each stop in the ramps.
- * @param  r     The contrast parameter for the red curve.
- * @param  g     The contrast parameter for the green curve.
- * @param  b     The contrast parameter for the blue curve.
+ * @param  r     The brightness parameter for the red curve.
+ * @param  g     The brightness parameter for the green curve.
+ * @param  b     The brightness parameter for the blue curve.
  */
-#define libclut_cie_contrast(ramp, max, type, r, g, b)							\
+#define libclut_cie_brightness(ramp, max, type, r, g, b)						\
   do													\
     {													\
       size_t rn__ = (ramp)->red_size;									\
