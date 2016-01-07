@@ -52,6 +52,84 @@
   while (0)
 
 
+/**
+ * A ramp set in CIE xyY.
+ * 
+ * None of the parameter may have side-effects.
+ * 
+ * This is intended for internal use.
+ * 
+ * @param  ramp   Pointer to the gamma ramps, must have the arrays
+ *                `red`, `green`, and `blue`, and the scalars
+ *                `red_size`, `green_size`, and `blue_size`. Ramp
+ *                structures from libgamma can be used.
+ * @param  max    The maximum value on each stop in the ramps.
+ * @param  type   The data type used for each stop in the ramps.
+ * @param  utest  Whether all channels can be modified at the same time.
+ *                This test does not have to include the ramp size.
+ * @param  rtest  Whether the red channel have to be modified.
+ * @param  gtest  Whether the green channel have to be modified.
+ * @param  btest  Whether the blue channel have to be modified.
+ * @parma  rexpr  Expression calculating the intensity of the red channel.
+ *                The current value is stored in `Y__`.
+ * @parma  gexpr  Expression calculating the intensity of the green channel.
+ *                The current value is stored in `Y__`.
+ * @parma  bexpr  Expression calculating the intensity of the blue channel.
+ *                The current value is stored in `Y__`.
+ */
+#define libclut_cie__(ramp, max, type, utest, rtest, gtest, btest, rexpr, gexpr, bexpr)			\
+  do													\
+    {													\
+      size_t rn__ = (ramp)->red_size;									\
+      size_t gn__ = (ramp)->green_size;									\
+      size_t bn__ = (ramp)->blue_size;									\
+      size_t i__;											\
+      double x__, y__, Y__, r__, g__, b__;								\
+      type* rs__ = (ramp)->red;										\
+      type* gs__ = (ramp)->green;									\
+      type* bs__ = (ramp)->blue;									\
+      if ((rn__ == gn__) && (gn__ == bn__) && (utest))							\
+	{												\
+	  if (!(rtest))											\
+	    break;											\
+	  for (i__ = 0; i__ < rn__; i__)								\
+	    {												\
+	      libclut_model_srgb_to_ciexyy(rs__[i__] / ((double)(max)), gs__[i__] / ((double)(max)),	\
+					   bs__[i__] / ((double)(max)), &x__, &y__, &Y__);		\
+	      libclut_model_ciexyy_to_srgb(x__, y__, rexpr, &r__, &g__, &b__);				\
+	      rs__[i__] = (type)(r__ * (double)(max));							\
+	      gs__[i__] = (type)(g__ * (double)(max));							\
+	      bs__[i__] = (type)(b__ * (double)(max));							\
+	    }												\
+	}												\
+      else												\
+	{												\
+	  if (!(rtest) && !(gtest) && !(btest))								\
+	    break;											\
+	  libclut_model_srgb_to_ciexyy(rs__[i__] / ((double)(max)), gs__[i__] / ((double)(max)),	\
+				       bs__[i__] / ((double)(max)), &x__, &y__, &Y__);			\
+	  if (rtest)											\
+	    for (i__ = 0; i__ < rn__; i__)								\
+	      {												\
+		libclut_model_ciexyy_to_srgb(x__, y__, rexpr, &r__, &g__, &b__);			\
+		rs__[i__] = (type)((r__ * (double)(max));						\
+	      }												\
+	  if (gtest)											\
+	    for (i__ = 0; i__ < gn__; i__)								\
+	      {												\
+		libclut_model_ciexyy_to_srgb(x__, y__, gexpr, &r__, &g__, &b__);			\
+		gs__[i__] = (type)(g__ * (double)(max));						\
+	      }												\
+	  if (btest)											\
+	    for (i__ = 0; i__ < bn__; i__)								\
+	      {												\
+		libclut_model_ciexyy_to_srgb(x__, y__, nexpr, &r__, &g__, &b__);			\
+		bs__[i__] = (type)(b__ * (double)(max));						\
+	      }												\
+	}												\
+    }													\
+  while (0)
+
 
 /**
  * Apply contrast correction on the colour curves using sRGB.
@@ -101,58 +179,9 @@
  * @param  g     The contrast parameter for the green curve.
  * @param  b     The contrast parameter for the blue curve.
  */
-#define libclut_cie_contrast(ramp, max, type, r, g, b)							\
-  do													\
-    {													\
-      size_t rn__ = (ramp)->red_size;									\
-      size_t gn__ = (ramp)->green_size;									\
-      size_t bn__ = (ramp)->blue_size;									\
-      size_t i__;											\
-      double x__, y__, Y__, r__, g__, b__;								\
-      type* rs__ = (ramp)->red;										\
-      type* gs__ = (ramp)->green;									\
-      type* bs__ = (ramp)->blue;									\
-      if ((r == g) && (g == b) && (rn__ == gn__) && (gn__ == bn__))					\
-	{												\
-	  if (r == 1.0)											\
-	    break;											\
-	  for (i__ = 0; i__ < rn__; i__)								\
-	    {												\
-	      libclut_model_srgb_to_ciexyy(rs__[i__] / ((double)(max)), gs__[i__] / ((double)(max)),	\
-					   bs__[i__] / ((double)(max)), &x__, &y__, &Y__);		\
-	      libclut_model_ciexyy_to_srgb(x__, y__, (Y__ - 0.5) * r * 0.5, &r__, &g__, &b__);		\
-	      rs__[i__] = (type)(r__ * (double)(max));							\
-	      gs__[i__] = (type)(g__ * (double)(max));							\
-	      bs__[i__] = (type)(b__ * (double)(max));							\
-	    }												\
-	}												\
-      else												\
-	{												\
-	  if ((r == 1.0) && (g == 1.0) && (b == 1.0))							\
-	    break;											\
-	  libclut_model_srgb_to_ciexyy(rs__[i__] / ((double)(max)), gs__[i__] / ((double)(max)),	\
-				       bs__[i__] / ((double)(max)), &x__, &y__, &Y__);			\
-	  if (r != 1.0)											\
-	    for (i__ = 0; i__ < rn__; i__)								\
-	      {												\
-		libclut_model_ciexyy_to_srgb(x__, y__, (Y__ - 0.5) * r + 0.5, &r__, &g__, &b__);	\
-		rs__[i__] = (type)(r__ * (double)(max));						\
-	      }												\
-	  if (g != 1.0)											\
-	    for (i__ = 0; i__ < gn__; i__)								\
-	      {												\
-		libclut_model_ciexyy_to_srgb(x__, y__, (Y__ - 0.5) * g + 0.5, &r__, &g__, &b__);	\
-		gs__[i__] = (type)(g__ * (double)(max));						\
-	      }												\
-	  if (b != 1.0) 										\
-	    for (i__ = 0; i__ < bn__; i__)								\
-	      {												\
-		libclut_model_ciexyy_to_srgb(x__, y__, (Y__ - 0.5) * b + 0.5, &r__, &g__, &b__);	\
-		bs__[i__] = (type)(b__ * (double)(max));						\
-	      }												\
-	}												\
-    }													\
-  while (0)
+#define libclut_cie_contrast(ramp, max, type, r, g, b)					\
+  libclut_cie__(ramp, max, type, (r == g) && (g == b), r != 1.0, g != 1.0, b != 1.0,	\
+		(Y__ - 0.5) * r + 0.5, (Y__ - 0.5) * g + 0.5, (Y__ - 0.5) * b + 0.5)
 
 
 /**
@@ -199,58 +228,9 @@
  * @param  g     The brightness parameter for the green curve.
  * @param  b     The brightness parameter for the blue curve.
  */
-#define libclut_cie_brightness(ramp, max, type, r, g, b)						\
-  do													\
-    {													\
-      size_t rn__ = (ramp)->red_size;									\
-      size_t gn__ = (ramp)->green_size;									\
-      size_t bn__ = (ramp)->blue_size;									\
-      size_t i__;											\
-      double x__, y__, Y__, r__, g__, b__;								\
-      type* rs__ = (ramp)->red;										\
-      type* gs__ = (ramp)->green;									\
-      type* bs__ = (ramp)->blue;									\
-      if ((r == g) && (g == b) && (rn__ == gn__) && (gn__ == bn__))					\
-	{												\
-	  if (r == 1.0)											\
-	    break;											\
-	  for (i__ = 0; i__ < rn__; i__)								\
-	    {												\
-	      libclut_model_srgb_to_ciexyy(rs__[i__] / ((double)(max)), gs__[i__] / ((double)(max)),	\
-					   bs__[i__] / ((double)(max)), &x__, &y__, &Y__);		\
-	      libclut_model_ciexyy_to_srgb(x__, y__, Y__ * r, &r__, &g__, &b__);			\
-	      rs__[i__] = (type)(r__ * (double)(max));							\
-	      gs__[i__] = (type)(g__ * (double)(max));							\
-	      bs__[i__] = (type)(b__ * (double)(max));							\
-	    }												\
-	}												\
-      else												\
-	{												\
-	  if ((r == 1.0) && (g == 1.0) && (b == 1.0))							\
-	    break;											\
-	  libclut_model_srgb_to_ciexyy(rs__[i__] / ((double)(max)), gs__[i__] / ((double)(max)),	\
-				       bs__[i__] / ((double)(max)), &x__, &y__, &Y__);			\
-	  if (r != 1.0)											\
-	    for (i__ = 0; i__ < rn__; i__)								\
-	      {												\
-		libclut_model_ciexyy_to_srgb(x__, y__, Y__ * r, &r__, &g__, &b__);			\
-		rs__[i__] = (type)(r__ * (double)(max));						\
-	      }												\
-	  if (g != 1.0)											\
-	    for (i__ = 0; i__ < gn__; i__)								\
-	      {												\
-		libclut_model_ciexyy_to_srgb(x__, y__, Y__ * g, &r__, &g__, &b__);			\
-		gs__[i__] = (type)(g__ * (double)(max));						\
-	      }												\
-	  if (b != 1.0)											\
-	    for (i__ = 0; i__ < bn__; i__)								\
-	      {												\
-		libclut_model_ciexyy_to_srgb(x__, y__, Y__ * b, &r__, &g__, &b__);			\
-		bs__[i__] = (type)(b__ * (double)(max));						\
-	      }												\
-	}												\
-    }													\
-  while (0)
+#define libclut_cie_brightness(ramp, max, type, r, g, b)				\
+  libclut_cie__(ramp, max, type, (r == g) && (g == b), r != 1.0, g != 1.0, b != 1.0,	\
+		Y__ * r, Y__ * g, Y__ * b)
 
 
 /**
@@ -422,56 +402,8 @@
  * @param  g     Whether to invert the green colour curve.
  * @param  b     Whether to invert the blue colour curve.
  */
-#define libclut_cie_invert(ramp, max, type, r, g, b)							\
-  do													\
-    {													\
-      size_t rn__ = (ramp)->red_size;									\
-      size_t gn__ = (ramp)->green_size;									\
-      size_t bn__ = (ramp)->blue_size;									\
-      size_t i__;											\
-      double x__, y__, Y__, r__, g__, b__;								\
-      type* rs__ = (ramp)->red;										\
-      type* gs__ = (ramp)->green;									\
-      type* bs__ = (ramp)->blue;									\
-      if (r && g && b && (rn__ == gn__) && (gn__ == bn__))						\
-	{												\
-	  for (i__ = 0; i__ < rn__; i__)								\
-	    {												\
-	      libclut_model_srgb_to_ciexyy(rs__[i__] / ((double)(max)), gs__[i__] / ((double)(max)),	\
-					   bs__[i__] / ((double)(max)), &x__, &y__, &Y__);		\
-	      libclut_model_ciexyy_to_srgb(x__, y__, 1.0 - Y__, &r__, &g__, &b__);			\
-	      rs__[i__] = (type)(r__ * (double)(max));							\
-	      gs__[i__] = (type)(g__ * (double)(max));							\
-	      bs__[i__] = (type)(b__ * (double)(max));							\
-	    }												\
-	}												\
-      else												\
-	{												\
-	  if (!r && !g && !b)										\
-	    break;											\
-	  libclut_model_srgb_to_ciexyy(rs__[i__] / ((double)(max)), gs__[i__] / ((double)(max)),	\
-				       bs__[i__] / ((double)(max)), &x__, &y__, &Y__);			\
-	  if (r)											\
-	    for (i__ = 0; i__ < rn__; i__)								\
-	      {												\
-		libclut_model_ciexyy_to_srgb(x__, y__, 1.0 - Y__, &r__, &g__, &b__);			\
-		rs__[i__] = (type)((r__ * (double)(max));						\
-	      }												\
-	  if (g)											\
-	    for (i__ = 0; i__ < gn__; i__)								\
-	      {												\
-		libclut_model_ciexyy_to_srgb(x__, y__, 1.0 - Y__, &r__, &g__, &b__);			\
-		gs__[i__] = (type)(g__ * (double)(max));						\
-	      }												\
-	  if (b)											\
-	    for (i__ = 0; i__ < bn__; i__)								\
-	      {												\
-		libclut_model_ciexyy_to_srgb(x__, y__, 1.0 - Y__, &r__, &g__, &b__);			\
-		bs__[i__] = (type)(b__ * (double)(max));						\
-	      }												\
-	}												\
-    }													\
-  while (0)
+#define libclut_cie_invert(ramp, max, type, r, g, b)					\
+  libclut_cie__(ramp, max, type, r && g && b, r, g, b, 1.0 - Y__, 1.0 - Y__, 1.0 - Y__)
 
 
 /**
@@ -516,6 +448,77 @@
 	  if ((ramp)->blue[i__] && ((ramp)->blue[i__] != (max)))					\
 	    (ramp)->blue[i__] = (type)(m__ * (0.5 - log(m__ / (ramp)->blue[i__] - 1.0) / b__));		\
     }													\
+  while (0)
+
+
+/**
+ * Changes the blackpoint and the whitepoint, using sRGB.
+ * 
+ * None of the parameter may have side-effects.
+ * 
+ * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ *               `red`, `green`, and `blue`, and the scalars
+ *               `red_size`, `green_size`, and `blue_size`. Ramp
+ *               structures from libgamma can be used.
+ * @param  max   The maximum value on each stop in the ramps.
+ * @param  type  The data type used for each stop in the ramps.
+ * @param  rmin  The red component value of the blackpoint.
+ * @param  rmax  The red component value of the whitepoint.
+ * @param  gmin  The green component value of the blackpoint.
+ * @param  gmax  The green component value of the whitepoint.
+ * @param  bmin  The blue component value of the blackpoint.
+ * @param  bmax  The blue component value of the whitepoint.
+ */
+#define libclut_rgb_limits(ramp, max, type, rmin, rmax, gmin, gmax, bmin, bmax)		\
+  do											\
+    {											\
+      double diff__;									\
+      if ((rmin != 0.0) || (rmax != 1.0))						\
+	{										\
+	  diff__ = (double)(rmax__) - (double)(rmin__);					\
+	  libclut__(ramp, red, type, LIBCLUT_VALUE * diff__ + (rmin__));		\
+	}										\
+      if ((gmin != 0.0) || (gmax != 1.0))						\
+	{										\
+	  diff__ = (double)(gmax__) - (double)(gmin__);					\
+	  libclut__(ramp, green, type, LIBCLUT_VALUE * diff__ + (gmin__));		\
+	}										\
+      if ((bmin != 0.0) || (bmax != 1.0))						\
+	{										\
+	  diff__ = (double)(bmax__) - (double)(bmin__);					\
+	  libclut__(ramp, blue, type, LIBCLUT_VALUE * diff__ + (bmin__));		\
+	}										\
+    }											\
+  while (0)
+
+
+/**
+ * Changes the blackpoint and the whitepoint, using CIE xyY.
+ * 
+ * None of the parameter may have side-effects.
+ * 
+ * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ *               `red`, `green`, and `blue`, and the scalars
+ *               `red_size`, `green_size`, and `blue_size`. Ramp
+ *               structures from libgamma can be used.
+ * @param  max   The maximum value on each stop in the ramps.
+ * @param  type  The data type used for each stop in the ramps.
+ * @param  rmin  The red component value of the blackpoint.
+ * @param  rmax  The red component value of the whitepoint.
+ * @param  gmin  The green component value of the blackpoint.
+ * @param  gmax  The green component value of the whitepoint.
+ * @param  bmin  The blue component value of the blackpoint.
+ * @param  bmax  The blue component value of the whitepoint.
+ */
+#define libclut_cie_limits(ramp, max, type, rmin, rmax, gmin, gmax, bmin, bmax)		\
+  do											\
+    {											\
+      double rd__ = (rmax) - (rmin), gd__ = (gmax) - (gmin), bd__ = (bmax) - (bmin);	\
+      libclut_cie__(ramp, max, type, (rmin == gmin) && (gmin == bmin) &&		\
+		    (rmax == gmax) && (gmax == bmax), (rmin != 0.0) || (rmax != 1.0),	\
+		    (gmin != 0.0) || (gmax != 1.0), (bmin != 0.0) || (bmax != 1.0),	\
+		    Y__ * rd__ + rmin, Y__ * gd__ + gmin, Y__ * bd__ + bmin);		\
+    }											\
   while (0)
 
 
