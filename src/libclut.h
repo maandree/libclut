@@ -61,6 +61,8 @@
  * 
  * None of the parameter may have side-effects.
  * 
+ * Requires linking with '-lclut'.
+ * 
  * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
@@ -110,6 +112,8 @@
  * 
  * None of the parameter may have side-effects.
  * 
+ * Requires linking with '-lclut'.
+ * 
  * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
@@ -129,6 +133,8 @@
  * Convert the curves from formatted in standard RGB to linear RGB.
  * 
  * None of the parameter may have side-effects.
+ * 
+ * Requires linking with '-lclut'.
  * 
  * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
@@ -159,6 +165,8 @@
  * 
  * None of the parameter may have side-effects.
  * 
+ * Requires linking with '-lclut'.
+ * 
  * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
@@ -187,6 +195,8 @@
  * Apply gamma correction on the colour curves.
  * 
  * None of the parameter may have side-effects.
+ * 
+ * Requires linking with '-lm'.
  * 
  * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
@@ -286,6 +296,8 @@
  * 
  * None of the parameter may have side-effects.
  * 
+ * Requires linking with '-lclut'.
+ * 
  * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
@@ -310,6 +322,8 @@
  * monitors.
  * 
  * None of the parameter may have side-effects.
+ * 
+ * Requires linking with '-lm'.
  * 
  * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
@@ -391,6 +405,8 @@
  * 
  * None of the parameter may have side-effects.
  * 
+ * Requires linking with '-lclut'.
+ * 
  * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
@@ -449,6 +465,8 @@
  * Manipulate the colour curves using a function on the CIE xyY colour space.
  * 
  * None of the parameter may have side-effects.
+ * 
+ * Requires linking with '-lclut'.
  * 
  * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
@@ -694,6 +712,8 @@
  * 
  * None of the parameter may have side-effects.
  * 
+ * Requires linking with '-lclut'.
+ * 
  * @param  clut    Pointer to the gamma ramps, must have the arrays
  *                 `red`, `green`, and `blue`, and the scalars
  *                 `red_size`, `green_size`, and `blue_size`. Ramp
@@ -755,6 +775,8 @@
  * Modify a ramp set in CIE xyY.
  * 
  * None of the parameter may have side-effects.
+ * 
+ * Requires linking with '-lclut'.
  * 
  * This is intended for internal use.
  * 
@@ -853,6 +875,8 @@
  * Modify a ramp stop in CIE xyY.
  * 
  * None of the parameter may have side-effects.
+ * 
+ * Requires linking with '-lclut'.
  * 
  * This is intended for internal use.
  * Assumes the existence of variables defined in `libclut_cie__`.

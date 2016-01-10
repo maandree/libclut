@@ -56,6 +56,8 @@ In this context, contrast is a measure of difference between
 the whitepoint and blackpoint, if the difference is 0 than
 they are both grey.
 
+Requires linking with @option{-lclut}.
+
 Parameters:
 @table @code
 @item r
@@ -90,6 +92,8 @@ Apply brightness correction on the colour curves using CIE xyY.
 In this context, brightness is a measure of the whiteness
 of the whitepoint.
 
+Requires linking with @option{-lclut}.
+
 Parameters:
 @table @code
 @item r
@@ -103,6 +107,8 @@ The brightness parameter for the blue curve.
 
 @item libclut_linearise(clut, max, type, r, g, b)
 Convert the curves from formatted in standard RGB to linear RGB.
+
+Requires linking with @option{-lclut}.
 
 Parameters:
 @table @code
@@ -118,6 +124,8 @@ Whether to convert the blue colour curve.
 @item libclut_standardise(clut, max, type, r, g, b)
 Convert the curves from formatted in linear RGB to standard RGB.
 
+Requires linking with @option{-lclut}.
+
 Parameters:
 @table @code
 @item r
@@ -131,6 +139,8 @@ Whether to convert the blue colour curve.
 
 @item libclut_gamma(clut, max, type, r, g, b)
 Apply gamma correction on the colour curves.
+
+Requires linking with @option{-lm}.
 
 Parameters:
 @table @code
@@ -176,6 +186,8 @@ Whether to invert the blue colour curve.
 Invert the colour curves (negative image with gamma
 invertion), using CIE xyY.
 
+Requires linking with @option{-lclut}.
+
 Parameters:
 @table @code
 @item r
@@ -195,6 +207,8 @@ You would probably like to use @code{rgb_limits}
 before this to adjust the blackpoint as that is
 the only way to adjust the blackpoint on many LCD
 monitors.
+
+Requires linking with @option{-lm}.
 
 Parameters:
 @table @code
@@ -238,6 +252,8 @@ That is, the contrast on the blue channel.
 
 @item libclut_cie_limits(clut, max, type, rmin, rmax, gmin, gmax, bmin, bmax)
 Changes the blackpoint and the whitepoint, using CIE xyY.
+
+Requires linking with @option{-lclut}.
 
 Parameters:
 @table @code
@@ -298,6 +314,8 @@ should be @code{double (*)(double)}.
 @item libclut_cie_manipulate(clut, max, type, r, g, b)
 Manipulate the colour curves using a function on the
 CIE xyY colour space.
+
+Requires linking with @option{-lclut}.
 
 Parameters:
 @table @code
@@ -413,6 +431,8 @@ Whether to apply the filter for the blue curve.
 @item libclut_cie_apply(clut, max, type, filter, fmax, ftype, r, g, b)
 Applies a filter or calibration, using CIE xyY.
 
+Requires linking with @option{-lclut}.
+
 Parameters:
 @table @code
 @item filter
@@ -429,10 +449,5 @@ Whether to apply the filter for the green curve.
 @item b
 Whether to apply the filter for the blue curve.
 @end table
-
-
-
 @end table
-
-@c TODO Which macros require -lclut?
 
