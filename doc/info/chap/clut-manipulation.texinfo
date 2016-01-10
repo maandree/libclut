@@ -17,8 +17,8 @@ must also have the scalar members @code{red_size},
 of the type @code{size_t}; they shall specify the
 number of stops (elements) in the arrays @code{.red},
 @code{.green}, and @code{.blue}, respectively, which
-shall be the gamma ramp for the ``red'', green, and
-blue channels respectively.
+shall be the gamma ramp for the ``red''@footnote{Acutally
+orange.}, green, and blue channels respectively.
 @item max
 The maximum value on each stop in the ramps.
 @item type
@@ -26,8 +26,9 @@ The data type used for each stop in the ramps.
 @end table
 @noindent
 Additionally, these macros do not allow that arguments
-have side-effects. None, if the macros have a return
-value.
+have side-effects.@footnote{Some macros currently allow
+side-effects on some parameters, but this may change
+in the future.} None, if the macros have a return value.
 
 @table @code
 @item libclut_rgb_contrast(clut, max, type, r, g, b)
@@ -259,6 +260,176 @@ That is, the brightness on the blue channel.
 The blue component value of the whitepoint.
 That is, the contrast on the blue channel.
 @end table
+
+
+@item libclut_manipulate(clut, max, type, r, g, b)
+Manipulate the colour curves using a function on the
+sRGB colour space.
+
+Parameters:
+@table @code
+@item r
+Function to manipulate the red colour curve. It
+shall map from old stop values to new stop values.
+This should either be @code{NULL} for no manipulation,
+or a function that maps from @code{double} to
+@code{double}. 0 % and 100 % is encoded as 0 and 1,
+respectively, in both input and ouput. Its signature
+should be @code{double (*)(double)}.
+@item g
+Function to manipulate the green colour curve. It
+shall map from old stop values to new stop values.
+This should either be @code{NULL} for no manipulation,
+or a function that maps from @code{double} to
+@code{double}. 0 % and 100 % is encoded as 0 and 1,
+respectively, in both input and ouput. Its signature
+should be @code{double (*)(double)}.
+@item b
+Function to manipulate the blue colour curve. It
+shall map from old stop values to new stop values.
+This should either be @code{NULL} for no manipulation,
+or a function that maps from @code{double} to
+@code{double}. 0 % and 100 % is encoded as 0 and 1,
+respectively, in both input and ouput. Its signature
+should be @code{double (*)(double)}.
+@end table
+
+
+@item libclut_cie_manipulate(clut, max, type, r, g, b)
+Manipulate the colour curves using a function on the
+CIE xyY colour space.
+
+Parameters:
+@table @code
+@item r
+Function to manipulate the red colour curve. It
+shall map from old stop values to new stop values.
+This should either be @code{NULL} for no manipulation,
+or a function that maps from @code{double} to
+@code{double}. 0 % and 100 % is encoded as 0 and 1,
+respectively, in both input and ouput. Its signature
+should be @code{double (*)(double)}.
+@item g
+Function to manipulate the green colour curve. It
+shall map from old stop values to new stop values.
+This should either be @code{NULL} for no manipulation,
+or a function that maps from @code{double} to
+@code{double}. 0 % and 100 % is encoded as 0 and 1,
+respectively, in both input and ouput. Its signature
+should be @code{double (*)(double)}.
+@item b
+Function to manipulate the blue colour curve. It
+shall map from old stop values to new stop values.
+This should either be @code{NULL} for no manipulation,
+or a function that maps from @code{double} to
+@code{double}. 0 % and 100 % is encoded as 0 and 1,
+respectively, in both input and ouput. Its signature
+should be @code{double (*)(double)}.
+@end table
+
+
+@item libclut_start_over(clut, max, type, r, g, b)
+Resets colour curvers to linear mappings.
+(Identity mapping if imaginged to map from [0, 1] to [0, 1].)
+
+Parameters:
+@table @code
+@item r
+Whether to reset the red colour curve.
+@item g
+Whether to reset the green colour curve.
+@item b
+Whether to reset the blue colour curve.
+@end table
+
+
+@item libclut_clip(clut, max, type, r, g, b)
+Clip colour curves to only map to values between the
+minimum and maximum. This should be done, before apply
+the curves, and before applying changes with limited
+domain.
+
+Values below 0 are set to 0, and values above @code{max}
+are set to @code{max}.
+
+Parameters:
+@table @code
+@item r
+Whether to clip the red colour curve.
+@item g
+Whether to clip the green colour curve.
+@item b
+Whether to clip the blue colour curve.
+@end table
+
+
+@item libclut_lower_resolution(clut, max, type, rx, ry, gx, gy, bx, by)
+Emulates low colour resolution.
+
+Parameters:
+@table @code
+@item rx
+The desired emulated red encoding resolution,
+0 for unchanged.
+@item ry
+The desired emulated red output resolution,
+0 for unchanged.
+@item gx
+The desired emulated green encoding resolution,
+0 for unchanged.
+@item gy
+The desired emulated green output resolution,
+0 for unchanged.
+@item bx
+The desired emulated blue encoding resolution,
+0 for unchanged.
+@item by
+The desired emulated blue output resolution,
+0 for unchanged.
+@end table
+
+
+@item libclut_apply(clut, max, type, filter, fmax, ftype, r, g, b)
+Applies a filter or calibration.
+
+Parameters:
+@table @code
+@item filter
+Same as @code{clut}, but for the filter to apply.
+@item fmax
+Same as @code{max}, but for the filter to apply.
+@item ftype
+Same as @code{type}, but for the filter to apply.
+(Not actually used).
+@item r
+Whether to apply the filter for the red curve.
+@item g
+Whether to apply the filter for the green curve.
+@item b
+Whether to apply the filter for the blue curve.
+@end table
+
+
+@item libclut_cie_apply(clut, max, type, filter, fmax, ftype, r, g, b)
+Applies a filter or calibration, using CIE xyY.
+
+Parameters:
+@table @code
+@item filter
+Same as @code{clut}, but for the filter to apply.
+@item fmax
+Same as @code{max}, but for the filter to apply.
+@item ftype
+Same as @code{type}, but for the filter to apply.
+(Not actually used).
+@item r
+Whether to apply the filter for the red curve.
+@item g
+Whether to apply the filter for the green curve.
+@item b
+Whether to apply the filter for the blue curve.
+@end table
+
 
 
 @end table
