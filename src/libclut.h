@@ -32,7 +32,7 @@
  * 
  * None of the parameter may have side-effects.
  * 
- * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
  *               structures from libgamma can be used.
@@ -42,12 +42,12 @@
  * @param  g     The contrast parameter for the green curve.
  * @param  b     The contrast parameter for the blue curve.
  */
-#define libclut_rgb_contrast(ramp, max, type, r, g, b)							\
+#define libclut_rgb_contrast(clut, max, type, r, g, b)							\
   do													\
     {													\
-      if ((r) != 1.0)  libclut__(ramp, red,   type, LIBCLUT_VALUE - (max) * 0.5 * (r) + (max) * 0.5);	\
-      if ((g) != 1.0)  libclut__(ramp, green, type, LIBCLUT_VALUE - (max) * 0.5 * (g) + (max) * 0.5);	\
-      if ((b) != 1.0)  libclut__(ramp, blue,  type, LIBCLUT_VALUE - (max) * 0.5 * (b) + (max) * 0.5);	\
+      if ((r) != 1.0)  libclut__(clut, red,   type, LIBCLUT_VALUE - (max) * 0.5 * (r) + (max) * 0.5);	\
+      if ((g) != 1.0)  libclut__(clut, green, type, LIBCLUT_VALUE - (max) * 0.5 * (g) + (max) * 0.5);	\
+      if ((b) != 1.0)  libclut__(clut, blue,  type, LIBCLUT_VALUE - (max) * 0.5 * (b) + (max) * 0.5);	\
     }													\
   while (0)
 
@@ -61,7 +61,7 @@
  * 
  * None of the parameter may have side-effects.
  * 
- * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
  *               structures from libgamma can be used.
@@ -71,8 +71,8 @@
  * @param  g     The contrast parameter for the green curve.
  * @param  b     The contrast parameter for the blue curve.
  */
-#define libclut_cie_contrast(ramp, max, type, r, g, b)						\
-  libclut_cie__(ramp, max, type, (r == g) && (g == b), (r) != 1.0, (g) != 1.0, (b) != 1.0,	\
+#define libclut_cie_contrast(clut, max, type, r, g, b)						\
+  libclut_cie__(clut, max, type, (r == g) && (g == b), (r) != 1.0, (g) != 1.0, (b) != 1.0,	\
 		(Y__ - 0.5) * (r) + 0.5, (Y__ - 0.5) * (g) + 0.5, (Y__ - 0.5) * (b) + 0.5)
 
 
@@ -83,7 +83,7 @@
  * 
  * None of the parameter may have side-effects.
  * 
- * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
  *               structures from libgamma can be used.
@@ -93,12 +93,12 @@
  * @param  g     The brightness parameter for the green curve.
  * @param  b     The brightness parameter for the blue curve.
  */
-#define libclut_rgb_brightness(ramp, max, type, r, g, b)			\
+#define libclut_rgb_brightness(clut, max, type, r, g, b)			\
   do										\
     {										\
-      if ((r) != 1.0)  libclut__(ramp, red,   type, LIBCLUT_VALUE * (r));	\
-      if ((g) != 1.0)  libclut__(ramp, green, type, LIBCLUT_VALUE * (g));	\
-      if ((b) != 1.0)  libclut__(ramp, blue,  type, LIBCLUT_VALUE * (b));	\
+      if ((r) != 1.0)  libclut__(clut, red,   type, LIBCLUT_VALUE * (r));	\
+      if ((g) != 1.0)  libclut__(clut, green, type, LIBCLUT_VALUE * (g));	\
+      if ((b) != 1.0)  libclut__(clut, blue,  type, LIBCLUT_VALUE * (b));	\
     }										\
   while (0)
 
@@ -110,7 +110,7 @@
  * 
  * None of the parameter may have side-effects.
  * 
- * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
  *               structures from libgamma can be used.
@@ -120,8 +120,8 @@
  * @param  g     The brightness parameter for the green curve.
  * @param  b     The brightness parameter for the blue curve.
  */
-#define libclut_cie_brightness(ramp, max, type, r, g, b)				\
-  libclut_cie__(ramp, max, type, ((r) == (g)) && ((g) == (b)),				\
+#define libclut_cie_brightness(clut, max, type, r, g, b)				\
+  libclut_cie__(clut, max, type, ((r) == (g)) && ((g) == (b)),				\
 		(r) != 1.0, (g) != 1.0, (b) != 1.0, Y__ * (r), Y__ * (g), Y__ * (b))
 
 
@@ -130,7 +130,7 @@
  * 
  * None of the parameter may have side-effects.
  * 
- * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
  *               structures from libgamma can be used.
@@ -140,16 +140,16 @@
  * @param  g     Whether to convert the green colour curve.
  * @param  b     Whether to convert the blue colour curve.
  */
-#define libclut_linearise(ramp, max, type, r, g, b)							\
+#define libclut_linearise(clut, max, type, r, g, b)							\
   do													\
     {													\
       double m__ = (double)(max);									\
       if (r)												\
-	libclut__(ramp, red,   type, m__ * libclut_model_standard_to_linear1(LIBCLUT_VALUE / m__));	\
+	libclut__(clut, red,   type, m__ * libclut_model_standard_to_linear1(LIBCLUT_VALUE / m__));	\
       if (g)												\
-	libclut__(ramp, green, type, m__ * libclut_model_standard_to_linear1(LIBCLUT_VALUE / m__));	\
+	libclut__(clut, green, type, m__ * libclut_model_standard_to_linear1(LIBCLUT_VALUE / m__));	\
       if (b)												\
-	libclut__(ramp, blue,  type, m__ * libclut_model_standard_to_linear1(LIBCLUT_VALUE / m__));	\
+	libclut__(clut, blue,  type, m__ * libclut_model_standard_to_linear1(LIBCLUT_VALUE / m__));	\
     }													\
   while (0)
 
@@ -159,7 +159,7 @@
  * 
  * None of the parameter may have side-effects.
  * 
- * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
  *               structures from libgamma can be used.
@@ -169,16 +169,16 @@
  * @param  g     Whether to convert the green colour curve.
  * @param  b     Whether to convert the blue colour curve.
  */
-#define libclut_standardise(ramp, max, type, r, g, b)							\
+#define libclut_standardise(clut, max, type, r, g, b)							\
   do													\
     {													\
       double m__ = (double)(max);									\
       if (r)												\
-	libclut__(ramp, red,   type, m__ * libclut_model_linear_to_standard1(LIBCLUT_VALUE / m__));	\
+	libclut__(clut, red,   type, m__ * libclut_model_linear_to_standard1(LIBCLUT_VALUE / m__));	\
       if (g)												\
-	libclut__(ramp, green, type, m__ * libclut_model_linear_to_standard1(LIBCLUT_VALUE / m__));	\
+	libclut__(clut, green, type, m__ * libclut_model_linear_to_standard1(LIBCLUT_VALUE / m__));	\
       if (b)												\
-	libclut__(ramp, blue,  type, m__ * libclut_model_linear_to_standard1(LIBCLUT_VALUE / m__));	\
+	libclut__(clut, blue,  type, m__ * libclut_model_linear_to_standard1(LIBCLUT_VALUE / m__));	\
     }													\
   while (0)
 
@@ -188,7 +188,7 @@
  * 
  * None of the parameter may have side-effects.
  * 
- * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
  *               structures from libgamma can be used.
@@ -198,13 +198,13 @@
  * @param  g     The gamma parameter the green colour curve.
  * @param  b     The gamma parameter the blue colour curve.
  */
-#define libclut_gamma(ramp, max, type, r, g, b)							\
+#define libclut_gamma(clut, max, type, r, g, b)							\
   do												\
     {												\
       double m__ = (double)(max);								\
-      if (r != 1.0)  libclut__(ramp, red,   type, m__ * pow(LIBCLUT_VALUE / m__, 1.0 / (r)));	\
-      if (g != 1.0)  libclut__(ramp, green, type, m__ * pow(LIBCLUT_VALUE / m__, 1.0 / (g)));	\
-      if (b != 1.0)  libclut__(ramp, blue,  type, m__ * pow(LIBCLUT_VALUE / m__, 1.0 / (b)));	\
+      if (r != 1.0)  libclut__(clut, red,   type, m__ * pow(LIBCLUT_VALUE / m__, 1.0 / (r)));	\
+      if (g != 1.0)  libclut__(clut, green, type, m__ * pow(LIBCLUT_VALUE / m__, 1.0 / (g)));	\
+      if (b != 1.0)  libclut__(clut, blue,  type, m__ * pow(LIBCLUT_VALUE / m__, 1.0 / (b)));	\
     }												\
   while (0)
 
@@ -214,7 +214,7 @@
  * 
  * None of the parameter may have side-effects.
  * 
- * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
  *               structures from libgamma can be used.
@@ -226,31 +226,31 @@
  * @param  g     Whether to invert the green colour curve.
  * @param  b     Whether to invert the blue colour curve.
  */
-#define libclut_negative(ramp, max, type, r, g, b)			\
+#define libclut_negative(clut, max, type, r, g, b)			\
   do									\
     {									\
       size_t i__, n__;							\
       type t__;								\
       if (r)								\
-	for (i__ = 0, n__ = (ramp)->red_size; i__ < (n__ >> 1); i__)	\
+	for (i__ = 0, n__ = (clut)->red_size; i__ < (n__ >> 1); i__)	\
 	  {								\
-	    t__ = (ramp)->red[i__];					\
-	    (ramp)->red[i__] = (ramp)->red[n__ - i__ - 1];		\
-	    (ramp)->red[n__ - i__ - 1] = t__;				\
+	    t__ = (clut)->red[i__];					\
+	    (clut)->red[i__] = (clut)->red[n__ - i__ - 1];		\
+	    (clut)->red[n__ - i__ - 1] = t__;				\
 	  }								\
       if (g)								\
-	for (i__ = 0, n__ = (ramp)->green_size; i__ < (n__ >> 1); i__)	\
+	for (i__ = 0, n__ = (clut)->green_size; i__ < (n__ >> 1); i__)	\
 	  {								\
-	    t__ = (ramp)->green[i__];					\
-	    (ramp)->green[i__] = (ramp)->green[n__ - i__ - 1];		\
-	    (ramp)->green[n__ - i__ - 1] = t__;				\
+	    t__ = (clut)->green[i__];					\
+	    (clut)->green[i__] = (clut)->green[n__ - i__ - 1];		\
+	    (clut)->green[n__ - i__ - 1] = t__;				\
 	  }								\
       if (b)								\
-	for (i__ = 0, n__ = (ramp)->blue_size; i__ < (n__ >> 1); i__)	\
+	for (i__ = 0, n__ = (clut)->blue_size; i__ < (n__ >> 1); i__)	\
 	  {								\
-	    t__ = (ramp)->blue[i__];					\
-	    (ramp)->blue[i__] = (ramp)->blue[n__ - i__ - 1];		\
-	    (ramp)->blue[n__ - i__ - 1] = t__;				\
+	    t__ = (clut)->blue[i__];					\
+	    (clut)->blue[i__] = (clut)->blue[n__ - i__ - 1];		\
+	    (clut)->blue[n__ - i__ - 1] = t__;				\
 	  }								\
     }									\
   while (0)
@@ -261,7 +261,7 @@
  * 
  * None of the parameter may have side-effects.
  * 
- * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
  *               structures from libgamma can be used.
@@ -271,12 +271,12 @@
  * @param  g     Whether to invert the green colour curve.
  * @param  b     Whether to invert the blue colour curve.
  */
-#define libclut_rgb_invert(ramp, max, type, r, g, b)			\
+#define libclut_rgb_invert(clut, max, type, r, g, b)			\
   do									\
     {									\
-      if (r)  libclut__(ramp, red,   type, (max) - LIBCLUT_VALUE);	\
-      if (g)  libclut__(ramp, green, type, (max) - LIBCLUT_VALUE);	\
-      if (b)  libclut__(ramp, blue,  type, (max) - LIBCLUT_VALUE);	\
+      if (r)  libclut__(clut, red,   type, (max) - LIBCLUT_VALUE);	\
+      if (g)  libclut__(clut, green, type, (max) - LIBCLUT_VALUE);	\
+      if (b)  libclut__(clut, blue,  type, (max) - LIBCLUT_VALUE);	\
     }									\
   while (0)
 
@@ -286,7 +286,7 @@
  * 
  * None of the parameter may have side-effects.
  * 
- * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
  *               structures from libgamma can be used.
@@ -296,8 +296,8 @@
  * @param  g     Whether to invert the green colour curve.
  * @param  b     Whether to invert the blue colour curve.
  */
-#define libclut_cie_invert(ramp, max, type, r, g, b)						\
-  libclut_cie__(ramp, max, type, (r) && (g) && (b), r, g, b, 1.0 - Y__, 1.0 - Y__, 1.0 - Y__)
+#define libclut_cie_invert(clut, max, type, r, g, b)						\
+  libclut_cie__(clut, max, type, (r) && (g) && (b), r, g, b, 1.0 - Y__, 1.0 - Y__, 1.0 - Y__)
 
 
 /**
@@ -311,7 +311,7 @@
  * 
  * None of the parameter may have side-effects.
  * 
- * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
  *               structures from libgamma can be used.
@@ -321,7 +321,7 @@
  * @param  gp    Pointer to the sigmoid parameter for the green curve. `NULL` for no adjustment.
  * @param  bp    Pointer to the sigmoid parameter for the blue curve. `NULL` for no adjustment.
  */
-#define libclut_sigmoid(ramp, max, type, rp, gp, bp)							\
+#define libclut_sigmoid(clut, max, type, rp, gp, bp)							\
   do													\
     {													\
       double r__ = (rp) ? *(rp) : 0.0;									\
@@ -330,17 +330,17 @@
       double m__ = (double)(max);									\
       size_t i__;											\
       if (rp)												\
-	for (i__ = 0; i++ < (ramp)->red_size; i__++)							\
-	  if ((ramp)->red[i__] && ((ramp)->red[i__] != (max)))						\
-	    (ramp)->red[i__] = (type)(m__ * (0.5 - log(m__ / (ramp)->red[i__] - 1.0) / r__));		\
+	for (i__ = 0; i++ < (clut)->red_size; i__++)							\
+	  if ((clut)->red[i__] && ((clut)->red[i__] != (max)))						\
+	    (clut)->red[i__] = (type)(m__ * (0.5 - log(m__ / (clut)->red[i__] - 1.0) / r__));		\
       if (gp)												\
-	for (i__ = 0; i++ < (ramp)->green_size; i__++)							\
-	  if ((ramp)->green[i__] && ((ramp)->green[i__] != (max)))					\
-	    (ramp)->green[i__] = (type)(m__ * (0.5 - log(m__ / (ramp)->green[i__] - 1.0) / g__));	\
+	for (i__ = 0; i++ < (clut)->green_size; i__++)							\
+	  if ((clut)->green[i__] && ((clut)->green[i__] != (max)))					\
+	    (clut)->green[i__] = (type)(m__ * (0.5 - log(m__ / (clut)->green[i__] - 1.0) / g__));	\
       if (bp)												\
-	for (i__ = 0; i++ < (ramp)->blue_size; i__++)							\
-	  if ((ramp)->blue[i__] && ((ramp)->blue[i__] != (max)))					\
-	    (ramp)->blue[i__] = (type)(m__ * (0.5 - log(m__ / (ramp)->blue[i__] - 1.0) / b__));		\
+	for (i__ = 0; i++ < (clut)->blue_size; i__++)							\
+	  if ((clut)->blue[i__] && ((clut)->blue[i__] != (max)))					\
+	    (clut)->blue[i__] = (type)(m__ * (0.5 - log(m__ / (clut)->blue[i__] - 1.0) / b__));		\
     }													\
   while (0)
 
@@ -350,7 +350,7 @@
  * 
  * None of the parameter may have side-effects.
  * 
- * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
  *               structures from libgamma can be used.
@@ -363,24 +363,24 @@
  * @param  bmin  The blue component value of the blackpoint.
  * @param  bmax  The blue component value of the whitepoint.
  */
-#define libclut_rgb_limits(ramp, max, type, rmin, rmax, gmin, gmax, bmin, bmax)		\
+#define libclut_rgb_limits(clut, max, type, rmin, rmax, gmin, gmax, bmin, bmax)		\
   do											\
     {											\
       double diff__;									\
       if ((rmin != 0.0) || (rmax != 1.0))						\
 	{										\
 	  diff__ = (double)(rmax__) - (double)(rmin__);					\
-	  libclut__(ramp, red, type, LIBCLUT_VALUE * diff__ + (rmin__));		\
+	  libclut__(clut, red, type, LIBCLUT_VALUE * diff__ + (rmin__));		\
 	}										\
       if ((gmin != 0.0) || (gmax != 1.0))						\
 	{										\
 	  diff__ = (double)(gmax__) - (double)(gmin__);					\
-	  libclut__(ramp, green, type, LIBCLUT_VALUE * diff__ + (gmin__));		\
+	  libclut__(clut, green, type, LIBCLUT_VALUE * diff__ + (gmin__));		\
 	}										\
       if ((bmin != 0.0) || (bmax != 1.0))						\
 	{										\
 	  diff__ = (double)(bmax__) - (double)(bmin__);					\
-	  libclut__(ramp, blue, type, LIBCLUT_VALUE * diff__ + (bmin__));		\
+	  libclut__(clut, blue, type, LIBCLUT_VALUE * diff__ + (bmin__));		\
 	}										\
     }											\
   while (0)
@@ -391,7 +391,7 @@
  * 
  * None of the parameter may have side-effects.
  * 
- * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
  *               structures from libgamma can be used.
@@ -404,11 +404,11 @@
  * @param  bmin  The blue component value of the blackpoint.
  * @param  bmax  The blue component value of the whitepoint.
  */
-#define libclut_cie_limits(ramp, max, type, rmin, rmax, gmin, gmax, bmin, bmax)				\
+#define libclut_cie_limits(clut, max, type, rmin, rmax, gmin, gmax, bmin, bmax)				\
   do													\
     {													\
       double rd__ = (rmax) - (rmin), gd__ = (gmax) - (gmin), bd__ = (bmax) - (bmin);			\
-      libclut_cie__(ramp, max, type, ((rmin) == (gmin)) && ((gmin) == (bmin)) &&			\
+      libclut_cie__(clut, max, type, ((rmin) == (gmin)) && ((gmin) == (bmin)) &&			\
 		    ((rmax) == (gmax)) && ((gmax) == (bmax)), ((rmin) != 0.0) || ((rmax) != 1.0),	\
 		    ((gmin) != 0.0) || ((gmax) != 1.0), ((bmin) != 0.0) || ((bmax) != 1.0),		\
 		    Y__ * rd__ + (rmin), Y__ * gd__ + (gmin), Y__ * bd__ + (bmin));			\
@@ -421,7 +421,7 @@
  * 
  * None of the parameter may have side-effects.
  * 
- * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
  *               structures from libgamma can be used.
@@ -434,13 +434,13 @@
  * @param  b     Function to manipulate the blue colour curve, should either
  *               be `NULL` or map a [0, 1] `double` to a [0, 1] `double`.
  */
-#define libclut_manipulate(ramp, max, type, r, g, b)				\
+#define libclut_manipulate(clut, max, type, r, g, b)				\
   do										\
     {										\
       double m__ = (double)(max);						\
-      if (r)  libclut__(ramp, red,   type, m__ * (r)(LIBCLUT_VALUE / m__));	\
-      if (g)  libclut__(ramp, green, type, m__ * (g)(LIBCLUT_VALUE / m__));	\
-      if (b)  libclut__(ramp, blue,  type, m__ * (b)(LIBCLUT_VALUE / m__));	\
+      if (r)  libclut__(clut, red,   type, m__ * (r)(LIBCLUT_VALUE / m__));	\
+      if (g)  libclut__(clut, green, type, m__ * (g)(LIBCLUT_VALUE / m__));	\
+      if (b)  libclut__(clut, blue,  type, m__ * (b)(LIBCLUT_VALUE / m__));	\
     }										\
   while (0)
 
@@ -450,7 +450,7 @@
  * 
  * None of the parameter may have side-effects.
  * 
- * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
  *               structures from libgamma can be used.
@@ -463,8 +463,8 @@
  * @param  b     Function to manipulate the blue colour curve, should either
  *               be `NULL` or map a [0, 1] `double` to a [0, 1] `double`.
  */
-#define libclut_cie_manipulate(ramp, max, type, r, g, b)					\
-  libclut_cie__(ramp, max, type, (r) && (g) && (b), r, g, b, (r)(Y__), (g)(Y__), (b)(Y__))
+#define libclut_cie_manipulate(clut, max, type, r, g, b)					\
+  libclut_cie__(clut, max, type, (r) && (g) && (b), r, g, b, (r)(Y__), (g)(Y__), (b)(Y__))
 
 
 /**
@@ -473,7 +473,7 @@
  * 
  * None of the parameter may have side-effects.
  * 
- * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
  *               structures from libgamma can be used.
@@ -483,28 +483,28 @@
  * @param  g     Whether to reset the green colour curve.
  * @param  b     Whether to reset the blue colour curve.
  */
-#define libclut_start_over(ramp, max, type, r, g, b)		\
+#define libclut_start_over(clut, max, type, r, g, b)		\
   do								\
     {								\
       size_t i__;						\
       double m__;						\
       if (r)							\
 	{							\
-	  m__ = (double)((ramp)->red_size - 1);			\
-	  for (i__ = 0; i__ < (ramp)->red_size; i__)		\
-	    (ramp)->red[i__] = (type)((i__ / m__) * (max));	\
+	  m__ = (double)((clut)->red_size - 1);			\
+	  for (i__ = 0; i__ < (clut)->red_size; i__)		\
+	    (clut)->red[i__] = (type)((i__ / m__) * (max));	\
 	}							\
       if (g)							\
 	{							\
-	  m__ = (double)((ramp)->green_size - 1);		\
-	  for (i__ = 0; i__ < (ramp)->green_size; i__)		\
-	    (ramp)->green[i__] = (type)((i__ / m__) * (max));	\
+	  m__ = (double)((clut)->green_size - 1);		\
+	  for (i__ = 0; i__ < (clut)->green_size; i__)		\
+	    (clut)->green[i__] = (type)((i__ / m__) * (max));	\
 	}							\
       if (b)							\
 	{							\
-	  m__ = (double)((ramp)->blue_size - 1);		\
-	  for (i__ = 0; i__ < (ramp)->blue_size; i__)		\
-	    (ramp)->blue[i__] = (type)((i__ / m__) * (max));	\
+	  m__ = (double)((clut)->blue_size - 1);		\
+	  for (i__ = 0; i__ < (clut)->blue_size; i__)		\
+	    (clut)->blue[i__] = (type)((i__ / m__) * (max));	\
 	}							\
     }								\
   while (0)
@@ -519,7 +519,7 @@
  * 
  * None of the parameter may have side-effects.
  * 
- * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
  *               structures from libgamma can be used.
@@ -529,12 +529,12 @@
  * @param  g     Whether to clip the green colour curve.
  * @param  b     Whether to clip the blue colour curve.
  */
-#define libclut_clip(ramp, max, type, r, g, b)						\
+#define libclut_clip(clut, max, type, r, g, b)						\
   do											\
     {											\
-      if (r)  libclut__(ramp, red,   type, libclut_clip__(0, LIBCLUT_VALUE, max));	\
-      if (g)  libclut__(ramp, green, type, libclut_clip__(0, LIBCLUT_VALUE, max));	\
-      if (b)  libclut__(ramp, blue,  type, libclut_clip__(0, LIBCLUT_VALUE, max));	\
+      if (r)  libclut__(clut, red,   type, libclut_clip__(0, LIBCLUT_VALUE, max));	\
+      if (g)  libclut__(clut, green, type, libclut_clip__(0, LIBCLUT_VALUE, max));	\
+      if (b)  libclut__(clut, blue,  type, libclut_clip__(0, LIBCLUT_VALUE, max));	\
     }											\
   while (0)
 
@@ -559,7 +559,7 @@
  * 
  * None of the parameter may have side-effects.
  * 
- * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
  *               structures from libgamma can be used.
@@ -572,12 +572,12 @@
  * @param  x     The desired emulated blue encoding resolution, 0 for unchanged.
  * @param  y     The desired emulated blue output resolution, 0 for unchanged.
  */
-#define libclut_lower_resolution(ramp, max, type, rx, ry, gx, gy, bx, by)	\
+#define libclut_lower_resolution(clut, max, type, rx, ry, gx, gy, bx, by)	\
   do										\
     {										\
-      libclut_lower_resolution__(ramp, red,   max, type, rx, ry);		\
-      libclut_lower_resolution__(ramp, green, max, type, gx, gy);		\
-      libclut_lower_resolution__(ramp, blue,  max, type, bx, by);		\
+      libclut_lower_resolution__(clut, red,   max, type, rx, ry);		\
+      libclut_lower_resolution__(clut, green, max, type, gx, gy);		\
+      libclut_lower_resolution__(clut, blue,  max, type, bx, by);		\
     }										\
   while (0)
 
@@ -589,7 +589,7 @@
  * 
  * Intended for internal use.
  * 
- * @param  ramp     Pointer to the gamma ramps, must have the arrays
+ * @param  clut     Pointer to the gamma ramps, must have the arrays
  *                  `red`, `green`, and `blue`, and the scalars
  *                  `red_size`, `green_size`, and `blue_size`. Ramp
  *                  structures from libgamma can be used.
@@ -599,12 +599,12 @@
  * @param  x        The desired emulated encoding resolution, 0 for unchanged.
  * @param  y        The desired emulated output resolution, 0 for unchanged.
  */
-#define libclut_lower_resolution__(ramp, channel, max, type, x, y)			\
+#define libclut_lower_resolution__(clut, channel, max, type, x, y)			\
   do											\
     {											\
       if ((x) || (y))									\
 	{										\
-	  size_t x__, y__, i__, n__ = (ramp)->channel##_size;				\
+	  size_t x__, y__, i__, n__ = (clut)->channel##_size;				\
 	  double xm__ = (double)((x) - 1), ym__ = (double)((y) - 1);			\
 	  double m__ = (double)(max);							\
 	  type c__[n__]; /* Do not use alloca! */					\
@@ -616,14 +616,14 @@
 		  x__ = (size_t)((double)x__ * i__ / xm__);				\
 		}									\
 	      if (!(y))									\
-		c__[i__] = (ramp)->channel[x__];					\
+		c__[i__] = (clut)->channel[x__];					\
 	      else									\
 		{									\
-		  y__ = (size_t)((double)((ramp)->channel[x__]) / (max) * ym__ + 0.5);	\
+		  y__ = (size_t)((double)((clut)->channel[x__]) / (max) * ym__ + 0.5);	\
 		  c__[i__] = (type)((double)y__ / ym__ * m__);				\
 		}									\
 	    }										\
-	  memcpy((ramp)->channel, c__, n__ * sizeof(type));				\
+	  memcpy((clut)->channel, c__, n__ * sizeof(type));				\
 	}										\
     }											\
   while (0)
@@ -634,26 +634,26 @@
  * 
  * None of the parameter may have side-effects.
  * 
- * @param  ramp    Pointer to the gamma ramps, must have the arrays
+ * @param  clut    Pointer to the gamma ramps, must have the arrays
  *                 `red`, `green`, and `blue`, and the scalars
  *                 `red_size`, `green_size`, and `blue_size`. Ramp
  *                 structures from libgamma can be used.
  * @param  max     The maximum value on each stop in the ramps.
  * @param  type    The data type used for each stop in the ramps.
- * @param  filter  Same as `ramp`, but for the filter to apply.
+ * @param  filter  Same as `clut`, but for the filter to apply.
  * @param  fmax    Same as `max`, but for the filter to apply.
  * @param  ftype   Same as `type`, but for the filter to apply. (Not actually used).
  * @param  r       Whether to apply the filter for the red curve.
  * @param  g       Whether to apply the filter for the green curve.
  * @param  b       Whether to apply the filter for the blue curve.
  */
-#define libclut_apply(ramp, max, type, filter, fmax, ftype, r, g, b)			\
-  do											\
-    {											\
-      if (r)  libclut_apply__(ramp, max, type, filter, fmax, ftype, red);		\
-      if (g)  libclut_apply__(ramp, max, type, filter, fmax, ftype, green);		\
-      if (b)  libclut_apply__(ramp, max, type, filter, fmax, ftype, blue);		\
-    }											\
+#define libclut_apply(clut, max, type, filter, fmax, ftype, r, g, b)		\
+  do										\
+    {										\
+      if (r)  libclut_apply__(clut, max, type, filter, fmax, ftype, red);	\
+      if (g)  libclut_apply__(clut, max, type, filter, fmax, ftype, green);	\
+      if (b)  libclut_apply__(clut, max, type, filter, fmax, ftype, blue);	\
+    }										\
   while (0)
 
 
@@ -664,26 +664,26 @@
  * 
  * Intended for internal use.
  * 
- * @param  ramp     Pointer to the gamma ramps, must have the arrays
+ * @param  clut     Pointer to the gamma ramps, must have the arrays
  *                  `red`, `green`, and `blue`, and the scalars
  *                  `red_size`, `green_size`, and `blue_size`. Ramp
  *                  structures from libgamma can be used.
  * @param  max      The maximum value on each stop in the ramps.
  * @param  type     The data type used for each stop in the ramps.
- * @param  filter   Same as `ramp`, but for the filter to apply.
+ * @param  filter   Same as `clut`, but for the filter to apply.
  * @param  fmax     Same as `max`, but for the filter to apply.
  * @param  ftype    Same as `type`, but for the filter to apply. (Not actually used).
  * @param  channel  The channel, must be either "red", "green", or "blue".
  */
-#define libclut_apply__(ramp, max, type, filter, fmax, ftype, channel)			\
+#define libclut_apply__(clut, max, type, filter, fmax, ftype, channel)			\
   do											\
     {											\
-      size_t i__, rn__ = (ramp)->channel##_size, fn__ = (filter)->channel##_size;	\
+      size_t i__, rn__ = (clut)->channel##_size, fn__ = (filter)->channel##_size;	\
       size_t x__, rm__ = (double)(max), m__ = (double)(max) / (double)(fmax);		\
       for (i__ = 0; i__ < rn__; i__++)							\
 	{										\
-	  x__ = (size_t)((double)((ramp)->channel[i__]) / rm__ * fn__);			\
-	  (ramp)->channel[i__] = (type)((double)((filter)->channel[x__]) * m__);	\
+	  x__ = (size_t)((double)((clut)->channel[i__]) / rm__ * fn__);			\
+	  (clut)->channel[i__] = (type)((double)((filter)->channel[x__]) * m__);	\
 	}										\
     }											\
   while (0)
@@ -694,26 +694,26 @@
  * 
  * None of the parameter may have side-effects.
  * 
- * @param  ramp    Pointer to the gamma ramps, must have the arrays
+ * @param  clut    Pointer to the gamma ramps, must have the arrays
  *                 `red`, `green`, and `blue`, and the scalars
  *                 `red_size`, `green_size`, and `blue_size`. Ramp
  *                 structures from libgamma can be used.
  * @param  max     The maximum value on each stop in the ramps.
  * @param  type    The data type used for each stop in the ramps.
- * @param  filter  Same as `ramp`, but for the filter to apply.
+ * @param  filter  Same as `clut`, but for the filter to apply.
  * @param  fmax    Same as `max`, but for the filter to apply.
  * @param  ftype   Same as `type`, but for the filter to apply. (Not actually used).
  * @param  r       Whether to apply the filter for the red curve.
  * @param  g       Whether to apply the filter for the green curve.
  * @param  b       Whether to apply the filter for the blue curve.
  */
-#define libclut_cie_apply(ramp, max, type, filter, fmax, ftype, r, g, b)				\
+#define libclut_cie_apply(clut, max, type, filter, fmax, ftype, r, g, b)				\
   do													\
     {													\
       size_t rfn__ = (filter)->red_size, gfn__ = (filter)->green_size;					\
       size_t bfn__ = (filter)->blue_size, x__;								\
       size_t rm__ = (double)(max), fm__ = (double)(fmax);						\
-      libclut_cie__(ramp, max, type, 0, r, g, b,							\
+      libclut_cie__(clut, max, type, 0, r, g, b,							\
 		    (x__ = (size_t)(Y__ / rm__ * rfn__), (double)((filter)->red[x__])   / fm__),	\
 		    (x__ = (size_t)(Y__ / rm__ * gfn__), (double)((filter)->green[x__]) / fm__),	\
 		    (x__ = (size_t)(Y__ / rm__ * bfn__), (double)((filter)->blue[x__])  / fm__));	\
@@ -728,7 +728,7 @@
  * 
  * This is intended for internal use.
  * 
- * @param  ramp     Pointer to the gamma ramps, must have and array
+ * @param  clut     Pointer to the gamma ramps, must have and array
  *                  named `channel` and a scalar named `channel` followed
  *                  by "_size".
  * @param  channel  The channel, must be either "red", "green", or "blue".
@@ -737,15 +737,15 @@
  *                  It can use the variable `LIBCLUT_VALUE` to get the
  *                  current value of the stop.
  */
-#define libclut__(ramp, channel, type, expr)		\
+#define libclut__(clut, channel, type, expr)		\
   do							\
     {							\
-      size_t i__, n__ = (ramp)->channel##_size;		\
+      size_t i__, n__ = (clut)->channel##_size;		\
       type LIBCLUT_VALUE;				\
       for (i__ = 0; i__ < n__; i__++)			\
 	{						\
-	  LIBCLUT_VALUE = (ramp)->channel[i__];		\
-	  (ramp)->channel[i__] = (type)(expr);		\
+	  LIBCLUT_VALUE = (clut)->channel[i__];		\
+	  (clut)->channel[i__] = (type)(expr);		\
 	}						\
     }							\
   while (0)
@@ -758,7 +758,7 @@
  * 
  * This is intended for internal use.
  * 
- * @param  ramp   Pointer to the gamma ramps, must have the arrays
+ * @param  clut   Pointer to the gamma ramps, must have the arrays
  *                `red`, `green`, and `blue`, and the scalars
  *                `red_size`, `green_size`, and `blue_size`. Ramp
  *                structures from libgamma can be used.
@@ -776,18 +776,18 @@
  * @param  bexpr  Expression calculating the intensity of the blue channel.
  *                The current value is stored in `Y__`.
  */
-#define libclut_cie__(ramp, max, type, utest, rtest, gtest, btest, rexpr, gexpr, bexpr)	\
+#define libclut_cie__(clut, max, type, utest, rtest, gtest, btest, rexpr, gexpr, bexpr)	\
   do											\
     {											\
-      size_t rn__ = (ramp)->red_size;							\
-      size_t gn__ = (ramp)->green_size;							\
-      size_t bn__ = (ramp)->blue_size;							\
+      size_t rn__ = (clut)->red_size;							\
+      size_t gn__ = (clut)->green_size;							\
+      size_t bn__ = (clut)->blue_size;							\
       size_t i__;									\
       double x__, y__, Y__, r__, g__, b__;						\
       double m__ = (double)(max);							\
-      type* rs__ = (ramp)->red;								\
-      type* gs__ = (ramp)->green;							\
-      type* bs__ = (ramp)->blue;							\
+      type* rs__ = (clut)->red;								\
+      type* gs__ = (clut)->green;							\
+      type* bs__ = (clut)->blue;							\
       if ((rn__ == gn__) && (gn__ == bn__) && (utest))					\
 	{										\
 	  if (!(rtest))									\
@@ -831,17 +831,17 @@
 	{										\
 	  if (rtest)									\
 	    for (i__ = 0; i__ < rn__; i__)						\
-	    libclut_cie___(ramp, max, type, rexpr, i__,					\
+	    libclut_cie___(clut, max, type, rexpr, i__,					\
 			   libclut_i__(i__, rn__, gn__),				\
 			   libclut_i__(i__, rn__, bn__));				\
 	  if (gtest)									\
 	    for (i__ = 0; i__ < rn__; i__)						\
-	    libclut_cie___(ramp, max, type, gexpr,					\
+	    libclut_cie___(clut, max, type, gexpr,					\
 			   libclut_i__(i__, gn__, rn__), i__,				\
 			   libclut_i__(i__, gn__, bn__));				\
 	  if (btest)									\
 	    for (i__ = 0; i__ < rn__; i__)						\
-	    libclut_cie___(ramp, max, type, bexpr, i__,					\
+	    libclut_cie___(clut, max, type, bexpr, i__,					\
 			   libclut_i__(i__, bn__, rn__),				\
 			   libclut_i__(i__, bn__, gn__), i__);				\
 	}										\
@@ -857,7 +857,7 @@
  * This is intended for internal use.
  * Assumes the existence of variables defined in `libclut_cie__`.
  * 
- * @param  ramp  Pointer to the gamma ramps, must have the arrays
+ * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
  *               structures from libgamma can be used.
@@ -869,7 +869,7 @@
  * @param  gi    The index of the stop translated to the green channel.
  * @param  bi    The index of the stop translated to the blue channel.
  */
-#define libclut_cie___(ramp, max, type, c, expr, ri, gi, bi)			\
+#define libclut_cie___(clut, max, type, c, expr, ri, gi, bi)			\
   do										\
     {										\
       for (i__ = 0; i__ < c##n__; i__)						\
