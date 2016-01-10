@@ -565,12 +565,12 @@
  *               structures from libgamma can be used.
  * @param  max   The maximum value on each stop in the ramps.
  * @param  type  The data type used for each stop in the ramps.
- * @param  x     The desired emulated red encoding resolution, 0 for unchanged.
- * @param  y     The desired emulated red output resolution, 0 for unchanged.
- * @param  x     The desired emulated green encoding resolution, 0 for unchanged.
- * @param  y     The desired emulated green output resolution, 0 for unchanged.
- * @param  x     The desired emulated blue encoding resolution, 0 for unchanged.
- * @param  y     The desired emulated blue output resolution, 0 for unchanged.
+ * @param  rx    The desired emulated red encoding resolution, 0 for unchanged.
+ * @param  ry    The desired emulated red output resolution, 0 for unchanged.
+ * @param  gx    The desired emulated green encoding resolution, 0 for unchanged.
+ * @param  gy    The desired emulated green output resolution, 0 for unchanged.
+ * @param  bx    The desired emulated blue encoding resolution, 0 for unchanged.
+ * @param  by    The desired emulated blue output resolution, 0 for unchanged.
  */
 #define libclut_lower_resolution(clut, max, type, rx, ry, gx, gy, bx, by)	\
   do										\
