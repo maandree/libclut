@@ -9,6 +9,7 @@
 
 @menu
 * Overview::                                Brief overview of @command{libclut}.
+* CLUT Manipulation::                       Function-like macros for CLUT manipulation.
 
 * Free Software Needs Free Documentation::  Why free documentation is important.
 * GNU General Public License::              Copying and sharing @command{libclut}.
@@ -18,6 +19,7 @@
 
 
 @include chap/overview.texinfo
+@include chap/clut-manipulation.texinfo
 
 @include appx/free-software-needs-free-documentation.texinfo
 
