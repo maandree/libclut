@@ -1,5 +1,13 @@
 @node Overview
 @chapter Overview
 
-@command{libclut}
+@command{libclut} is C library for manipulating colour
+lookup tables. @command{libclut} is used by including
+the header @file{<libclut.h>}. Some functionality also
+requires that the objects be linked with @option{-lclut}.
+
+@command{libclut} is designed to work well with
+@command{libgamma}, but does not require that
+@command{libgamma} is used for any of its [@command{libclut}'s]
+functionality.
 
