@@ -29,3 +29,239 @@ Additionally, these macros do not allow that arguments
 have side-effects. None, if the macros have a return
 value.
 
+@table @code
+@item libclut_rgb_contrast(clut, max, type, r, g, b)
+Apply contrast correction on the colour curves using sRGB.
+
+In this context, contrast is a measure of difference between
+the whitepoint and blackpoint, if the difference is 0 than
+they are both grey.
+
+Parameters:
+@table @code
+@item r
+The contrast parameter for the red curve.
+@item g
+The contrast parameter for the green curve.
+@item b
+The contrast parameter for the blue curve.
+@end table
+
+
+@item libclut_cie_contrast(clut, max, type, r, g, b)
+Apply contrast correction on the colour curves using CIE xyY.
+
+In this context, contrast is a measure of difference between
+the whitepoint and blackpoint, if the difference is 0 than
+they are both grey.
+
+Parameters:
+@table @code
+@item r
+The contrast parameter for the red curve.
+@item g
+The contrast parameter for the green curve.
+@item b
+The contrast parameter for the blue curve.
+@end table
+
+
+@item libclut_rgb_brightness(clut, max, type, r, g, b)
+Apply brightness correction on the colour curves using sRGB.
+
+In this context, brightness is a measure of the whiteness
+of the whitepoint.
+
+Parameters:
+@table @code
+@item r
+The brightness parameter for the red curve.
+@item g
+The brightness parameter for the green curve.
+@item b
+The brightness parameter for the blue curve.
+@end table
+
+
+@item libclut_cie_brightness(clut, max, type, r, g, b)
+Apply brightness correction on the colour curves using CIE xyY.
+
+In this context, brightness is a measure of the whiteness
+of the whitepoint.
+
+Parameters:
+@table @code
+@item r
+The brightness parameter for the red curve.
+@item g
+The brightness parameter for the green curve.
+@item b
+The brightness parameter for the blue curve.
+@end table
+
+
+@item libclut_linearise(clut, max, type, r, g, b)
+Convert the curves from formatted in standard RGB to linear RGB.
+
+Parameters:
+@table @code
+@item r
+Whether to convert the red colour curve.
+@item g
+Whether to convert the green colour curve.
+@item b
+Whether to convert the blue colour curve.
+@end table
+
+
+@item libclut_standardise(clut, max, type, r, g, b)
+Convert the curves from formatted in linear RGB to standard RGB.
+
+Parameters:
+@table @code
+@item r
+Whether to convert the red colour curve.
+@item g
+Whether to convert the green colour curve.
+@item b
+Whether to convert the blue colour curve.
+@end table
+
+
+@item libclut_gamma(clut, max, type, r, g, b)
+Apply gamma correction on the colour curves.
+
+Parameters:
+@table @code
+@item r
+The gamma parameter for the red curve.
+@item g
+The gamma parameter for the green curve.
+@item b
+The gamma parameter for the blue curve.
+@end table
+
+
+@item libclut_negative(clut, max, type, r, g, b)
+Reverse the colour curves (negative image with gamma preservation.)
+
+Parameters:
+@table @code
+@item r
+Whether to reverse the red colour curve.
+@item g
+Whether to reverse the green colour curve.
+@item b
+Whether to reverse the blue colour curve.
+@end table
+
+
+@item libclut_rgb_invert(clut, max, type, r, g, b)
+Invert the colour curves (negative image with gamma
+invertion), using sRGB.
+
+Parameters:
+@table @code
+@item r
+Whether to invert the red colour curve.
+@item g
+Whether to invert the green colour curve.
+@item b
+Whether to invert the blue colour curve.
+@end table
+
+
+@item libclut_cie_invert(clut, max, type, r, g, b)
+Invert the colour curves (negative image with gamma
+invertion), using CIE xyY.
+
+Parameters:
+@table @code
+@item r
+Whether to invert the red colour curve.
+@item g
+Whether to invert the green colour curve.
+@item b
+Whether to invert the blue colour curve.
+@end table
+
+
+@item libclut_sigmoid(clut, max, type, rp, gp, bp)
+Apply S-curve correction on the colour curves.
+This is intended for fine tuning LCD monitors,
+4.5 is good value start start testing at.
+You would probably like to use @code{rgb_limits}
+before this to adjust the blackpoint as that is
+the only way to adjust the blackpoint on many LCD
+monitors.
+
+Parameters:
+@table @code
+@item rp
+Pointer to the sigmoid parameter for the red curve.
+@code{NULL} for no adjustment.
+@item gp
+Pointer to the sigmoid parameter for the green curve.
+@code{NULL} for no adjustment.
+@item bp
+Pointer to the sigmoid parameter for the blue curve.
+@code{NULL} for no adjustment.
+@end table
+
+
+@item libclut_rgb_limits(clut, max, type, rmin, rmax, gmin, gmax, bmin, bmax)
+Changes the blackpoint and the whitepoint, using sRGB.
+
+Parameters:
+@table @code
+@item rmin
+The red component value of the blackpoint.
+That is, the brightness on the red channel.
+@item rmax
+The red component value of the whitepoint.
+That is, the contrast on the red channel.
+@item gmin
+The green component value of the blackpoint.
+That is, the brightness on the green channel.
+@item gmax
+The green component value of the whitepoint.
+That is, the contrast on the green channel.
+@item bmin
+The blue component value of the blackpoint.
+That is, the brightness on the blue channel.
+@item bmax
+The blue component value of the whitepoint.
+That is, the contrast on the blue channel.
+@end table
+
+
+@item libclut_cie_limits(clut, max, type, rmin, rmax, gmin, gmax, bmin, bmax)
+Changes the blackpoint and the whitepoint, using CIE xyY.
+
+Parameters:
+@table @code
+@item rmin
+The red component value of the blackpoint.
+That is, the brightness on the red channel.
+@item rmax
+The red component value of the whitepoint.
+That is, the contrast on the red channel.
+@item gmin
+The green component value of the blackpoint.
+That is, the brightness on the green channel.
+@item gmax
+The green component value of the whitepoint.
+That is, the contrast on the green channel.
+@item bmin
+The blue component value of the blackpoint.
+That is, the brightness on the blue channel.
+@item bmax
+The blue component value of the whitepoint.
+That is, the contrast on the blue channel.
+@end table
+
+
+@end table
+
+@c TODO Which macros require -lclut?
+

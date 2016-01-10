@@ -305,8 +305,8 @@
  * This is intended for fine tuning LCD monitors,
  * 4.5 is good value start start testing at.
  * You would probably like to use rgb_limits before
- * this to adjust the black point as that is the
- * only why to adjust the black point on many LCD
+ * this to adjust the blackpoint as that is the
+ * only way to adjust the blackpoint on many LCD
  * monitors.
  * 
  * None of the parameter may have side-effects.
