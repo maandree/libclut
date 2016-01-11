@@ -24,9 +24,9 @@
  * @param   c  The linear RGB value.
  * @return     Corresponding sRGB value.
  */
-double libclut_model_linear_to_standard1(double c)
+double (libclut_model_linear_to_standard1)(double c)
 {
-  return (c <= 0.0031308) ? (12.92 * c) : ((1.0 + 0.055) * pow(c, 1.0 / 2.4));
+  return libclut_model_linear_to_standard1(c);
 }
 
 
@@ -40,11 +40,9 @@ double libclut_model_linear_to_standard1(double c)
  * @param  b  Pointer to the linear blue component,
  *            and output parameter for the blue component.
  */
-void libclut_model_linear_to_standard(double* r, double* g, double* b)
+void (libclut_model_linear_to_standard)(double* r, double* g, double* b)
 {
-  *r = libclut_model_linear_to_standard1(*r);
-  *g = libclut_model_linear_to_standard1(*g);
-  *b = libclut_model_linear_to_standard1(*b);
+  libclut_model_linear_to_standard(r, g, b);
 }
 
 
@@ -54,9 +52,9 @@ void libclut_model_linear_to_standard(double* r, double* g, double* b)
  * @param   c  The sRGB value.
  * @return     Corresponding linear RGB value.
  */
-double libclut_model_standard_to_linear1(double c)
+double (libclut_model_standard_to_linear1)(double c)
 {
-  return (c <= 0.04045) ? (c / 12.92) : pow((c + 0.055) / (1.0 + 0.055), 2.4);
+  return libclut_model_standard_to_linear1(c);
 }
 
 
@@ -70,11 +68,9 @@ double libclut_model_standard_to_linear1(double c)
  * @param  b  Pointer to the blue component, and output
  *            parameter for the linear blue component.
  */
-void libclut_model_standard_to_linear(double* r, double* g, double* b)
+void (libclut_model_standard_to_linear)(double* r, double* g, double* b)
 {
-  *r = libclut_model_standard_to_linear1(*r);
-  *g = libclut_model_standard_to_linear1(*g);
-  *b = libclut_model_standard_to_linear1(*b);
+  libclut_model_standard_to_linear(r, g, b);
 }
 
 
@@ -87,10 +83,9 @@ void libclut_model_standard_to_linear(double* r, double* g, double* b)
  * @param  X  Output parameter for the X parameter.
  * @param  Z  Output parameter for the Z parameter.
  */
-void libclut_model_ciexyy_to_ciexyz(double x, double y, double Y, double* X, double* Z)
+void (libclut_model_ciexyy_to_ciexyz)(double x, double y, double Y, double* X, double* Z)
 {
-  *X = (y == 0.0) ? Y : (Y * x / y);
-  *Z = (y == 0.0) ? Y : (Y * (1 - x - y) / y);
+  libclut_model_ciexyy_to_ciexyz(x, y, Y, X, Z);
 }
 
 
@@ -103,13 +98,9 @@ void libclut_model_ciexyy_to_ciexyz(double x, double y, double Y, double* X, dou
  * @param  x  Output parameter for the x parameter.
  * @param  y  Output parameter for the y parameter.
  */
-void libclut_model_ciexyz_to_ciexyy(double X, double Y, double Z, double* x, double* y)
+void (libclut_model_ciexyz_to_ciexyy)(double X, double Y, double Z, double* x, double* y)
 {
-  double s = X + Y + Z;
-  if (s == 0.0)
-    *x = *y = 0.0;
-  else
-    *x = X / s, *y = Y / s;
+  libclut_model_ciexyz_to_ciexyy(X, Y, Z, x, y);
 }
 
 
@@ -123,11 +114,9 @@ void libclut_model_ciexyz_to_ciexyy(double X, double Y, double Z, double* x, dou
  * @param  g  Output parameter for the green component.
  * @param  b  Output parameter for the blue component.
  */
-void libclut_model_ciexyz_to_linear(double X, double Y, double Z, double* r, double* g, double* b)
+void (libclut_model_ciexyz_to_linear)(double X, double Y, double Z, double* r, double* g, double* b)
 {
-  *r = ( 3.2404500 * X) + (-1.537140 * Y) + (-0.4985320 * Z);
-  *g = (-0.9692660 * X) + ( 1.876010 * Y) + ( 0.0415561 * Z);
-  *b = ( 0.0556434 * X) + (-0.204026 * Y) + ( 1.0572300 * Z);
+  libclut_model_ciexyz_to_linear(X, Y, Z, r, g, b);
 }
 
 
@@ -141,11 +130,9 @@ void libclut_model_ciexyz_to_linear(double X, double Y, double Z, double* r, dou
  * @param  Y  Output parameter for the Y parameter.
  * @param  Z  Output parameter for the Z parameter.
  */
-void libclut_model_linear_to_ciexyz(double r, double g, double b, double* X, double* Y, double* Z)
+void (libclut_model_linear_to_ciexyz)(double r, double g, double b, double* X, double* Y, double* Z)
 {
-  *X = (0.4124564 * r) + (0.3575761 * g) + (0.1804375 * b);
-  *Y = (0.2126729 * r) + (0.7151522 * g) + (0.0721750 * b);
-  *Z = (0.0193339 * r) + (0.1191920 * g) + (0.9503041 * b);
+  libclut_model_linear_to_ciexyz(r, g, b, X, Y, Z);
 }
 
 
@@ -159,12 +146,9 @@ void libclut_model_linear_to_ciexyz(double r, double g, double b, double* X, dou
  * @param  y  Output parameter for the y parameter.
  * @param  Y  Output parameter for the Y parameter.
  */
-void libclut_model_srgb_to_ciexyy(double r, double g, double b, double* x, double* y, double* Y)
+void (libclut_model_srgb_to_ciexyy)(double r, double g, double b, double* x, double* y, double* Y)
 {
-  double X, Z;
-  libclut_model_standard_to_linear(&r, &g, &b);
-  libclut_model_linear_to_ciexyz(r, g, b, &X, Y, &Z);
-  libclut_model_ciexyz_to_ciexyy(X, *Y, Z, x, y);
+  libclut_model_srgb_to_ciexyy(r, g, b, x, y, Y);
 }
 
 
@@ -178,12 +162,9 @@ void libclut_model_srgb_to_ciexyy(double r, double g, double b, double* x, doubl
  * @param  g  Output parameter for the green component.
  * @param  b  Output parameter for the blue component.
  */
-void libclut_model_ciexyy_to_srgb(double x, double y, double Y, double* r, double* g, double* b)
+void (libclut_model_ciexyy_to_srgb)(double x, double y, double Y, double* r, double* g, double* b)
 {
-  double X, Z;
-  libclut_model_ciexyy_to_ciexyz(x, y, Y, &X, &Z);
-  libclut_model_ciexyz_to_linear(X, Y, Z, r, g, b);
-  libclut_model_linear_to_standard(r, g, b);
+  libclut_model_ciexyy_to_srgb(x, y, Y, r, g, b);
 }
 
 
@@ -197,15 +178,9 @@ void libclut_model_ciexyy_to_srgb(double x, double y, double Y, double* r, doubl
  * @param  a  Output parameter for the a* component.
  * @param  b  Output parameter for the b* component.
  */
-void libclut_model_ciexyz_to_cielab(double X, double Y, double Z, double* L, double* a, double* b)
+void (libclut_model_ciexyz_to_cielab)(double X, double Y, double Z, double* L, double* a, double* b)
 {
-#define F(C)  ((C) > 0.00885642) ? pow((C), 1.0 / 3.0) : ((7.78 + 703.0 / 99900.0) * (C) + 0.1379310)
-  X /= 0.95047, Z /= 1.08883;
-  X = F(X), Y = F(Y), Z = F(Z);
-  *L = 116.0 * Y - 16.0;
-  *a = 500.0 * (X - Y);
-  *b = 200.0 * (Y - Z);
-#undef F
+  libclut_model_ciexyz_to_cielab(X, Y, Z, L, a, b);
 }
 
 
@@ -219,15 +194,8 @@ void libclut_model_ciexyz_to_cielab(double X, double Y, double Z, double* L, dou
  * @param  Y  Output parameter for the Y parameter.
  * @param  Z  Output parameter for the Z parameter.
  */
-void libclut_model_cielab_to_xiexyz(double L, double a, double b, double* X, double* Y, double* Z)
+void (libclut_model_cielab_to_ciexyz)(double L, double a, double b, double* X, double* Y, double* Z)
 {
-#define F(C)  (((C)*(C)*(C) > 0.00885642) ? ((C)*(C)*(C)) : (((C) - 0.1379310) / (7.78 + 703.0 / 99900.0)))
-    *Y = (L + 16.0) / 116.0;
-    *X = a / 500.0 + *Y;
-    *Z = *Y - b / 200.0;
-    *X = F(*X) * 0.95047;
-    *Y = F(*Y);
-    *Z = F(*Z) * 1.08883;
-#undef F
+  libclut_model_cielab_to_ciexyz(L, a, b, X, Y, Z);
 }
 

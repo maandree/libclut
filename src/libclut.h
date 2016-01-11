@@ -134,7 +134,8 @@
  * 
  * None of the parameter may have side-effects.
  * 
- * Requires linking with '-lclut'.
+ * Requires linking with '-lclut', or '-lm' if
+ * `libclut_model_standard_to_linear1` is not undefined.
  * 
  * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
@@ -165,7 +166,8 @@
  * 
  * None of the parameter may have side-effects.
  * 
- * Requires linking with '-lclut'.
+ * Requires linking with '-lclut', or '-lm' if
+ * `libclut_model_linear_to_standard1` is not undefined.
  * 
  * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
@@ -930,14 +932,24 @@
 /**
  * Convert one component from [0, 1] linear RGB to [0, 1] sRGB.
  * 
+ * If the macro variant is used, the argument must not have
+ * any side-effects. The macro variant requires linking with
+ * '-lm'.
+ * 
  * @param   c  The linear RGB value.
  * @return     Corresponding sRGB value.
  */
 LIBCLUT_GCC_ONLY__(__attribute__((__const__, __leaf__)))
-double libclut_model_linear_to_standard1(double);
+double (libclut_model_linear_to_standard1)(double);
+#define libclut_model_linear_to_standard1(c)  \
+  (((double)(c) <= 0.0031308) ? (12.92 * (double)(c)) : ((1.0 + 0.055) * pow((double)(c), 1.0 / 2.4)))
 
 /**
  * Convert [0, 1] linear RGB to [0, 1] sRGB.
+ * 
+ * The macro variant requires linking with '-lm',
+ * if the 'libclut_model_linear_to_standard1' is defined,
+ * otherwise it requires linking with '-lclut'.
  * 
  * @param  r  Pointer to the linear red component,
  *            and output parameter for the red component.
@@ -946,19 +958,38 @@ double libclut_model_linear_to_standard1(double);
  * @param  b  Pointer to the linear blue component,
  *            and output parameter for the blue component.
  */
-void libclut_model_linear_to_standard(double*, double*, double*);
+void (libclut_model_linear_to_standard)(double*, double*, double*);
+#define libclut_model_linear_to_standard(r, g, b)	\
+  do							\
+    {							\
+      double *r__ = (r), *g__ = (g), *b__ = (b);	\
+      *r__ = libclut_model_linear_to_standard1(*r__);	\
+      *g__ = libclut_model_linear_to_standard1(*g__);	\
+      *b__ = libclut_model_linear_to_standard1(*b__);	\
+    }							\
+  while (0)
 
 /**
  * Convert one component from [0, 1] sRGB to [0, 1] linear RGB.
+ * 
+ * If the macro variant is used, the argument must not have
+ * any side-effects. The macro variant requires linking with
+ * '-lm'.
  * 
  * @param   c  The sRGB value.
  * @return     Corresponding linear RGB value.
  */
 LIBCLUT_GCC_ONLY__(__attribute__((__const__, __leaf__)))
-double libclut_model_standard_to_linear1(double);
+double (libclut_model_standard_to_linear1)(double);
+#define libclut_model_standard_to_linear1(c)  \
+  (((double)(c) <= 0.04045) ? ((double)(c) / 12.92) : pow(((double)(c) + 0.055) / (1.0 + 0.055), 2.4))
 
 /**
  * Convert [0, 1] sRGB to [0, 1] linear RGB.
+ * 
+ * The macro variant requires linking with '-lm',
+ * if the 'libclut_model_standard_to_linear1' is defined,
+ * otherwise it requires linking with '-lclut'.
  * 
  * @param  r  Pointer to the red component, and output
  *            parameter for the linear red component.
@@ -967,7 +998,16 @@ double libclut_model_standard_to_linear1(double);
  * @param  b  Pointer to the blue component, and output
  *            parameter for the linear blue component.
  */
-void libclut_model_standard_to_linear(double*, double*, double*);
+void (libclut_model_standard_to_linear)(double*, double*, double*);
+#define libclut_model_standard_to_linear(r, g, b)	\
+  do							\
+    {							\
+      double *r__ = (r), *g__ = (g), *b__ = (b);	\
+      *r__ = libclut_model_standard_to_linear1(*r__);	\
+      *g__ = libclut_model_standard_to_linear1(*g__);	\
+      *b__ = libclut_model_standard_to_linear1(*b__);	\
+    }							\
+  while (0)
 
 /**
  * Convert CIE xyY to CIE XYZ.
@@ -979,7 +1019,15 @@ void libclut_model_standard_to_linear(double*, double*, double*);
  * @param  Z  Output parameter for the Z parameter.
  */
 LIBCLUT_GCC_ONLY__(__attribute__((__leaf__)))
-void libclut_model_ciexyy_to_ciexyz(double, double, double, double*, double*);
+void (libclut_model_ciexyy_to_ciexyz)(double, double, double, double*, double*);
+#define libclut_model_ciexyy_to_ciexyz(x, y, Y, X, Z)			\
+  do									\
+    {									\
+      double x__ = (x), y__ = (y), Y__ = (Y), *X__ = (X), *Z__ = (Z);	\
+      *X__ = (y__ == 0.0) ? Y__ : (Y__ * x__ / y__);			\
+      *Z__ = (y__ == 0.0) ? Y__ : (Y__ * (1.0 - x__ - y__) / y__);	\
+    }									\
+  while (0)
 
 /**
  * Convert CIE XYZ to CIE xyY.
@@ -991,7 +1039,18 @@ void libclut_model_ciexyy_to_ciexyz(double, double, double, double*, double*);
  * @param  y  Output parameter for the y parameter.
  */
 LIBCLUT_GCC_ONLY__(__attribute__((__leaf__)))
-void libclut_model_ciexyz_to_ciexyy(double, double, double, double*, double*);
+void (libclut_model_ciexyz_to_ciexyy)(double, double, double, double*, double*);
+#define libclut_model_ciexyz_to_ciexyy(X, Y, Z, x, y)			\
+  do									\
+    {									\
+      double X__ = (X), Y__ = (Y), Z__ = (Z), *x__ = (x), *y__ = (y);	\
+      double s__ = X__ + Y__ + Z__;					\
+      if (s__ == 0.0)							\
+	*x__ = *y__ = 0.0;						\
+      else								\
+	*x__ = X__ / s__, *y__ = Y__ / s__;				\
+    }									\
+  while (0)
 
 /**
  * Convert CIE XYZ to [0, 1] linear RGB.
@@ -1004,7 +1063,16 @@ void libclut_model_ciexyz_to_ciexyy(double, double, double, double*, double*);
  * @param  b  Output parameter for the blue component.
  */
 LIBCLUT_GCC_ONLY__(__attribute__((__leaf__)))
-void libclut_model_ciexyz_to_linear(double, double, double, double*, double*, double*);
+void (libclut_model_ciexyz_to_linear)(double, double, double, double*, double*, double*);
+#define libclut_model_ciexyz_to_linear(X, Y, Z, r, g, b)			\
+  do										\
+    {										\
+      double X__ = (X), Y__ = (Y), Z__ = (Z);					\
+      *(r) = ( 3.2404500 * X__) + (-1.537140 * Y__) + (-0.4985320 * Z__);	\
+      *(g) = (-0.9692660 * X__) + ( 1.876010 * Y__) + ( 0.0415561 * Z__);	\
+      *(b) = ( 0.0556434 * X__) + (-0.204026 * Y__) + ( 1.0572300 * Z__);	\
+    }										\
+  while (0)
 
 /**
  * Convert [0, 1] linear RGB to CIE XYZ.
@@ -1017,10 +1085,27 @@ void libclut_model_ciexyz_to_linear(double, double, double, double*, double*, do
  * @param  Z  Output parameter for the Z parameter.
  */
 LIBCLUT_GCC_ONLY__(__attribute__((__leaf__)))
-void libclut_model_linear_to_ciexyz(double, double, double, double*, double*, double*);
+void (libclut_model_linear_to_ciexyz)(double, double, double, double*, double*, double*);
+#define libclut_model_linear_to_ciexyz(r, g, b, X, Y, Z)			\
+  do										\
+    {										\
+      double r__ = (r), g__ = (g), b__ = (b);					\
+      *(X) = (0.4124564 * r__) + (0.3575761 * g__) + (0.1804375 * b__);		\
+      *(Y) = (0.2126729 * r__) + (0.7151522 * g__) + (0.0721750 * b__);		\
+      *(Z) = (0.0193339 * r__) + (0.1191920 * g__) + (0.9503041 * b__);		\
+    }										\
+  while (0)
 
 /**
  * Convert [0, 1] linear RGB to CIE xyY.
+ * 
+ * The macro variant requires linking with '-lclut'
+ * if any of `libclut_model_ciexyz_to_ciexyy`,
+ * `libclut_model_linear_to_ciexyz`, and
+ * `libclut_model_standard_to_linear` are undefined.
+ * The macro variant requires linking with '-lm' if
+ * neither `libclut_model_standard_to_linear` nor
+ * `libclut_model_standard_to_linear1` are undefined.
  * 
  * @param  r  The red component.
  * @param  g  The green component.
@@ -1029,10 +1114,29 @@ void libclut_model_linear_to_ciexyz(double, double, double, double*, double*, do
  * @param  y  Output parameter for the y parameter.
  * @param  Y  Output parameter for the Y parameter.
  */
-void libclut_model_srgb_to_ciexyy(double, double, double, double*, double*, double*);
+void (libclut_model_srgb_to_ciexyy)(double, double, double, double*, double*, double*);
+#define libclut_model_srgb_to_ciexyy(r, g, b, x, y, Y)				\
+  do										\
+    {										\
+      double r___ = (r), g___ = (g), b___ = (b);				\
+      double *x___ = (x), *y___ = (y), *Y___ = (Y);				\
+      double X___, Z___;							\
+      libclut_model_standard_to_linear(&r___, &g___, &b___);			\
+      libclut_model_linear_to_ciexyz(r___, g___, b___, &X___, Y___, &Z___);	\
+      libclut_model_ciexyz_to_ciexyy(X___, *Y___, Z___, x___, y___);		\
+    }										\
+  while (0)
 
 /**
  * Convert CIE xyY to [0, 1] sRGB.
+ * 
+ * The macro variant requires linking with '-lclut'
+ * if any of `libclut_model_ciexyy_to_ciexyz`,
+ * `libclut_model_ciexyz_to_linear`, and
+ * `libclut_model_linear_to_standard` are undefined.
+ * The macro variant requires linking with '-lm' if
+ * neither `libclut_model_linear_to_standard` nor
+ * `libclut_model_linear_to_standard1` are undefined.
  * 
  * @param  x  The x parameter.
  * @param  y  The y parameter.
@@ -1041,10 +1145,23 @@ void libclut_model_srgb_to_ciexyy(double, double, double, double*, double*, doub
  * @param  g  Output parameter for the green component.
  * @param  b  Output parameter for the blue component.
  */
-void libclut_model_ciexyy_to_srgb(double, double, double, double*, double*, double*);
+void (libclut_model_ciexyy_to_srgb)(double, double, double, double*, double*, double*);
+#define libclut_model_ciexyy_to_srgb(x, y, Y, r, g, b)				\
+  do										\
+    {										\
+      double x___ = (x), y___ = (y), Y___ = (Y);				\
+      double *r___ = (r), *g___ = (g), *b___ = (b);				\
+      double X___, Z___;							\
+      libclut_model_ciexyy_to_ciexyz(x___, y___, Y___, &X___, &Z___);		\
+      libclut_model_ciexyz_to_linear(X___, Y___, Z___, r___, g___, b___);	\
+      libclut_model_linear_to_standard(r___, g___, b___);			\
+    }										\
+  while(0)
 
 /**
  * Convert from CIE XYZ to CIE L*a*b*.
+ * 
+ * The macro variant requires linking with '-lm'.
  * 
  * @param  X  The X parameter.
  * @param  Y  The Y parameter.
@@ -1054,7 +1171,22 @@ void libclut_model_ciexyy_to_srgb(double, double, double, double*, double*, doub
  * @param  b  Output parameter for the b* component.
  */
 LIBCLUT_GCC_ONLY__(__attribute__((__leaf__)))
-void libclut_model_ciexyz_to_cielab(double, double, double, double*, double*, double*);
+void (libclut_model_ciexyz_to_cielab)(double, double, double, double*, double*, double*);
+#define libclut_model_ciexyz_to_cielab(X, Y, Z, L, a, b)	\
+  do								\
+    {								\
+      double X__ = (X), Y__ = (Y), Z__ = (Z);			\
+      X__ /= 0.95047, Z__ /= 1.08883;				\
+      X__ = LIBCLUT_MODEL_CIEXYZ_TO_CIELAB__(X__);		\
+      Y__ = LIBCLUT_MODEL_CIEXYZ_TO_CIELAB__(Y__);		\
+      Z__ = LIBCLUT_MODEL_CIEXYZ_TO_CIELAB__(Z__);		\
+      *(L) = 116.0 * Y__ - 16.0;				\
+      *(a) = 500.0 * (X__ - Y__);				\
+      *(b) = 200.0 * (Y__ - Z__);				\
+    }								\
+  while (0)
+#define LIBCLUT_MODEL_CIEXYZ_TO_CIELAB__(C)  \
+  (((C) > 0.00885642) ? pow((C), 1.0 / 3.0) : ((7.78 + 703.0 / 99900.0) * (C) + 0.1379310))
 
 /**
  * Convert from CIE L*a*b* to CIE XYZ.
@@ -1067,7 +1199,22 @@ void libclut_model_ciexyz_to_cielab(double, double, double, double*, double*, do
  * @param  Z  Output parameter for the Z parameter.
  */
 LIBCLUT_GCC_ONLY__(__attribute__((__leaf__)))
-void libclut_model_cielab_to_xiexyz(double, double, double, double*, double*, double*);
+void (libclut_model_cielab_to_ciexyz)(double, double, double, double*, double*, double*);
+#define libclut_model_cielab_to_ciexyz(L, a, b, X, Y, Z)	\
+  do								\
+    {								\
+      double L__ = (L), a__ = (a), b__ = (b);			\
+      double *X__ = (X), *Y__ = (Y), *Z__ = (Z);		\
+      *Y__ = (L__ + 16.0) / 116.0;				\
+      *X__ = a__ / 500.0 + *Y__;				\
+      *Z__ = *Y__ - b__ / 200.0;				\
+      *X__ = LIBCLUT_MODEL_CIELAB_TO_CIEXYZ__(*X__) * 0.95047;	\
+      *Y__ = LIBCLUT_MODEL_CIELAB_TO_CIEXYZ__(*Y__);		\
+      *Z__ = LIBCLUT_MODEL_CIELAB_TO_CIEXYZ__(*Z__) * 1.08883;	\
+    }								\
+  while (0)
+#define LIBCLUT_MODEL_CIELAB_TO_CIEXYZ__(C)  \
+  (((C)*(C)*(C) > 0.00885642) ? ((C)*(C)*(C)) : (((C) - 0.1379310) / (7.78 + 703.0 / 99900.0)))
 
 
 

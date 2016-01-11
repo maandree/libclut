@@ -108,7 +108,8 @@ The brightness parameter for the blue curve.
 @item libclut_linearise(clut, max, type, r, g, b)
 Convert the curves from formatted in standard RGB to linear RGB.
 
-Requires linking with @option{-lclut}.
+Requires linking with @option{-lclut}, or @option{-lm} if
+@code{libclut_model_standard_to_linear1} is not undefined.
 
 Parameters:
 @table @code
@@ -124,7 +125,8 @@ Whether to convert the blue colour curve.
 @item libclut_standardise(clut, max, type, r, g, b)
 Convert the curves from formatted in linear RGB to standard RGB.
 
-Requires linking with @option{-lclut}.
+Requires linking with @option{-lclut}, or @option{-lm} if
+@code{libclut_model_linear_to_standard1} is not undefined.
 
 Parameters:
 @table @code
