@@ -213,8 +213,8 @@ void libclut_model_ciexyz_to_cielab(double X, double Y, double Z, double* L, dou
  * Convert from CIE L*a*b* to CIE XYZ.
  * 
  * @param  L  The L* component.
- * @param  a  The a component.
- * @param  b  The b component.
+ * @param  a  The a* component.
+ * @param  b  The b* component.
  * @param  X  Output parameter for the X parameter.
  * @param  Y  Output parameter for the Y parameter.
  * @param  Z  Output parameter for the Z parameter.
