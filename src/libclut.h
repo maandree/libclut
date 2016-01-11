@@ -929,6 +929,7 @@
 #endif
 
 
+
 /**
  * Convert one component from [0, 1] linear RGB to [0, 1] sRGB.
  * 
@@ -943,6 +944,7 @@ LIBCLUT_GCC_ONLY__(__attribute__((__const__, __leaf__)))
 double (libclut_model_linear_to_standard1)(double);
 #define libclut_model_linear_to_standard1(c)  \
   (((double)(c) <= 0.0031308) ? (12.92 * (double)(c)) : ((1.0 + 0.055) * pow((double)(c), 1.0 / 2.4)))
+
 
 /**
  * Convert [0, 1] linear RGB to [0, 1] sRGB.
@@ -969,6 +971,7 @@ void (libclut_model_linear_to_standard)(double*, double*, double*);
     }							\
   while (0)
 
+
 /**
  * Convert one component from [0, 1] sRGB to [0, 1] linear RGB.
  * 
@@ -983,6 +986,7 @@ LIBCLUT_GCC_ONLY__(__attribute__((__const__, __leaf__)))
 double (libclut_model_standard_to_linear1)(double);
 #define libclut_model_standard_to_linear1(c)  \
   (((double)(c) <= 0.04045) ? ((double)(c) / 12.92) : pow(((double)(c) + 0.055) / (1.0 + 0.055), 2.4))
+
 
 /**
  * Convert [0, 1] sRGB to [0, 1] linear RGB.
@@ -1009,6 +1013,7 @@ void (libclut_model_standard_to_linear)(double*, double*, double*);
     }							\
   while (0)
 
+
 /**
  * Convert CIE xyY to CIE XYZ.
  * 
@@ -1028,6 +1033,7 @@ void (libclut_model_ciexyy_to_ciexyz)(double, double, double, double*, double*);
       *Z__ = (y__ == 0.0) ? Y__ : (Y__ * (1.0 - x__ - y__) / y__);	\
     }									\
   while (0)
+
 
 /**
  * Convert CIE XYZ to CIE xyY.
@@ -1052,6 +1058,7 @@ void (libclut_model_ciexyz_to_ciexyy)(double, double, double, double*, double*);
     }									\
   while (0)
 
+
 /**
  * Convert CIE XYZ to [0, 1] linear RGB.
  * 
@@ -1074,6 +1081,7 @@ void (libclut_model_ciexyz_to_linear)(double, double, double, double*, double*, 
     }										\
   while (0)
 
+
 /**
  * Convert [0, 1] linear RGB to CIE XYZ.
  * 
@@ -1095,6 +1103,7 @@ void (libclut_model_linear_to_ciexyz)(double, double, double, double*, double*, 
       *(Z) = (0.0193339 * r__) + (0.1191920 * g__) + (0.9503041 * b__);		\
     }										\
   while (0)
+
 
 /**
  * Convert [0, 1] linear RGB to CIE xyY.
@@ -1127,6 +1136,7 @@ void (libclut_model_srgb_to_ciexyy)(double, double, double, double*, double*, do
     }										\
   while (0)
 
+
 /**
  * Convert CIE xyY to [0, 1] sRGB.
  * 
@@ -1158,6 +1168,7 @@ void (libclut_model_ciexyy_to_srgb)(double, double, double, double*, double*, do
     }										\
   while(0)
 
+
 /**
  * Convert from CIE XYZ to CIE L*a*b*.
  * 
@@ -1187,6 +1198,7 @@ void (libclut_model_ciexyz_to_cielab)(double, double, double, double*, double*, 
   while (0)
 #define LIBCLUT_MODEL_CIEXYZ_TO_CIELAB__(C)  \
   (((C) > 0.00885642) ? pow((C), 1.0 / 3.0) : ((7.78 + 703.0 / 99900.0) * (C) + 0.1379310))
+
 
 /**
  * Convert from CIE L*a*b* to CIE XYZ.
