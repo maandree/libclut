@@ -51,7 +51,8 @@ _TEXINFO_DIRLEVELS = 2
 _INFOPARTS = 0
 _HAVE_TEXINFO_MANUAL = yes
 _HTML_FILES = Free-Software-Needs-Free-Documentation.html  GNU-Free-Documentation-License.html  \
-              GNU-General-Public-License.html  index.html  Overview.html  CLUT-Manipulation.html
+              GNU-General-Public-License.html  index.html  Overview.html  CLUT-Manipulation.html  \
+              Colour-Spaces.html
 
 # Used by mk/man.mk
 #_MAN_PAGE_SECTIONS = 0 3 7
@@ -66,7 +67,7 @@ _COPYING = COPYING
 ___EVERYTHING_INFO = autohaltd titlepage-data content hardcopy-copying  \
                      appx/fdl appx/free-software-needs-free-documentation appx/gpl  \
                      reusable/macros reusable/paper reusable/titlepage  \
-                     chap/overview chap/clut-manipulation.texinfo
+                     chap/overview chap/clut-manipulation.texinfo chap/colour-spaces.texinfo
 _EVERYTHING = $(__EVERYTHING_ALL_COMMON) DEPENDENCIES INSTALL NEWS  \
               $(foreach F,$(___EVERYTHING_INFO),doc/info/$(F).texinfo)  clut.h
 
