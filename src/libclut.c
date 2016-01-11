@@ -42,7 +42,7 @@ double libclut_model_linear_to_standard1(double c)
  */
 void libclut_model_linear_to_standard(double* r, double* g, double* b)
 {
-  *r = libclut_model_linear_to_standard1(*r):
+  *r = libclut_model_linear_to_standard1(*r);
   *g = libclut_model_linear_to_standard1(*g);
   *b = libclut_model_linear_to_standard1(*b);
 }
@@ -72,7 +72,7 @@ double libclut_model_standard_to_linear1(double c)
  */
 void libclut_model_standard_to_linear(double* r, double* g, double* b)
 {
-  *r = libclut_model_standard_to_linear1(*r):
+  *r = libclut_model_standard_to_linear1(*r);
   *g = libclut_model_standard_to_linear1(*g);
   *b = libclut_model_standard_to_linear1(*b);
 }
@@ -182,7 +182,7 @@ void libclut_model_ciexyy_to_srgb(double x, double y, double Y, double* r, doubl
 {
   double X, Z;
   libclut_model_ciexyy_to_ciexyz(x, y, Y, &X, &Z);
-  libclut_model_ciexyz_to_linear(X, *Y, Z, r, g, b);
+  libclut_model_ciexyz_to_linear(X, Y, Z, r, g, b);
   libclut_model_linear_to_standard(r, g, b);
 }
 
@@ -222,36 +222,12 @@ void libclut_model_ciexyz_to_cielab(double X, double Y, double Z, double* L, dou
 void libclut_model_cielab_to_xiexyz(double L, double a, double b, double* X, double* Y, double* Z)
 {
 #define F(C)  (((C)*(C)*(C) > 0.00885642) ? ((C)*(C)*(C)) : (((C) - 0.1379310) / (7.78 + 703.0 / 99900.0)))
-    *Y = (l + 16.0) / 116.0;
+    *Y = (L + 16.0) / 116.0;
     *X = a / 500.0 + *Y;
     *Z = *Y - b / 200.0;
     *X = F(*X) * 0.95047;
     *Y = F(*Y);
     *Z = F(*Z) * 1.08883;
 #undef F
-}
-
-
-/**
- * Convert the distance (∆E*_ab) between two [0, 1] sRGB colours.
- * 
- * @param   r1  The red component of the first colour.
- * @param   g1  The green component of the first colour.
- * @param   b1  The blue component of the first colour.
- * @param   r2  The red component of the second colour.
- * @param   g2  The green component of the second colour.
- * @param   b2  The blue component of the second colour.
- * @return      The difference.
- */
-double libclut_model_delta_e(double r1, double g1, double b1, double r2, double g2, double b2)
-{
-  double X1, Y1, Z1,     L1, a1, b1,            X2, Y2, Z2,     L2, a2, b2;
-  standard_to_linear(&r1, &g1, &b1),            standard_to_linear(&r2, &g2, &b2);
-  linear_to_ciexyz(r1, g1, b1, &X1, &Y1, &Z1),  linear_to_ciexyz(r2, g2, b2, &X2, &Y2, &Z2);
-  ciexyz_to_cielab(X1, Y1, Z1, &L1, &a1, &b1),  ciexyz_to_cielab(X2, Y2, Z2, &L2, &a2, &b2);
-  L1 -= L2,  L1 *= L1;
-  a1 -= a2,  a1 *= a1;
-  b1 -= b2,  b1 *= b1;
-  return L1 + a1 + b1;
 }
 

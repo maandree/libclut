@@ -1069,20 +1069,6 @@ void libclut_model_ciexyz_to_cielab(double, double, double, double*, double*, do
 LIBCLUT_GCC_ONLY__(__attribute__((__leaf__)))
 void libclut_model_cielab_to_xiexyz(double, double, double, double*, double*, double*);
 
-/**
- * Convert the distance (∆E*_ab) between two [0, 1] sRGB colours.
- * 
- * @param   r1  The red component of the first colour.
- * @param   g1  The green component of the first colour.
- * @param   b1  The blue component of the first colour.
- * @param   r2  The red component of the second colour.
- * @param   g2  The green component of the second colour.
- * @param   b2  The blue component of the second colour.
- * @return      The difference.
- */
-LIBCLUT_GCC_ONLY__(__attribute__((__const__)))
-double libclut_model_delta_e(double, double, double, double, double, double);
-
 
 
 #endif
