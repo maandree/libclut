@@ -379,26 +379,26 @@
  * @param  bmin  The blue component value of the blackpoint.
  * @param  bmax  The blue component value of the whitepoint.
  */
-#define libclut_rgb_limits(clut, max, type, rmin, rmax, gmin, gmax, bmin, bmax)		\
-  do											\
-    {											\
-      double diff__;									\
-      if ((rmin != 0.0) || (rmax != 1.0))						\
-	{										\
-	  diff__ = (double)(rmax__) - (double)(rmin__);					\
-	  libclut__(clut, red, type, LIBCLUT_VALUE * diff__ + (rmin__));		\
-	}										\
-      if ((gmin != 0.0) || (gmax != 1.0))						\
-	{										\
-	  diff__ = (double)(gmax__) - (double)(gmin__);					\
-	  libclut__(clut, green, type, LIBCLUT_VALUE * diff__ + (gmin__));		\
-	}										\
-      if ((bmin != 0.0) || (bmax != 1.0))						\
-	{										\
-	  diff__ = (double)(bmax__) - (double)(bmin__);					\
-	  libclut__(clut, blue, type, LIBCLUT_VALUE * diff__ + (bmin__));		\
-	}										\
-    }											\
+#define libclut_rgb_limits(clut, max, type, rmin, rmax, gmin, gmax, bmin, bmax)			\
+  do												\
+    {												\
+      double diff__;										\
+      if ((rmin != 0.0) || (rmax != 1.0))							\
+	{											\
+	  diff__ = (double)(rmax) - (double)(rmin);						\
+	  libclut__(clut, red, type, LIBCLUT_VALUE / (double)(max) * diff__ + (rmin));		\
+	}											\
+      if ((gmin != 0.0) || (gmax != 1.0))							\
+	{											\
+	  diff__ = (double)(gmax) - (double)(gmin);						\
+	  libclut__(clut, green, type, LIBCLUT_VALUE / (double)(max) * diff__ + (gmin));	\
+	}											\
+      if ((bmin != 0.0) || (bmax != 1.0))							\
+	{											\
+	  diff__ = (double)(bmax) - (double)(bmin);						\
+	  libclut__(clut, blue, type, LIBCLUT_VALUE / (double)(max) * diff__ + (bmin));		\
+	}											\
+    }												\
   while (0)
 
 
