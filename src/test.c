@@ -326,6 +326,8 @@ int main(int argc, char *argv[])
 
 
 /*
+  TODO test these too: (also add this to the makefile)
+  
   libclut_cie_contrast
   libclut_cie_brightness
   libclut_cie_invert
