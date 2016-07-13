@@ -941,7 +941,7 @@
 LIBCLUT_GCC_ONLY__(__attribute__((__const__, __leaf__)))
 double (libclut_model_linear_to_standard1)(double);
 #define libclut_model_linear_to_standard1(c)  \
-  (((double)(c) <= 0.0031308) ? (12.92 * (double)(c)) : ((1.0 + 0.055) * pow((double)(c), 1.0 / 2.4)))
+  (((double)(c) <= 0.0031308) ? (12.92 * (double)(c)) : ((1.0 + 0.055) * pow((double)(c), 1.0 / 2.4) - 0.055))
 
 
 /**

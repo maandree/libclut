@@ -58,12 +58,20 @@ static inline int clutcmp(const struct clut *a, const struct clut *b, uint16_t t
 }
 
 
-static int dumpcluts(const struct clut *a, const struct clut *b)
+static int dumpcluts(const struct clut *a, const struct clut *b, int tol)
 {
   size_t i;
+  uint16_t *r1 = a->red, *r2 = b->red, *g1 = a->green, *g2 = b->green, *b1 = a->blue, *b2 = b->blue;
   for (i = 0; i < 256; i++)
-    printf("%3zu (%02x)  ::  %04x - %04x  ----  %04x - %04x  ----  %04x - %04x\n",
-	   i, i, a->red[i], b->red[i], a->green[i], b->green[i], a->blue[i], b->blue[i]);
+    {
+      if ((tol >= 0) &&
+	  (((r1[i] > r2[i]) ? (r1[i] - r2[i]) : (r2[i] - r1[i])) <= tol) &&
+	  (((g1[i] > g2[i]) ? (g1[i] - g2[i]) : (g2[i] - g1[i])) <= tol) &&
+	  (((b1[i] > b2[i]) ? (b1[i] - b2[i]) : (b2[i] - b1[i])) <= tol))
+	continue;
+      printf("%3zu (%02x)  ::  %04x - %04x  ----  %04x - %04x  ----  %04x - %04x\n",
+	     i, i, a->red[i], b->red[i], a->green[i], b->green[i], a->blue[i], b->blue[i]);
+    }
 }
 
 
@@ -215,6 +223,21 @@ int main(int argc, char *argv[])
     printf("libclut_lower_resolution (y) failed\n"), rc = 1;
   
   
+  for (i = 0; i < 256; i++)
+    {
+      t1.blue[i] = t1.green[i] = t1.red[i] = (uint16_t)((i << 8) | i);
+      t2.blue[i] = t2.green[i] = t2.red[i] = (uint16_t)((i << 8) | i);
+    }
+  libclut_linearise(&t1, UINT16_MAX, uint16_t, 1, 1, 1);
+  if (!clutcmp(&t1, &t2, 1))
+    printf("libclut_linearise failed\n"), rc = 1;
+  libclut_standardise(&t1, UINT16_MAX, uint16_t, 1, 1, 1);
+  if (clutcmp(&t1, &t2, 12))
+    printf("libclut_linearise/libclut_standardise failed\n"), rc = 1;
+  /* High error rate, especially at low values, are expected due
+   * to low precision and truncated values rather rounded values. */
+  
+  
   if (!rc)
     printf("everything is fine\n");
   return rc;
@@ -228,8 +251,6 @@ int main(int argc, char *argv[])
 /*
   libclut_cie_contrast
   libclut_cie_brightness
-  libclut_linearise
-  libclut_standardise
   libclut_cie_invert
   libclut_cie_limits
   libclut_cie_manipulate
