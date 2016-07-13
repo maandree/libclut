@@ -36,13 +36,41 @@ struct clut
   uint16_t  *blue;
 };
 
+struct dclut
+{
+  size_t   red_size;
+  size_t green_size;
+  size_t  blue_size;
+  double   *red;
+  double *green;
+  double  *blue;
+};
 
 
-static inline int clutcmp(const struct clut *a, const struct clut *b, uint16_t tol)
+
+static int clutcmp(const struct clut *a, const struct clut *b, uint16_t tol)
 {
   size_t i;
   if (tol == 0)
     return memcmp(a->red, b->red, 3 * 256 * sizeof(uint16_t));
+  for (i = 0; i < 3 * 256; i++)
+    if (a->red[i] > b->red[i])
+      {
+	if (a->red[i] - b->red[i] > tol)
+	  return +1;
+      }
+    else if (a->red[i] < b->red[i])
+      {
+	if (b->red[i] - a->red[i] > tol)
+	  return -1;
+      }
+  return 0;
+}
+
+
+static int dclutcmp(const struct dclut *a, const struct dclut *b, double tol)
+{
+  size_t i;
   for (i = 0; i < 3 * 256; i++)
     if (a->red[i] > b->red[i])
       {
@@ -70,7 +98,24 @@ static int dumpcluts(const struct clut *a, const struct clut *b, int tol)
 	  (((b1[i] > b2[i]) ? (b1[i] - b2[i]) : (b2[i] - b1[i])) <= tol))
 	continue;
       printf("%3zu (%02x)  ::  %04x - %04x  ----  %04x - %04x  ----  %04x - %04x\n",
-	     i, i, a->red[i], b->red[i], a->green[i], b->green[i], a->blue[i], b->blue[i]);
+	     i, i, r1[i], r2[i], g1[i], g2[i], b1[i], b2[i]);
+    }
+}
+
+
+static int dumpdcluts(const struct dclut *a, const struct dclut *b, double tol)
+{
+  size_t i;
+  double *r1 = a->red, *r2 = b->red, *g1 = a->green, *g2 = b->green, *b1 = a->blue, *b2 = b->blue;
+  for (i = 0; i < 256; i++)
+    {
+      if ((tol >= 0) &&
+	  (((r1[i] > r2[i]) ? (r1[i] - r2[i]) : (r2[i] - r1[i])) <= tol) &&
+	  (((g1[i] > g2[i]) ? (g1[i] - g2[i]) : (g2[i] - g1[i])) <= tol) &&
+	  (((b1[i] > b2[i]) ? (b1[i] - b2[i]) : (b2[i] - b1[i])) <= tol))
+	continue;
+      printf("%3zu (%02x)  ::  %lf - %lf  ----  %lf - %lf  ----  %lf - %lf\n",
+	     i, i, r1[i], r2[i], g1[i], g2[i], b1[i], b2[i]);
     }
 }
 
@@ -91,19 +136,24 @@ static double make_double(double x)
 int main(int argc, char *argv[])
 {
   struct clut t1, t2, t3;
+  struct dclut d1, d2;
   size_t i, j;
   int rc = 0;
   double param;
   
-  t1.  red_size = t2.  red_size = t3.  red_size = 256;
-  t1.green_size = t2.green_size = t3.green_size = 256;
-  t1. blue_size = t2. blue_size = t3. blue_size = 256;
+  t1.  red_size = t2.  red_size = t3.  red_size = d1.  red_size = d2.  red_size = 256;
+  t1.green_size = t2.green_size = t3.green_size = d1.green_size = d2.green_size = 256;
+  t1. blue_size = t2. blue_size = t3. blue_size = d1. blue_size = d2. blue_size = 256;
   if (!(t1.red = malloc(3 * 256 * sizeof(uint16_t))))  goto fail;
   if (!(t2.red = malloc(3 * 256 * sizeof(uint16_t))))  goto fail;
   if (!(t3.red = malloc(3 * 256 * sizeof(uint16_t))))  goto fail;
+  if (!(d1.red = malloc(3 * 256 * sizeof(double))))  goto fail;
+  if (!(d2.red = malloc(3 * 256 * sizeof(double))))  goto fail;
   t1.blue = (t1.green = t1.red + 256) + 256;
   t2.blue = (t2.green = t2.red + 256) + 256;
   t3.blue = (t3.green = t3.red + 256) + 256;
+  d1.blue = (d1.green = d1.red + 256) + 256;
+  d2.blue = (d2.green = d2.red + 256) + 256;
   
   
   libclut_start_over(&t1, UINT16_MAX, uint16_t, 1, 1, 1);
@@ -164,7 +214,7 @@ int main(int argc, char *argv[])
   if (clutcmp(&t1, &t2, 0))
     printf("libclut_manipulate failed\n"), rc = 1;
   
-
+  
   for (i = 0; i < 256; i++)
     {
       t1.blue[i] = t1.green[i] = t1.red[i] = (uint16_t)i;
@@ -238,8 +288,35 @@ int main(int argc, char *argv[])
    * to low precision and truncated values rather rounded values. */
   
   
+  for (i = 0; i < 256; i++)
+    {
+      d1.blue[i] = d1.green[i] = d1.red[i] = (i & 1) ? -1.0 : 2.0;
+      d2.blue[i] = d2.green[i] = d2.red[i] = (i & 1) ?  0.0 : 1.0;
+    }
+  libclut_clip(&d1, 1.0, double, 1, 1, 1);
+  if (dclutcmp(&d1, &d2, 0))
+    printf("libclut_clip failed\n"), rc = 1;
+  
+  
+  for (i = 0; i < 256; i++)
+    {
+      t1.blue[i] = t1.green[i] = t1.red[i] = UINT16_MAX - (uint16_t)((i << 8) | i);
+      t2.blue[i] = t2.green[i] = t2.red[i] = (uint16_t)(pow((double)i / 255.0, 1.0 / 1.1) * UINT16_MAX);
+    }
+  for (i = 0; i < 256; i++)
+    t3.blue[i] = t3.green[i] = t3.red[i] = t2.red[255 - i];
+  libclut_apply(&t1, UINT16_MAX, uint16_t, &t2, UINT16_MAX, uint16_t, 1, 1, 1);
+  if (clutcmp(&t1, &t3, 0))
+    printf("libclut_apply failed\n"), rc = 1;
+  
+  
   if (!rc)
     printf("everything is fine\n");
+  free(t1.red);
+  free(t2.red);
+  free(t3.red);
+  free(d1.red);
+  free(d2.red);
   return rc;
  fail:
   perror(*argv);
@@ -254,8 +331,6 @@ int main(int argc, char *argv[])
   libclut_cie_invert
   libclut_cie_limits
   libclut_cie_manipulate
-  libclut_clip
-  libclut_apply
   libclut_cie_apply
 */
 

@@ -693,17 +693,17 @@
  * @param  ftype    Same as `type`, but for the filter to apply. (Not actually used).
  * @param  channel  The channel, must be either "red", "green", or "blue".
  */
-#define libclut_apply__(clut, max, type, filter, fmax, ftype, channel)			\
-  do											\
-    {											\
-      size_t i__, rn__ = (clut)->channel##_size, fn__ = (filter)->channel##_size;	\
-      size_t x__, rm__ = (double)(max), m__ = (double)(max) / (double)(fmax);		\
-      for (i__ = 0; i__ < rn__; i__++)							\
-	{										\
-	  x__ = (size_t)((double)((clut)->channel[i__]) / rm__ * fn__);			\
-	  (clut)->channel[i__] = (type)((double)((filter)->channel[x__]) * m__);	\
-	}										\
-    }											\
+#define libclut_apply__(clut, max, type, filter, fmax, ftype, channel)				\
+  do												\
+    {												\
+      size_t i__, rn__ = (clut)->channel##_size - 1, fn__ = (filter)->channel##_size - 1;	\
+      double x__, rm__ = (double)(max), m__ = (double)(max) / (double)(fmax);			\
+      for (i__ = 0; i__ < rn__; i__++)								\
+	{											\
+	  x__ = (double)((clut)->channel[i__]) / rm__ * fn__;					\
+	  (clut)->channel[i__] = (type)((double)((filter)->channel[(size_t)x__]) * m__);	\
+	}											\
+    }												\
   while (0)
 
 
@@ -730,8 +730,8 @@
 #define libclut_cie_apply(clut, max, type, filter, fmax, ftype, r, g, b)				\
   do													\
     {													\
-      size_t rfn__ = (filter)->red_size, gfn__ = (filter)->green_size;					\
-      size_t bfn__ = (filter)->blue_size, x__;								\
+      size_t rfn__ = (filter)->red_size - 1, gfn__ = (filter)->green_size - 1;				\
+      size_t bfn__ = (filter)->blue_size - 1, x__;							\
       size_t rm__ = (double)(max), fm__ = (double)(fmax);						\
       libclut_cie__(clut, max, type, 0, r, g, b,							\
 		    (x__ = (size_t)(Y__ / rm__ * rfn__), (double)((filter)->red[x__])   / fm__),	\
