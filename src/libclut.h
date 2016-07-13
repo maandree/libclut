@@ -238,33 +238,33 @@
  * @param  g     Whether to invert the green colour curve.
  * @param  b     Whether to invert the blue colour curve.
  */
-#define libclut_negative(clut, max, type, r, g, b)			\
-  do									\
-    {									\
-      size_t i__, n__;							\
-      type t__;								\
-      if (r)								\
-	for (i__ = 0, n__ = (clut)->red_size; i__ < (n__ >> 1); i__)	\
-	  {								\
-	    t__ = (clut)->red[i__];					\
-	    (clut)->red[i__] = (clut)->red[n__ - i__ - 1];		\
-	    (clut)->red[n__ - i__ - 1] = t__;				\
-	  }								\
-      if (g)								\
-	for (i__ = 0, n__ = (clut)->green_size; i__ < (n__ >> 1); i__)	\
-	  {								\
-	    t__ = (clut)->green[i__];					\
-	    (clut)->green[i__] = (clut)->green[n__ - i__ - 1];		\
-	    (clut)->green[n__ - i__ - 1] = t__;				\
-	  }								\
-      if (b)								\
-	for (i__ = 0, n__ = (clut)->blue_size; i__ < (n__ >> 1); i__)	\
-	  {								\
-	    t__ = (clut)->blue[i__];					\
-	    (clut)->blue[i__] = (clut)->blue[n__ - i__ - 1];		\
-	    (clut)->blue[n__ - i__ - 1] = t__;				\
-	  }								\
-    }									\
+#define libclut_negative(clut, max, type, r, g, b)				\
+  do										\
+    {										\
+      size_t i__, n__;								\
+      type t__;									\
+      if (r)									\
+	for (i__ = 0, n__ = (clut)->red_size; i__ < (n__ >> 1); i__++)		\
+	  {									\
+	    t__ = (clut)->red[i__];						\
+	    (clut)->red[i__] = (clut)->red[n__ - i__ - 1];			\
+	    (clut)->red[n__ - i__ - 1] = t__;					\
+	  }									\
+      if (g)									\
+	for (i__ = 0, n__ = (clut)->green_size; i__ < (n__ >> 1); i__++)	\
+	  {									\
+	    t__ = (clut)->green[i__];						\
+	    (clut)->green[i__] = (clut)->green[n__ - i__ - 1];			\
+	    (clut)->green[n__ - i__ - 1] = t__;					\
+	  }									\
+      if (b)									\
+	for (i__ = 0, n__ = (clut)->blue_size; i__ < (n__ >> 1); i__++)		\
+	  {									\
+	    t__ = (clut)->blue[i__];						\
+	    (clut)->blue[i__] = (clut)->blue[n__ - i__ - 1];			\
+	    (clut)->blue[n__ - i__ - 1] = t__;					\
+	  }									\
+    }										\
   while (0)
 
 
@@ -511,19 +511,19 @@
       if (r)							\
 	{							\
 	  m__ = (double)((clut)->red_size - 1);			\
-	  for (i__ = 0; i__ < (clut)->red_size; i__)		\
+	  for (i__ = 0; i__ < (clut)->red_size; i__++)		\
 	    (clut)->red[i__] = (type)((i__ / m__) * (max));	\
 	}							\
       if (g)							\
 	{							\
 	  m__ = (double)((clut)->green_size - 1);		\
-	  for (i__ = 0; i__ < (clut)->green_size; i__)		\
+	  for (i__ = 0; i__ < (clut)->green_size; i__++)	\
 	    (clut)->green[i__] = (type)((i__ / m__) * (max));	\
 	}							\
       if (b)							\
 	{							\
 	  m__ = (double)((clut)->blue_size - 1);		\
-	  for (i__ = 0; i__ < (clut)->blue_size; i__)		\
+	  for (i__ = 0; i__ < (clut)->blue_size; i__++)		\
 	    (clut)->blue[i__] = (type)((i__ / m__) * (max));	\
 	}							\
     }								\
@@ -816,7 +816,7 @@
 	{										\
 	  if (!(rtest))									\
 	    break;									\
-	  for (i__ = 0; i__ < rn__; i__)						\
+	  for (i__ = 0; i__ < rn__; i__++)						\
 	    {										\
 	      libclut_model_srgb_to_ciexyy(rs__[i__] / m__, gs__[i__] / m__,		\
 					   bs__[i__] / m__, &x__, &y__, &Y__);		\
@@ -830,7 +830,7 @@
 	{										\
 	  if (!(rtest) && !(gtest) && !(btest))						\
 	    break;									\
-	  for (i__ = 0; i__ < rn__; i__)						\
+	  for (i__ = 0; i__ < rn__; i__++)						\
 	    {										\
 	      libclut_model_srgb_to_ciexyy(rs__[i__] / m__, gs__[i__] / m__,		\
 					   bs__[i__] / m__, &x__, &y__, &Y__);		\
@@ -854,17 +854,17 @@
       else										\
 	{										\
 	  if (rtest)									\
-	    for (i__ = 0; i__ < rn__; i__)						\
+	    for (i__ = 0; i__ < rn__; i__++)						\
 	    libclut_cie___(clut, max, type, rexpr, i__,					\
 			   libclut_i__(i__, rn__, gn__),				\
 			   libclut_i__(i__, rn__, bn__));				\
 	  if (gtest)									\
-	    for (i__ = 0; i__ < rn__; i__)						\
+	    for (i__ = 0; i__ < rn__; i__++)						\
 	    libclut_cie___(clut, max, type, gexpr,					\
 			   libclut_i__(i__, gn__, rn__), i__,				\
 			   libclut_i__(i__, gn__, bn__));				\
 	  if (btest)									\
-	    for (i__ = 0; i__ < rn__; i__)						\
+	    for (i__ = 0; i__ < rn__; i__++)						\
 	    libclut_cie___(clut, max, type, bexpr, i__,					\
 			   libclut_i__(i__, bn__, rn__),				\
 			   libclut_i__(i__, bn__, gn__), i__);				\
@@ -898,7 +898,7 @@
 #define libclut_cie___(clut, max, type, c, expr, ri, gi, bi)			\
   do										\
     {										\
-      for (i__ = 0; i__ < c##n__; i__)						\
+      for (i__ = 0; i__ < c##n__; i__++)					\
 	{									\
 	  libclut_model_srgb_to_ciexyy(rs__[(ri)] / m__, gs__[(gi)] / m__,	\
 				       bs__[(bi)] / m__, &x__, &y__, &Y__);	\
