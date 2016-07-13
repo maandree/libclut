@@ -45,9 +45,9 @@
 #define libclut_rgb_contrast(clut, max, type, r, g, b)							\
   do													\
     {													\
-      if ((r) != 1.0)  libclut__(clut, red,   type, LIBCLUT_VALUE - (max) * 0.5 * (r) + (max) * 0.5);	\
-      if ((g) != 1.0)  libclut__(clut, green, type, LIBCLUT_VALUE - (max) * 0.5 * (g) + (max) * 0.5);	\
-      if ((b) != 1.0)  libclut__(clut, blue,  type, LIBCLUT_VALUE - (max) * 0.5 * (b) + (max) * 0.5);	\
+      if ((r) != 1.0)  libclut__(clut, red,   type, (LIBCLUT_VALUE - (max) * 0.5) * (r) + (max) * 0.5);	\
+      if ((g) != 1.0)  libclut__(clut, green, type, (LIBCLUT_VALUE - (max) * 0.5) * (g) + (max) * 0.5);	\
+      if ((b) != 1.0)  libclut__(clut, blue,  type, (LIBCLUT_VALUE - (max) * 0.5) * (b) + (max) * 0.5);	\
     }													\
   while (0)
 
@@ -346,15 +346,15 @@
       double m__ = (double)(max);									\
       size_t i__;											\
       if (rp)												\
-	for (i__ = 0; i++ < (clut)->red_size; i__++)							\
+	for (i__ = 0; i__ < (clut)->red_size; i__++)							\
 	  if ((clut)->red[i__] && ((clut)->red[i__] != (max)))						\
 	    (clut)->red[i__] = (type)(m__ * (0.5 - log(m__ / (clut)->red[i__] - 1.0) / r__));		\
       if (gp)												\
-	for (i__ = 0; i++ < (clut)->green_size; i__++)							\
+	for (i__ = 0; i__ < (clut)->green_size; i__++)							\
 	  if ((clut)->green[i__] && ((clut)->green[i__] != (max)))					\
 	    (clut)->green[i__] = (type)(m__ * (0.5 - log(m__ / (clut)->green[i__] - 1.0) / g__));	\
       if (bp)												\
-	for (i__ = 0; i++ < (clut)->blue_size; i__++)							\
+	for (i__ = 0; i__ < (clut)->blue_size; i__++)							\
 	  if ((clut)->blue[i__] && ((clut)->blue[i__] != (max)))					\
 	    (clut)->blue[i__] = (type)(m__ * (0.5 - log(m__ / (clut)->blue[i__] - 1.0) / b__));		\
     }													\
@@ -621,31 +621,29 @@
  */
 #define libclut_lower_resolution__(clut, channel, max, type, x, y)			\
   do											\
-    {											\
-      if ((x) || (y))									\
-	{										\
-	  size_t x__, y__, i__, n__ = (clut)->channel##_size;				\
-	  double xm__ = (double)((x) - 1), ym__ = (double)((y) - 1);			\
-	  double m__ = (double)(max);							\
-	  type c__[n__]; /* Do not use alloca! */					\
-	  for (i__ = 0; i__ < n__; i__++)						\
-	    {										\
-	      if ((x__ = i__), (x))							\
-		{									\
-		  x__ = (size_t)((double)i__ * (x) / n__);				\
-		  x__ = (size_t)((double)x__ * i__ / xm__);				\
-		}									\
-	      if (!(y))									\
-		c__[i__] = (clut)->channel[x__];					\
-	      else									\
-		{									\
-		  y__ = (size_t)((double)((clut)->channel[x__]) / (max) * ym__ + 0.5);	\
-		  c__[i__] = (type)((double)y__ / ym__ * m__);				\
-		}									\
-	    }										\
-	  memcpy((clut)->channel, c__, n__ * sizeof(type));				\
-	}										\
-    }											\
+    if ((x) || (y))									\
+      {											\
+	size_t x__, y__, i__, n__ = (clut)->channel##_size;				\
+	double xm__ = (double)((x) - 1), ym__ = (double)((y) - 1);			\
+	double m__ = (double)(max), nm__ = (double)(n__ - 1);				\
+	type c__[n__]; /* Do not use alloca! */						\
+	for (i__ = 0; i__ < n__; i__++)							\
+	  {										\
+	    if ((x__ = i__), (x))							\
+	      {										\
+		x__ = (size_t)((double)i__ * (x) / n__);				\
+		x__ = (size_t)((double)x__ * nm__ / xm__);				\
+	      }										\
+	    if (!(y))									\
+	      c__[i__] = (clut)->channel[x__];						\
+	    else									\
+	      {										\
+		y__ = (size_t)((double)((clut)->channel[x__]) / (max) * ym__ + 0.5);	\
+		c__[i__] = (type)((double)y__ / ym__ * m__);				\
+	      }										\
+	  }										\
+	memcpy((clut)->channel, c__, n__ * sizeof(type));				\
+      }											\
   while (0)
 
 
