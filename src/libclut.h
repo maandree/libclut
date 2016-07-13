@@ -23,6 +23,21 @@
 
 
 
+/* This is to avoid warnings about comparing double, which is safe in our case. { */
+#if defined(__GNUC__)
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wfloat-equal"
+#endif
+static inline int libclut_eq__(double a, double b)  {  return a == b;  }
+static inline int libclut_1__(double x)  {  return libclut_eq__(x, 1);  }
+static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
+#if defined(__GNUC__)
+# pragma GCC diagnostic pop
+#endif
+/* } */
+
+
+
 /**
  * Apply contrast correction on the colour curves using sRGB.
  * 
@@ -42,13 +57,17 @@
  * @param  g     The contrast parameter for the green curve.
  * @param  b     The contrast parameter for the blue curve.
  */
-#define libclut_rgb_contrast(clut, max, type, r, g, b)							\
-  do													\
-    {													\
-      if ((r) != 1.0)  libclut__(clut, red,   type, (LIBCLUT_VALUE - (max) * 0.5) * (r) + (max) * 0.5);	\
-      if ((g) != 1.0)  libclut__(clut, green, type, (LIBCLUT_VALUE - (max) * 0.5) * (g) + (max) * 0.5);	\
-      if ((b) != 1.0)  libclut__(clut, blue,  type, (LIBCLUT_VALUE - (max) * 0.5) * (b) + (max) * 0.5);	\
-    }													\
+#define libclut_rgb_contrast(clut, max, type, r, g, b)						\
+  do												\
+    {												\
+      const double h__ = (double)5 / 10;							\
+      if (!libclut_1__(r))									\
+	libclut__(clut, red,   type, (LIBCLUT_VALUE - (max) * h__) * (r) + (max) * h__);	\
+      if (!libclut_1__(g))									\
+	libclut__(clut, green, type, (LIBCLUT_VALUE - (max) * h__) * (g) + (max) * h__);	\
+      if (!libclut_1__(b))									\
+	libclut__(clut, blue,  type, (LIBCLUT_VALUE - (max) * h__) * (b) + (max) * h__);	\
+    }												\
   while (0)
 
 
@@ -74,8 +93,14 @@
  * @param  b     The contrast parameter for the blue curve.
  */
 #define libclut_cie_contrast(clut, max, type, r, g, b)						\
-  libclut_cie__(clut, max, type, (r == g) && (g == b), (r) != 1.0, (g) != 1.0, (b) != 1.0,	\
-		(Y__ - 0.5) * (r) + 0.5, (Y__ - 0.5) * (g) + 0.5, (Y__ - 0.5) * (b) + 0.5)
+  do												\
+    {												\
+      const double h__ = (double)5 / 10;							\
+      libclut_cie__(clut, max, type, libclut_eq__((r), (g)) && libclut_eq__((g), (b)), 		\
+		    !libclut_1__(r), !libclut_1__(g), !libclut_1__(b),				\
+		    (Y__ - h__) * (r) + h__, (Y__ - h__) * (g) + h__, (Y__ - h__) * (b) + h__);	\
+    }												\
+  while (0)
 
 
 /**
@@ -98,9 +123,9 @@
 #define libclut_rgb_brightness(clut, max, type, r, g, b)			\
   do										\
     {										\
-      if ((r) != 1.0)  libclut__(clut, red,   type, LIBCLUT_VALUE * (r));	\
-      if ((g) != 1.0)  libclut__(clut, green, type, LIBCLUT_VALUE * (g));	\
-      if ((b) != 1.0)  libclut__(clut, blue,  type, LIBCLUT_VALUE * (b));	\
+      if (!libclut_1__(r))  libclut__(clut, red,   type, LIBCLUT_VALUE * (r));	\
+      if (!libclut_1__(g))  libclut__(clut, green, type, LIBCLUT_VALUE * (g));	\
+      if (!libclut_1__(b))  libclut__(clut, blue,  type, LIBCLUT_VALUE * (b));	\
     }										\
   while (0)
 
@@ -125,8 +150,9 @@
  * @param  b     The brightness parameter for the blue curve.
  */
 #define libclut_cie_brightness(clut, max, type, r, g, b)				\
-  libclut_cie__(clut, max, type, ((r) == (g)) && ((g) == (b)),				\
-		(r) != 1.0, (g) != 1.0, (b) != 1.0, Y__ * (r), Y__ * (g), Y__ * (b))
+  libclut_cie__(clut, max, type, libclut_eq__((r), (g)) && libclut_eq__((g), (b)),	\
+		!libclut_1__(r), !libclut_1__(g), !libclut_1__(b),			\
+		Y__ * (r), Y__ * (g), Y__ * (b))
 
 
 /**
@@ -210,14 +236,17 @@
  * @param  g     The gamma parameter the green colour curve.
  * @param  b     The gamma parameter the blue colour curve.
  */
-#define libclut_gamma(clut, max, type, r, g, b)							\
-  do												\
-    {												\
-      double m__ = (double)(max);								\
-      if (r != 1.0)  libclut__(clut, red,   type, m__ * pow(LIBCLUT_VALUE / m__, 1.0 / (r)));	\
-      if (g != 1.0)  libclut__(clut, green, type, m__ * pow(LIBCLUT_VALUE / m__, 1.0 / (g)));	\
-      if (b != 1.0)  libclut__(clut, blue,  type, m__ * pow(LIBCLUT_VALUE / m__, 1.0 / (b)));	\
-    }												\
+#define libclut_gamma(clut, max, type, r, g, b)						\
+  do											\
+    {											\
+      double m__ = (double)(max);							\
+      if (!libclut_1__(r))								\
+	libclut__(clut, red,   type, m__ * pow(LIBCLUT_VALUE / m__, 1 / (double)(r)));	\
+      if (!libclut_1__(g))								\
+	libclut__(clut, green, type, m__ * pow(LIBCLUT_VALUE / m__, 1 / (double)(g)));	\
+      if (!libclut_1__(b))								\
+	libclut__(clut, blue,  type, m__ * pow(LIBCLUT_VALUE / m__, 1 / (double)(b)));	\
+    }											\
   while (0)
 
 
@@ -311,7 +340,7 @@
  * @param  b     Whether to invert the blue colour curve.
  */
 #define libclut_cie_invert(clut, max, type, r, g, b)						\
-  libclut_cie__(clut, max, type, (r) && (g) && (b), r, g, b, 1.0 - Y__, 1.0 - Y__, 1.0 - Y__)
+  libclut_cie__(clut, max, type, (r) && (g) && (b), r, g, b, 1 - Y__, 1 - Y__, 1 - Y__)
 
 
 /**
@@ -337,27 +366,28 @@
  * @param  gp    Pointer to the sigmoid parameter for the green curve. `NULL` for no adjustment.
  * @param  bp    Pointer to the sigmoid parameter for the blue curve. `NULL` for no adjustment.
  */
-#define libclut_sigmoid(clut, max, type, rp, gp, bp)							\
-  do													\
-    {													\
-      double r__ = (rp) ? *(rp) : 0.0;									\
-      double g__ = (gp) ? *(gp) : 0.0;									\
-      double b__ = (bp) ? *(bp) : 0.0;									\
-      double m__ = (double)(max);									\
-      size_t i__;											\
-      if (rp)												\
-	for (i__ = 0; i__ < (clut)->red_size; i__++)							\
-	  if ((clut)->red[i__] && ((clut)->red[i__] != (max)))						\
-	    (clut)->red[i__] = (type)(m__ * (0.5 - log(m__ / (clut)->red[i__] - 1.0) / r__));		\
-      if (gp)												\
-	for (i__ = 0; i__ < (clut)->green_size; i__++)							\
-	  if ((clut)->green[i__] && ((clut)->green[i__] != (max)))					\
-	    (clut)->green[i__] = (type)(m__ * (0.5 - log(m__ / (clut)->green[i__] - 1.0) / g__));	\
-      if (bp)												\
-	for (i__ = 0; i__ < (clut)->blue_size; i__++)							\
-	  if ((clut)->blue[i__] && ((clut)->blue[i__] != (max)))					\
-	    (clut)->blue[i__] = (type)(m__ * (0.5 - log(m__ / (clut)->blue[i__] - 1.0) / b__));		\
-    }													\
+#define libclut_sigmoid(clut, max, type, rp, gp, bp)						\
+  do												\
+    {												\
+      double *gcc_6_1_1_workaround, s__, m__ = (double)(max);					\
+      size_t i__;										\
+      const double h__ = (double)5 / 10;							\
+      gcc_6_1_1_workaround = rp;								\
+      if (gcc_6_1_1_workaround)									\
+	for (i__ = 0, s__ = *gcc_6_1_1_workaround; i__ < (clut)->red_size; i__++)		\
+	  if ((clut)->red[i__] && ((clut)->red[i__] != (max)))					\
+	    (clut)->red[i__] = (type)(m__ * (h__ - log(m__ / (clut)->red[i__] - 1) / s__));	\
+      gcc_6_1_1_workaround = gp;								\
+      if (gcc_6_1_1_workaround)									\
+	for (i__ = 0, s__ = *gcc_6_1_1_workaround; i__ < (clut)->green_size; i__++)		\
+	  if ((clut)->green[i__] && ((clut)->green[i__] != (max)))				\
+	    (clut)->green[i__] = (type)(m__ * (h__ - log(m__ / (clut)->green[i__] - 1) / s__));	\
+      gcc_6_1_1_workaround = bp;								\
+      if (gcc_6_1_1_workaround)									\
+	for (i__ = 0, s__ = *gcc_6_1_1_workaround; i__ < (clut)->blue_size; i__++)		\
+	  if ((clut)->blue[i__] && ((clut)->blue[i__] != (max)))				\
+	    (clut)->blue[i__] = (type)(m__ * (h__ - log(m__ / (clut)->blue[i__] - 1) / s__));	\
+    }												\
   while (0)
 
 
@@ -383,17 +413,17 @@
   do												\
     {												\
       double diff__;										\
-      if ((rmin != 0.0) || (rmax != 1.0))							\
+      if (!libclut_0__(rmin) || !libclut_1__(rmax))						\
 	{											\
 	  diff__ = (double)(rmax) - (double)(rmin);						\
 	  libclut__(clut, red, type, LIBCLUT_VALUE / (double)(max) * diff__ + (rmin));		\
 	}											\
-      if ((gmin != 0.0) || (gmax != 1.0))							\
+      if (!libclut_0__(gmin) || !libclut_1__(gmax))						\
 	{											\
 	  diff__ = (double)(gmax) - (double)(gmin);						\
 	  libclut__(clut, green, type, LIBCLUT_VALUE / (double)(max) * diff__ + (gmin));	\
 	}											\
-      if ((bmin != 0.0) || (bmax != 1.0))							\
+      if (!libclut_0__(bmin) || !libclut_1__(bmax))						\
 	{											\
 	  diff__ = (double)(bmax) - (double)(bmin);						\
 	  libclut__(clut, blue, type, LIBCLUT_VALUE / (double)(max) * diff__ + (bmin));		\
@@ -422,15 +452,18 @@
  * @param  bmin  The blue component value of the blackpoint.
  * @param  bmax  The blue component value of the whitepoint.
  */
-#define libclut_cie_limits(clut, max, type, rmin, rmax, gmin, gmax, bmin, bmax)				\
-  do													\
-    {													\
-      double rd__ = (rmax) - (rmin), gd__ = (gmax) - (gmin), bd__ = (bmax) - (bmin);			\
-      libclut_cie__(clut, max, type, ((rmin) == (gmin)) && ((gmin) == (bmin)) &&			\
-		    ((rmax) == (gmax)) && ((gmax) == (bmax)), ((rmin) != 0.0) || ((rmax) != 1.0),	\
-		    ((gmin) != 0.0) || ((gmax) != 1.0), ((bmin) != 0.0) || ((bmax) != 1.0),		\
-		    Y__ * rd__ + (rmin), Y__ * gd__ + (gmin), Y__ * bd__ + (bmin));			\
-    }													\
+#define libclut_cie_limits(clut, max, type, rmin, rmax, gmin, gmax, bmin, bmax)		\
+  do											\
+    {											\
+      double rd__ = (rmax) - (rmin), gd__ = (gmax) - (gmin), bd__ = (bmax) - (bmin);	\
+      libclut_cie__(clut, max, type,							\
+		    libclut_eq__((rmin), (gmin)) && libclut_eq__((gmin), (bmin)) &&	\
+		    libclut_eq__((rmax), (gmax)) && libclut_eq__((gmax), (bmax)),	\
+		    !libclut_0__(rmin) || !libclut_1__(rmax),				\
+		    !libclut_0__(gmin) || !libclut_1__(gmax),				\
+		    !libclut_0__(bmin) || !libclut_1__(bmax),				\
+		    Y__ * rd__ + (rmin), Y__ * gd__ + (gmin), Y__ * bd__ + (bmin));	\
+    }											\
   while (0)
 
 
@@ -452,14 +485,21 @@
  * @param  b     Function to manipulate the blue colour curve, should either
  *               be `NULL` or map a [0, 1] `double` to a [0, 1] `double`.
  */
-#define libclut_manipulate(clut, max, type, r, g, b)				\
-  do										\
-    {										\
-      double m__ = (double)(max);						\
-      if (r)  libclut__(clut, red,   type, m__ * (r)(LIBCLUT_VALUE / m__));	\
-      if (g)  libclut__(clut, green, type, m__ * (g)(LIBCLUT_VALUE / m__));	\
-      if (b)  libclut__(clut, blue,  type, m__ * (b)(LIBCLUT_VALUE / m__));	\
-    }										\
+#define libclut_manipulate(clut, max, type, r, g, b)						\
+  do												\
+    {												\
+      double m__ = (double)(max);								\
+      double (*gcc_6_1_1_workaround__)(double);							\
+      gcc_6_1_1_workaround__ = r;								\
+      if (gcc_6_1_1_workaround__)	       							\
+	libclut__(clut, red,   type, m__ * (gcc_6_1_1_workaround__)(LIBCLUT_VALUE / m__));	\
+      gcc_6_1_1_workaround__ = g;								\
+      if (gcc_6_1_1_workaround__)								\
+	libclut__(clut, green, type, m__ * (gcc_6_1_1_workaround__)(LIBCLUT_VALUE / m__));	\
+      gcc_6_1_1_workaround__ = b;								\
+      if (gcc_6_1_1_workaround__)								\
+	libclut__(clut, blue,  type, m__ * (gcc_6_1_1_workaround__)(LIBCLUT_VALUE / m__));	\
+    }												\
   while (0)
 
 
@@ -503,30 +543,30 @@
  * @param  g     Whether to reset the green colour curve.
  * @param  b     Whether to reset the blue colour curve.
  */
-#define libclut_start_over(clut, max, type, r, g, b)		\
-  do								\
-    {								\
-      size_t i__;						\
-      double m__;						\
-      if (r)							\
-	{							\
-	  m__ = (double)((clut)->red_size - 1);			\
-	  for (i__ = 0; i__ < (clut)->red_size; i__++)		\
-	    (clut)->red[i__] = (type)((i__ / m__) * (max));	\
-	}							\
-      if (g)							\
-	{							\
-	  m__ = (double)((clut)->green_size - 1);		\
-	  for (i__ = 0; i__ < (clut)->green_size; i__++)	\
-	    (clut)->green[i__] = (type)((i__ / m__) * (max));	\
-	}							\
-      if (b)							\
-	{							\
-	  m__ = (double)((clut)->blue_size - 1);		\
-	  for (i__ = 0; i__ < (clut)->blue_size; i__++)		\
-	    (clut)->blue[i__] = (type)((i__ / m__) * (max));	\
-	}							\
-    }								\
+#define libclut_start_over(clut, max, type, r, g, b)			\
+  do									\
+    {									\
+      size_t i__;							\
+      double m__;							\
+      if (r)								\
+	{								\
+	  m__ = (double)((clut)->red_size - 1);				\
+	  for (i__ = 0; i__ < (clut)->red_size; i__++)			\
+	    (clut)->red[i__] = (type)(((double)i__ / m__) * (max));	\
+	}								\
+      if (g)								\
+	{								\
+	  m__ = (double)((clut)->green_size - 1);			\
+	  for (i__ = 0; i__ < (clut)->green_size; i__++)		\
+	    (clut)->green[i__] = (type)(((double)i__ / m__) * (max));	\
+	}								\
+      if (b)								\
+	{								\
+	  m__ = (double)((clut)->blue_size - 1);			\
+	  for (i__ = 0; i__ < (clut)->blue_size; i__++)			\
+	    (clut)->blue[i__] = (type)(((double)i__ / m__) * (max));	\
+	}								\
+    }									\
   while (0)
 
 
@@ -627,18 +667,19 @@
 	double xm__ = (double)((x) - 1), ym__ = (double)((y) - 1);			\
 	double m__ = (double)(max), nm__ = (double)(n__ - 1);				\
 	type c__[n__]; /* Do not use alloca! */						\
+	const double h__ = (double)5 / 10;						\
 	for (i__ = 0; i__ < n__; i__++)							\
 	  {										\
 	    if ((x__ = i__), (x))							\
 	      {										\
-		x__ = (size_t)((double)i__ * (x) / n__);				\
+		x__ = (size_t)((double)i__ * (double)(x) / (double)n__);		\
 		x__ = (size_t)((double)x__ * nm__ / xm__);				\
 	      }										\
 	    if (!(y))									\
 	      c__[i__] = (clut)->channel[x__];						\
 	    else									\
 	      {										\
-		y__ = (size_t)((double)((clut)->channel[x__]) / (max) * ym__ + 0.5);	\
+		y__ = (size_t)((double)((clut)->channel[x__]) / (max) * ym__ + h__);	\
 		c__[i__] = (type)((double)y__ / ym__ * m__);				\
 	      }										\
 	  }										\
@@ -700,7 +741,7 @@
       double x__, rm__ = (double)(max), m__ = (double)(max) / (double)(fmax);			\
       for (i__ = 0; i__ < rn__; i__++)								\
 	{											\
-	  x__ = (double)((clut)->channel[i__]) / rm__ * fn__;					\
+	  x__ = (double)((clut)->channel[i__]) / rm__ * (double)fn__;				\
 	  (clut)->channel[i__] = (type)((double)((filter)->channel[(size_t)x__]) * m__);	\
 	}											\
     }												\
@@ -941,7 +982,7 @@
 LIBCLUT_GCC_ONLY__(__attribute__((__const__, __leaf__)))
 double (libclut_model_linear_to_standard1)(double);
 #define libclut_model_linear_to_standard1(c)  \
-  (((double)(c) <= 0.0031308) ? (12.92 * (double)(c)) : ((1.0 + 0.055) * pow((double)(c), 1.0 / 2.4) - 0.055))
+  (((double)(c) <= 0.0031308) ? (12.92 * (double)(c)) : ((1.055) * pow((double)(c), 1 / 2.4) - 0.055))
 
 
 /**
@@ -983,7 +1024,7 @@ void (libclut_model_linear_to_standard)(double*, double*, double*);
 LIBCLUT_GCC_ONLY__(__attribute__((__const__, __leaf__)))
 double (libclut_model_standard_to_linear1)(double);
 #define libclut_model_standard_to_linear1(c)  \
-  (((double)(c) <= 0.04045) ? ((double)(c) / 12.92) : pow(((double)(c) + 0.055) / (1.0 + 0.055), 2.4))
+  (((double)(c) <= 0.04045) ? ((double)(c) / 12.92) : pow(((double)(c) + 0.055) / 1.055, 2.4))
 
 
 /**
@@ -1027,8 +1068,8 @@ void (libclut_model_ciexyy_to_ciexyz)(double, double, double, double*, double*);
   do									\
     {									\
       double x__ = (x), y__ = (y), Y__ = (Y), *X__ = (X), *Z__ = (Z);	\
-      *X__ = (y__ == 0.0) ? Y__ : (Y__ * x__ / y__);			\
-      *Z__ = (y__ == 0.0) ? Y__ : (Y__ * (1.0 - x__ - y__) / y__);	\
+      *X__ = libclut_0__(y__) ? Y__ : (Y__ * x__ / y__);		\
+      *Z__ = libclut_0__(y__) ? Y__ : (Y__ * (1 - x__ - y__) / y__);	\
     }									\
   while (0)
 
@@ -1049,8 +1090,8 @@ void (libclut_model_ciexyz_to_ciexyy)(double, double, double, double*, double*);
     {									\
       double X__ = (X), Y__ = (Y), Z__ = (Z), *x__ = (x), *y__ = (y);	\
       double s__ = X__ + Y__ + Z__;					\
-      if (s__ == 0.0)							\
-	*x__ = *y__ = 0.0;						\
+      if (libclut_0__(s__))						\
+	*x__ = *y__ = 0;						\
       else								\
 	*x__ = X__ / s__, *y__ = Y__ / s__;				\
     }									\
@@ -1189,13 +1230,13 @@ void (libclut_model_ciexyz_to_cielab)(double, double, double, double*, double*, 
       X__ = LIBCLUT_MODEL_CIEXYZ_TO_CIELAB__(X__);		\
       Y__ = LIBCLUT_MODEL_CIEXYZ_TO_CIELAB__(Y__);		\
       Z__ = LIBCLUT_MODEL_CIEXYZ_TO_CIELAB__(Z__);		\
-      *(L) = 116.0 * Y__ - 16.0;				\
-      *(a) = 500.0 * (X__ - Y__);				\
-      *(b) = 200.0 * (Y__ - Z__);				\
+      *(L) = 116 * Y__ - 16;					\
+      *(a) = 500 * (X__ - Y__);					\
+      *(b) = 200 * (Y__ - Z__);					\
     }								\
   while (0)
 #define LIBCLUT_MODEL_CIEXYZ_TO_CIELAB__(C)  \
-  (((C) > 0.00885642) ? pow((C), 1.0 / 3.0) : ((7.78 + 703.0 / 99900.0) * (C) + 0.1379310))
+  (((C) > 0.00885642) ? pow((C), 1.0 / 3) : ((7.78 + 703.0 / 99900) * (C) + 0.1379310))
 
 
 /**
@@ -1215,16 +1256,16 @@ void (libclut_model_cielab_to_ciexyz)(double, double, double, double*, double*, 
     {								\
       double L__ = (L), a__ = (a), b__ = (b);			\
       double *X__ = (X), *Y__ = (Y), *Z__ = (Z);		\
-      *Y__ = (L__ + 16.0) / 116.0;				\
-      *X__ = a__ / 500.0 + *Y__;				\
-      *Z__ = *Y__ - b__ / 200.0;				\
+      *Y__ = (L__ + 16) / 116;					\
+      *X__ = a__ / 500 + *Y__;					\
+      *Z__ = *Y__ - b__ / 200;					\
       *X__ = LIBCLUT_MODEL_CIELAB_TO_CIEXYZ__(*X__) * 0.95047;	\
       *Y__ = LIBCLUT_MODEL_CIELAB_TO_CIEXYZ__(*Y__);		\
       *Z__ = LIBCLUT_MODEL_CIELAB_TO_CIEXYZ__(*Z__) * 1.08883;	\
     }								\
   while (0)
 #define LIBCLUT_MODEL_CIELAB_TO_CIEXYZ__(C)  \
-  (((C)*(C)*(C) > 0.00885642) ? ((C)*(C)*(C)) : (((C) - 0.1379310) / (7.78 + 703.0 / 99900.0)))
+  (((C)*(C)*(C) > 0.00885642) ? ((C)*(C)*(C)) : (((C) - 0.1379310) / (7.78 + 703.0 / 99900)))
 
 
 

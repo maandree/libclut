@@ -86,7 +86,7 @@ static int dclutcmp(const struct dclut *a, const struct dclut *b, double tol)
 }
 
 
-static int dumpcluts(const struct clut *a, const struct clut *b, int tol)
+static void dumpcluts(const struct clut *a, const struct clut *b, int tol)
 {
   size_t i;
   uint16_t *r1 = a->red, *r2 = b->red, *g1 = a->green, *g2 = b->green, *b1 = a->blue, *b2 = b->blue;
@@ -97,13 +97,13 @@ static int dumpcluts(const struct clut *a, const struct clut *b, int tol)
 	  (((g1[i] > g2[i]) ? (g1[i] - g2[i]) : (g2[i] - g1[i])) <= tol) &&
 	  (((b1[i] > b2[i]) ? (b1[i] - b2[i]) : (b2[i] - b1[i])) <= tol))
 	continue;
-      printf("%3zu (%02x)  ::  %04x - %04x  ----  %04x - %04x  ----  %04x - %04x\n",
+      printf("%3zu (%02zx)  ::  %04x - %04x  ----  %04x - %04x  ----  %04x - %04x\n",
 	     i, i, r1[i], r2[i], g1[i], g2[i], b1[i], b2[i]);
     }
 }
 
 
-static int dumpdcluts(const struct dclut *a, const struct dclut *b, double tol)
+static void dumpdcluts(const struct dclut *a, const struct dclut *b, double tol)
 {
   size_t i;
   double *r1 = a->red, *r2 = b->red, *g1 = a->green, *g2 = b->green, *b1 = a->blue, *b2 = b->blue;
@@ -114,7 +114,7 @@ static int dumpdcluts(const struct dclut *a, const struct dclut *b, double tol)
 	  (((g1[i] > g2[i]) ? (g1[i] - g2[i]) : (g2[i] - g1[i])) <= tol) &&
 	  (((b1[i] > b2[i]) ? (b1[i] - b2[i]) : (b2[i] - b1[i])) <= tol))
 	continue;
-      printf("%3zu (%02x)  ::  %lf - %lf  ----  %lf - %lf  ----  %lf - %lf\n",
+      printf("%3zu (%02zx)  ::  %lf - %lf  ----  %lf - %lf  ----  %lf - %lf\n",
 	     i, i, r1[i], r2[i], g1[i], g2[i], b1[i], b2[i]);
     }
 }
@@ -135,6 +135,9 @@ static double make_double(double x)
  */
 int main(int argc, char *argv[])
 {
+#define HALF       ((double)5 / 10)
+#define TENTHS(x)  ((double)x / 10)
+  
   struct clut t1, t2, t3;
   struct dclut d1, d2;
   size_t i, j;
@@ -176,7 +179,7 @@ int main(int argc, char *argv[])
   for (i = 0; i < 256; i++)
     {
       t1.blue[i] = t1.green[i] = t1.red[i] = (uint16_t)i;
-      t2.blue[i] = t2.green[i] = t2.red[i] = UINT16_MAX - (uint16_t)i;
+      t2.blue[i] = t2.green[i] = t2.red[i] = (uint16_t)(UINT16_MAX - (uint16_t)i);
     }
   libclut_rgb_invert(&t1, UINT16_MAX, uint16_t, 1, 1, 1);
   if (clutcmp(&t1, &t2, 0))
@@ -186,7 +189,7 @@ int main(int argc, char *argv[])
   for (i = 0; i < 256; i++)
     {
       t1.blue[i] = t1.green[i] = t1.red[i] = (uint16_t)((i << 8) | i);
-      t2.blue[i] = 1 + (t2.green[i] = 1 + (t2.red[i] = 1000 + (uint16_t)i));
+      t2.blue[i] = (uint16_t)(1 + (t2.green[i] = (uint16_t)(1 + (t2.red[i] = (uint16_t)(1000 + i)))));
     }
   libclut_rgb_limits(&t1, UINT16_MAX, uint16_t, 1000, 1255, 1001, 1256, 1002, 1257);
   if (clutcmp(&t1, &t2, 0))
@@ -196,9 +199,9 @@ int main(int argc, char *argv[])
   for (i = 0; i < 256; i++)
     {
       t1.blue[i] = t1.green[i] = t1.red[i] = (uint16_t)i;
-      t2.red[i]   = t1.blue[i]  * 2;
-      t2.green[i] = t1.green[i] * 3;
-      t2.blue[i]  = t1.blue[i]  * 4;
+      t2.red[i]   = (uint16_t)(t1.blue[i]  * 2);
+      t2.green[i] = (uint16_t)(t1.green[i] * 3);
+      t2.blue[i]  = (uint16_t)(t1.blue[i]  * 4);
     }
   libclut_rgb_brightness(&t1, UINT16_MAX, uint16_t, 2, 3, 4);
   if (clutcmp(&t1, &t2, 0))
@@ -208,7 +211,7 @@ int main(int argc, char *argv[])
   for (i = 0; i < 256; i++)
     {
       t1.blue[i] = t1.green[i] = t1.red[i] = (uint16_t)i;
-      t2.blue[i] = t2.green[i] = 2 * (t2.red[i] = (uint16_t)i);
+      t2.blue[i] = t2.green[i] = (uint16_t)(2 * (t2.red[i] = (uint16_t)i));
     }
   libclut_manipulate(&t1, UINT16_MAX, uint16_t, (double (*)(double))(NULL), make_double, make_double);
   if (clutcmp(&t1, &t2, 0))
@@ -218,9 +221,9 @@ int main(int argc, char *argv[])
   for (i = 0; i < 256; i++)
     {
       t1.blue[i] = t1.green[i] = t1.red[i] = (uint16_t)i;
-      t2.blue[i] = t2.green[i] = t2.red[i] = (uint16_t)(pow((double)i / UINT16_MAX, 1.0 / 1.1) * UINT16_MAX);
+      t2.blue[i] = t2.green[i] = t2.red[i] = (uint16_t)(pow((double)i / UINT16_MAX, (double)10 / 11) * UINT16_MAX);
     }
-  libclut_gamma(&t1, UINT16_MAX, uint16_t, 1.1, 1.1, 1.1);
+  libclut_gamma(&t1, UINT16_MAX, uint16_t, TENTHS(11), TENTHS(11), TENTHS(11));
   if (clutcmp(&t1, &t2, 0))
     printf("libclut_gamma failed\n"), rc = 1;
   
@@ -228,22 +231,22 @@ int main(int argc, char *argv[])
   for (i = 0; i < 256; i++)
     {
       t1.blue[i] = t1.green[i] = t1.red[i] = (uint16_t)((i << 8) | i);
-      t2.blue[i] = t2.green[i] = t2.red[i] = (t1.red[i] - UINT16_MAX / 2) / 2 + UINT16_MAX / 2;
+      t2.blue[i] = t2.green[i] = t2.red[i] = (uint16_t)((t1.red[i] - UINT16_MAX / 2) / 2 + UINT16_MAX / 2);
     }
-  libclut_rgb_contrast(&t1, UINT16_MAX, uint16_t, 0.5, 0.5, 0.5);
+  libclut_rgb_contrast(&t1, UINT16_MAX, uint16_t, HALF, HALF, HALF);
   if (clutcmp(&t1, &t2, 1))
     printf("libclut_rgb_contrast failed\n"), rc = 1;
   
   
-  param = 2.0;
+  param = 2;
   for (i = 0; i < 256; i++)
     {
-      double x = i / 255.0;
+      double x = (double)i / 255;
       if (i % 255)
 	{
-	  x = 1.0 / x - 1.0;
+	  x = 1 / x - 1;
 	  x = log(x);
-	  x = 0.5 - x / param;
+	  x = HALF - x / param;
 	}
       t1.blue[i] = t1.green[i] = t1.red[i] = (uint16_t)((i << 8) | i);
       t2.blue[i] = t2.green[i] = t2.red[i] = (uint16_t)(x * UINT16_MAX);
@@ -256,7 +259,7 @@ int main(int argc, char *argv[])
   for (i = 0; i < 256; i++)
     {
       t1.blue[i] = t1.green[i] = t1.red[i] = (uint16_t)((i << 8) | i);
-      t2.blue[i] = t2.green[i] = t2.red[i] = t1.red[i & ~15] | (t1.red[i & ~15] >> 4);
+      t2.blue[i] = t2.green[i] = t2.red[i] = t1.red[i & 0xF0] | (t1.red[i & 0xF0] >> 4);
     }
   libclut_lower_resolution(&t1, UINT16_MAX, uint16_t, 16, 0, 16, 0, 16, 0);
   if (clutcmp(&t1, &t2, 0))
@@ -266,7 +269,7 @@ int main(int argc, char *argv[])
   for (i = 0; i < 256; i++)
     {
       t1.blue[i] = t1.green[i] = t1.red[i] = (uint16_t)((i << 8) | i);
-      t2.blue[i] = t2.green[i] = t2.red[i] = (uint16_t)(i / 255.0 * 15.0 + 0.5) * UINT16_MAX / 15;
+      t2.blue[i] = t2.green[i] = t2.red[i] = (uint16_t)((uint16_t)((double)i / 255 * 15 + HALF) * UINT16_MAX / 15);
     }
   libclut_lower_resolution(&t1, UINT16_MAX, uint16_t, 0, 16, 0, 16, 0, 16);
   if (clutcmp(&t1, &t2, 0))
@@ -290,18 +293,18 @@ int main(int argc, char *argv[])
   
   for (i = 0; i < 256; i++)
     {
-      d1.blue[i] = d1.green[i] = d1.red[i] = (i & 1) ? -1.0 : 2.0;
-      d2.blue[i] = d2.green[i] = d2.red[i] = (i & 1) ?  0.0 : 1.0;
+      d1.blue[i] = d1.green[i] = d1.red[i] = (i & 1) ? -1 : 2;
+      d2.blue[i] = d2.green[i] = d2.red[i] = (i & 1) ?  0 : 1;
     }
-  libclut_clip(&d1, 1.0, double, 1, 1, 1);
+  libclut_clip(&d1, 1, double, 1, 1, 1);
   if (dclutcmp(&d1, &d2, 0))
     printf("libclut_clip failed\n"), rc = 1;
   
   
   for (i = 0; i < 256; i++)
     {
-      t1.blue[i] = t1.green[i] = t1.red[i] = UINT16_MAX - (uint16_t)((i << 8) | i);
-      t2.blue[i] = t2.green[i] = t2.red[i] = (uint16_t)(pow((double)i / 255.0, 1.0 / 1.1) * UINT16_MAX);
+      t1.blue[i] = t1.green[i] = t1.red[i] = (uint16_t)(UINT16_MAX - ((i << 8) | i));
+      t2.blue[i] = t2.green[i] = t2.red[i] = (uint16_t)(pow((double)i / 255, (double)10 / 11) * UINT16_MAX);
     }
   for (i = 0; i < 256; i++)
     t3.blue[i] = t3.green[i] = t3.red[i] = t2.red[255 - i];
@@ -322,6 +325,9 @@ int main(int argc, char *argv[])
   perror(*argv);
   return 2;
   (void) argc;
+  
+  (void) dumpcluts;
+  (void) dumpdcluts;
 }
 
 
