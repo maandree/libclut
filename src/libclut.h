@@ -547,24 +547,24 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
   do									\
     {									\
       size_t i__;							\
-      double m__;							\
+      double m__, max__ = (double)(max);				\
       if (r)								\
 	{								\
 	  m__ = (double)((clut)->red_size - 1);				\
 	  for (i__ = 0; i__ < (clut)->red_size; i__++)			\
-	    (clut)->red[i__] = (type)(((double)i__ / m__) * (max));	\
+	    (clut)->red[i__] = (type)(((double)i__ / m__) * max__);	\
 	}								\
       if (g)								\
 	{								\
 	  m__ = (double)((clut)->green_size - 1);			\
 	  for (i__ = 0; i__ < (clut)->green_size; i__++)		\
-	    (clut)->green[i__] = (type)(((double)i__ / m__) * (max));	\
+	    (clut)->green[i__] = (type)(((double)i__ / m__) * max__);	\
 	}								\
       if (b)								\
 	{								\
 	  m__ = (double)((clut)->blue_size - 1);			\
 	  for (i__ = 0; i__ < (clut)->blue_size; i__++)			\
-	    (clut)->blue[i__] = (type)(((double)i__ / m__) * (max));	\
+	    (clut)->blue[i__] = (type)(((double)i__ / m__) * max__);	\
 	}								\
     }									\
   while (0)
