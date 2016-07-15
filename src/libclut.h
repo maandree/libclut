@@ -689,6 +689,88 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
 
 
 /**
+ * Translates a gamma ramp structure to another gamma ramp structure type.
+ * 
+ * None of the parameter may have side-effects.
+ * 
+ * @param  dclut  Pointer to the desired gamma ramps, must have the arrays
+ *                `red`, `green`, and `blue`, and the scalars `red_size`,
+ *                `green_size`, and `blue_size`. Ramp structures from
+ *                libgamma can be used.
+ * @param  dmax   The maximum value on each stop in the ramps in `dclut`.
+ * @param  dtype  The data type used for each stop in the ramps in `dclut`.
+ * @param  sclut  Pointer to the set gamma ramps, must have the arrays
+ *                `red`, `green`, and `blue`, and the scalars `red_size`,
+ *                `green_size`, and `blue_size`. Ramp structures from
+ *                libgamma can be used.
+ * @param  smax   The maximum value on each stop in the ramps in `sclut`.
+ * @param  stype  The data type used for each stop in the ramps in `sclut`.
+ *                (Not actually used.)
+ */
+#define libclut_translate(dclut, dmax, dtype, sclut, smax, stype)		\
+  do										\
+    {										\
+      libclut_translate__(dclut, dmax, dtype, sclut, smax, stype, red);		\
+      libclut_translate__(dclut, dmax, dtype, sclut, smax, stype, green);	\
+      libclut_translate__(dclut, dmax, dtype, sclut, smax, stype, blue);	\
+    }										\
+  while (0)
+
+/**
+ * Translates a gamma ramp structure to another gamma ramp structure type.
+ * 
+ * None of the parameter may have side-effects.
+ * 
+ * This is intended for internal use.
+ * 
+ * @param  dclut    Pointer to the desired gamma ramps, must have the arrays
+ *                  `red`, `green`, and `blue`, and the scalars `red_size`,
+ *                  `green_size`, and `blue_size`. Ramp structures from
+ *                  libgamma can be used.
+ * @param  dmax     The maximum value on each stop in the ramps in `dclut`.
+ * @param  dtype    The data type used for each stop in the ramps in `dclut`.
+ * @param  sclut    Pointer to the set gamma ramps, must have the arrays
+ *                  `red`, `green`, and `blue`, and the scalars `red_size`,
+ *                  `green_size`, and `blue_size`. Ramp structures from
+ *                  libgamma can be used.
+ * @param  smax     The maximum value on each stop in the ramps in `sclut`.
+ * @param  stype    The data type used for each stop in the ramps in `sclut`.
+ *                  (Not actually used.)
+ * @param  channel  The channel, must be either "red", "green", or "blue".
+ */
+#define libclut_translate__(dclut, dmax, dtype, sclut, smax, stype, channel)	\
+  do										\
+    {										\
+      size_t di__, si__, sj__;							\
+      size_t dn__ = (dclut)->channel##_size;					\
+      size_t sn__ = (sclut)->channel##_size;					\
+      double dm__ = (double)(dmax);						\
+      double sm__ = (double)(smax);						\
+      double smdm__ = sm__ / dm__;						\
+      double x__, y__;								\
+      if (dn__ == sn__)								\
+	for (di__ = 0; di__ < dn__; di__++)					\
+	  {									\
+	    y__ = (double)((sclut)->channel[si__]) * smdm__;			\
+	    (dclut)->channel[di__] = (dtype)y__;				\
+	  }									\
+      else									\
+	for (di__ = 0; di__ < dn__; di__++)					\
+	  {									\
+	    x__ = di__ / (dn__ - 1) * (sn__ - 1);				\
+	    si__ = (size_t)(x__);						\
+	    sj__ = si__ + (si__ != sn__);					\
+	    x__ -= (double)si__;						\
+	    y__  = (double)((sclut)->channel[si__]) * (1 - x__);		\
+	    y__ += (double)((sclut)->channel[sj__]) * (x__);			\
+	    y__ *= smdm__;							\
+	    (dclut)->channel[di__] = (dtype)y__;				\
+	  }									\
+    }										\
+  while (0)
+
+
+/**
  * Applies a filter or calibration.
  * 
  * None of the parameter may have side-effects.
