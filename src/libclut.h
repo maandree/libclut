@@ -50,7 +50,7 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
  * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
- *               structures from libgamma can be used.
+ *               structures from libgamma or libcoopgamma can be used.
  * @param  max   The maximum value on each stop in the ramps.
  * @param  type  The data type used for each stop in the ramps.
  * @param  r     The contrast parameter for the red curve.
@@ -85,7 +85,7 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
  * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
- *               structures from libgamma can be used.
+ *               structures from libgamma or libcoopgamma can be used.
  * @param  max   The maximum value on each stop in the ramps.
  * @param  type  The data type used for each stop in the ramps.
  * @param  r     The contrast parameter for the red curve.
@@ -113,7 +113,7 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
  * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
- *               structures from libgamma can be used.
+ *               structures from libgamma or libcoopgamma can be used.
  * @param  max   The maximum value on each stop in the ramps.
  * @param  type  The data type used for each stop in the ramps.
  * @param  r     The brightness parameter for the red curve.
@@ -142,7 +142,7 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
  * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
- *               structures from libgamma can be used.
+ *               structures from libgamma or libcoopgamma can be used.
  * @param  max   The maximum value on each stop in the ramps.
  * @param  type  The data type used for each stop in the ramps.
  * @param  r     The brightness parameter for the red curve.
@@ -166,7 +166,7 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
  * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
- *               structures from libgamma can be used.
+ *               structures from libgamma or libcoopgamma can be used.
  * @param  max   The maximum value on each stop in the ramps.
  * @param  type  The data type used for each stop in the ramps.
  * @param  r     Whether to convert the red colour curve.
@@ -198,7 +198,7 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
  * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
- *               structures from libgamma can be used.
+ *               structures from libgamma or libcoopgamma can be used.
  * @param  max   The maximum value on each stop in the ramps.
  * @param  type  The data type used for each stop in the ramps.
  * @param  r     Whether to convert the red colour curve.
@@ -229,7 +229,7 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
  * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
- *               structures from libgamma can be used.
+ *               structures from libgamma or libcoopgamma can be used.
  * @param  max   The maximum value on each stop in the ramps.
  * @param  type  The data type used for each stop in the ramps.
  * @param  r     The gamma parameter the red colour curve.
@@ -258,7 +258,7 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
  * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
- *               structures from libgamma can be used.
+ *               structures from libgamma or libcoopgamma can be used.
  * @param  max   The maximum value on each stop in the ramps.
  *               This parameter is not used, it is just a dummy, to unify
  *               the API with the other functions.
@@ -305,7 +305,7 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
  * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
- *               structures from libgamma can be used.
+ *               structures from libgamma or libcoopgamma can be used.
  * @param  max   The maximum value on each stop in the ramps.
  * @param  type  The data type used for each stop in the ramps.
  * @param  r     Whether to invert the red colour curve.
@@ -332,7 +332,7 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
  * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
- *               structures from libgamma can be used.
+ *               structures from libgamma or libcoopgamma can be used.
  * @param  max   The maximum value on each stop in the ramps.
  * @param  type  The data type used for each stop in the ramps.
  * @param  r     Whether to invert the red colour curve.
@@ -359,7 +359,7 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
  * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
- *               structures from libgamma can be used.
+ *               structures from libgamma or libcoopgamma can be used.
  * @param  max   The maximum value on each stop in the ramps.
  * @param  type  The data type used for each stop in the ramps.
  * @param  rp    Pointer to the sigmoid parameter for the red curve. `NULL` for no adjustment.
@@ -399,7 +399,7 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
  * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
- *               structures from libgamma can be used.
+ *               structures from libgamma or libcoopgamma can be used.
  * @param  max   The maximum value on each stop in the ramps.
  * @param  type  The data type used for each stop in the ramps.
  * @param  rmin  The red component value of the blackpoint.
@@ -442,7 +442,7 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
  * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
- *               structures from libgamma can be used.
+ *               structures from libgamma or libcoopgamma can be used.
  * @param  max   The maximum value on each stop in the ramps.
  * @param  type  The data type used for each stop in the ramps.
  * @param  rmin  The red component value of the blackpoint.
@@ -475,7 +475,7 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
  * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
- *               structures from libgamma can be used.
+ *               structures from libgamma or libcoopgamma can be used.
  * @param  max   The maximum value on each stop in the ramps.
  * @param  type  The data type used for each stop in the ramps.
  * @param  r     Function to manipulate the red colour curve, should either
@@ -513,7 +513,7 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
  * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
- *               structures from libgamma can be used.
+ *               structures from libgamma or libcoopgamma can be used.
  * @param  max   The maximum value on each stop in the ramps.
  * @param  type  The data type used for each stop in the ramps.
  * @param  r     Function to manipulate the red colour curve, should either
@@ -536,7 +536,7 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
  * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
- *               structures from libgamma can be used.
+ *               structures from libgamma or libcoopgamma can be used.
  * @param  max   The maximum value on each stop in the ramps.
  * @param  type  The data type used for each stop in the ramps.
  * @param  r     Whether to reset the red colour curve.
@@ -582,7 +582,7 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
  * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
- *               structures from libgamma can be used.
+ *               structures from libgamma or libcoopgamma can be used.
  * @param  max   The maximum value on each stop in the ramps.
  * @param  type  The data type used for each stop in the ramps.
  * @param  r     Whether to clip the red colour curve.
@@ -622,7 +622,7 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
  * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
- *               structures from libgamma can be used.
+ *               structures from libgamma or libcoopgamma can be used.
  * @param  max   The maximum value on each stop in the ramps.
  * @param  type  The data type used for each stop in the ramps.
  * @param  rx    The desired emulated red encoding resolution, 0 for unchanged.
@@ -652,7 +652,7 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
  * @param  clut     Pointer to the gamma ramps, must have the arrays
  *                  `red`, `green`, and `blue`, and the scalars
  *                  `red_size`, `green_size`, and `blue_size`. Ramp
- *                  structures from libgamma can be used.
+ *                  structures from libgamma or libcoopgamma can be used.
  * @param  channel  The channel, must be either "red", "green", or "blue".
  * @param  max      The maximum value on each stop in the ramps.
  * @param  type     The data type used for each stop in the ramps.
@@ -696,13 +696,13 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
  * @param  dclut  Pointer to the desired gamma ramps, must have the arrays
  *                `red`, `green`, and `blue`, and the scalars `red_size`,
  *                `green_size`, and `blue_size`. Ramp structures from
- *                libgamma can be used.
+ *                libgamma or libcoopgamma can be used.
  * @param  dmax   The maximum value on each stop in the ramps in `dclut`.
  * @param  dtype  The data type used for each stop in the ramps in `dclut`.
  * @param  sclut  Pointer to the set gamma ramps, must have the arrays
  *                `red`, `green`, and `blue`, and the scalars `red_size`,
  *                `green_size`, and `blue_size`. Ramp structures from
- *                libgamma can be used.
+ *                libgamma or libcoopgamma can be used.
  * @param  smax   The maximum value on each stop in the ramps in `sclut`.
  * @param  stype  The data type used for each stop in the ramps in `sclut`.
  *                (Not actually used.)
@@ -726,13 +726,13 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
  * @param  dclut    Pointer to the desired gamma ramps, must have the arrays
  *                  `red`, `green`, and `blue`, and the scalars `red_size`,
  *                  `green_size`, and `blue_size`. Ramp structures from
- *                  libgamma can be used.
+ *                  libgamma or libcoopgamma can be used.
  * @param  dmax     The maximum value on each stop in the ramps in `dclut`.
  * @param  dtype    The data type used for each stop in the ramps in `dclut`.
  * @param  sclut    Pointer to the set gamma ramps, must have the arrays
  *                  `red`, `green`, and `blue`, and the scalars `red_size`,
  *                  `green_size`, and `blue_size`. Ramp structures from
- *                  libgamma can be used.
+ *                  libgamma or libcoopgamma can be used.
  * @param  smax     The maximum value on each stop in the ramps in `sclut`.
  * @param  stype    The data type used for each stop in the ramps in `sclut`.
  *                  (Not actually used.)
@@ -778,7 +778,7 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
  * @param  clut    Pointer to the gamma ramps, must have the arrays
  *                 `red`, `green`, and `blue`, and the scalars
  *                 `red_size`, `green_size`, and `blue_size`. Ramp
- *                 structures from libgamma can be used.
+ *                 structures from libgamma or libcoopgamma can be used.
  * @param  max     The maximum value on each stop in the ramps.
  * @param  type    The data type used for each stop in the ramps.
  * @param  filter  Same as `clut`, but for the filter to apply.
@@ -808,7 +808,7 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
  * @param  clut     Pointer to the gamma ramps, must have the arrays
  *                  `red`, `green`, and `blue`, and the scalars
  *                  `red_size`, `green_size`, and `blue_size`. Ramp
- *                  structures from libgamma can be used.
+ *                  structures from libgamma or libcoopgamma can be used.
  * @param  max      The maximum value on each stop in the ramps.
  * @param  type     The data type used for each stop in the ramps.
  * @param  filter   Same as `clut`, but for the filter to apply.
@@ -840,7 +840,7 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
  * @param  clut    Pointer to the gamma ramps, must have the arrays
  *                 `red`, `green`, and `blue`, and the scalars
  *                 `red_size`, `green_size`, and `blue_size`. Ramp
- *                 structures from libgamma can be used.
+ *                 structures from libgamma or libcoopgamma can be used.
  * @param  max     The maximum value on each stop in the ramps.
  * @param  type    The data type used for each stop in the ramps.
  * @param  filter  Same as `clut`, but for the filter to apply.
@@ -906,7 +906,7 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
  * @param  clut   Pointer to the gamma ramps, must have the arrays
  *                `red`, `green`, and `blue`, and the scalars
  *                `red_size`, `green_size`, and `blue_size`. Ramp
- *                structures from libgamma can be used.
+ *                structures from libgamma or libcoopgamma can be used.
  * @param  max    The maximum value on each stop in the ramps.
  * @param  type   The data type used for each stop in the ramps.
  * @param  utest  Whether all channels can be modified at the same time.
@@ -1007,7 +1007,7 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
  * @param  clut  Pointer to the gamma ramps, must have the arrays
  *               `red`, `green`, and `blue`, and the scalars
  *               `red_size`, `green_size`, and `blue_size`. Ramp
- *               structures from libgamma can be used.
+ *               structures from libgamma or libcoopgamma can be used.
  * @param  max   The maximum value on each stop in the ramps.
  * @param  type  The data type used for each stop in the ramps.
  * @param  c     Either "r" for red, "g" for green, or "b" for blue.

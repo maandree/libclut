@@ -5,5 +5,5 @@ DESCRIPTION
 	libclut is C library for manipulating colour lookup tables.
 
 SEE ALSO
-	libred(7), redshift(1), blueshift(1), libgamma(7)
+	libred(7), redshift(1), blueshift(1), libgamma(7), libcoopgamma(7)
 
