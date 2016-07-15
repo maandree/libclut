@@ -420,7 +420,7 @@ Same as @code{clut}, but for the filter to apply.
 Same as @code{max}, but for the filter to apply.
 @item ftype
 Same as @code{type}, but for the filter to apply.
-(Not actually used).
+(Not actually used.)
 @item r
 Whether to apply the filter for the red curve.
 @item g
@@ -443,13 +443,35 @@ Same as @code{clut}, but for the filter to apply.
 Same as @code{max}, but for the filter to apply.
 @item ftype
 Same as @code{type}, but for the filter to apply.
-(Not actually used).
+(Not actually used.)
 @item r
 Whether to apply the filter for the red curve.
 @item g
 Whether to apply the filter for the green curve.
 @item b
 Whether to apply the filter for the blue curve.
+@end table
+
+
+@item libclut_translate(dclut, dmax, dtype, sclut, smax, stype)
+Translates a gamma ramp structure to another
+gamma ramp structure type.
+
+Parameters:
+@table @code
+@item dclut
+Like @code{clut} described above, for the destination.
+@item dmax
+Like @code{max} described above, for the destination.
+@item dtype
+Like @code{type} described above, for the destination.
+@item sclut
+Like @code{clut} described above, for the source.
+@item smax
+Like @code{max} described above, for the source.
+@item stype
+Like @code{type} described above, for the source.
+(Not actually used.)
 @end table
 @end table
 
