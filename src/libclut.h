@@ -24,17 +24,23 @@
 
 
 /* This is to avoid warnings about comparing double, which is safe in our case. { */
-#if defined(__GNUC__)
+#if defined(__GNUC__) || defined(__clang__)
 # pragma GCC diagnostic push
 # pragma GCC diagnostic ignored "-Wfloat-equal"
 #endif
 static inline int libclut_eq__(double a, double b)  {  return a == b;  }
 static inline int libclut_1__(double x)  {  return libclut_eq__(x, 1);  }
 static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
-#if defined(__GNUC__)
+#if defined(__GNUC__) || defined(__clang__)
 # pragma GCC diagnostic pop
 #endif
 /* } */
+
+
+#if defined(__clang__)
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wdocumentation"
+#endif
 
 
 
@@ -1043,10 +1049,10 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
 
 
 
-#if __GNUC__
-#define LIBCLUT_GCC_ONLY__(x)  x
+#if defined(__GNUC__) && !defined(__clang__)
+# define LIBCLUT_GCC_ONLY__(x)  x
 #else
-#define LIBCLUT_GCC_ONLY__(x)  /* do nothing */
+# define LIBCLUT_GCC_ONLY__(x)  /* do nothing */
 #endif
 
 
@@ -1349,6 +1355,11 @@ void (libclut_model_cielab_to_ciexyz)(double, double, double, double*, double*, 
 #define LIBCLUT_MODEL_CIELAB_TO_CIEXYZ__(C)  \
   (((C)*(C)*(C) > 0.00885642) ? ((C)*(C)*(C)) : (((C) - 0.1379310) / (7.78 + 703.0 / 99900)))
 
+
+
+#if defined(__clang__)
+# pragma GCC diagnostic pop
+#endif
 
 
 #endif
