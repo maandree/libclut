@@ -20,6 +20,7 @@
 #include <stddef.h>
 #include <string.h>
 #include <math.h>
+#include <float.h>
 
 
 
@@ -360,11 +361,6 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
  * only way to adjust the blackpoint on many LCD
  * monitors.
  * 
- * Warning. Stops that is too close 0 when using
- * floating-point values, get generate overly
- * large results. Values too close to `max` when
- * using floating-point values, get generate `nan`.
- * 
  * None of the parameter may have side-effects.
  * 
  * Requires linking with '-lm'.
@@ -379,28 +375,60 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
  * @param  gp    Pointer to the sigmoid parameter for the green curve. `NULL` for no adjustment.
  * @param  bp    Pointer to the sigmoid parameter for the blue curve. `NULL` for no adjustment.
  */
-#define libclut_sigmoid(clut, max, type, rp, gp, bp)						\
-  do												\
-    {												\
-      double *gcc_6_1_1_workaround, s__, m__ = (double)(max);					\
-      size_t i__;										\
-      const double h__ = (double)5 / 10;							\
-      gcc_6_1_1_workaround = rp;								\
-      if (gcc_6_1_1_workaround)									\
-	for (i__ = 0, s__ = *gcc_6_1_1_workaround; i__ < (clut)->red_size; i__++)		\
-	  if ((clut)->red[i__] && ((clut)->red[i__] != (max)))					\
-	    (clut)->red[i__] = (type)(m__ * (h__ - log(m__ / (clut)->red[i__] - 1) / s__));	\
-      gcc_6_1_1_workaround = gp;								\
-      if (gcc_6_1_1_workaround)									\
-	for (i__ = 0, s__ = *gcc_6_1_1_workaround; i__ < (clut)->green_size; i__++)		\
-	  if ((clut)->green[i__] && ((clut)->green[i__] != (max)))				\
-	    (clut)->green[i__] = (type)(m__ * (h__ - log(m__ / (clut)->green[i__] - 1) / s__));	\
-      gcc_6_1_1_workaround = bp;								\
-      if (gcc_6_1_1_workaround)									\
-	for (i__ = 0, s__ = *gcc_6_1_1_workaround; i__ < (clut)->blue_size; i__++)		\
-	  if ((clut)->blue[i__] && ((clut)->blue[i__] != (max)))				\
-	    (clut)->blue[i__] = (type)(m__ * (h__ - log(m__ / (clut)->blue[i__] - 1) / s__));	\
-    }												\
+#define libclut_sigmoid(clut, max, type, rp, gp, bp)		\
+  do								\
+    {								\
+      double *gcc_6_1_1_workaround, m__ = (double)(max);	\
+      const double h__ = (double)5 / 10;			\
+      gcc_6_1_1_workaround = rp;				\
+      if (gcc_6_1_1_workaround)					\
+	libclut_sigmoid__(clut, max, type, red);		\
+      gcc_6_1_1_workaround = gp;				\
+      if (gcc_6_1_1_workaround)					\
+	libclut_sigmoid__(clut, max, type, green);		\
+      gcc_6_1_1_workaround = bp;				\
+      if (gcc_6_1_1_workaround)					\
+	libclut_sigmoid__(clut, max, type, blue);		\
+    }								\
+  while (0)
+
+
+/**
+ * Apply S-curve correction on the colour curves.
+ * This is intended for fine tuning LCD monitors,
+ * 4.5 is good value start start testing at.
+ * You would probably like to use rgb_limits before
+ * this to adjust the blackpoint as that is the
+ * only way to adjust the blackpoint on many LCD
+ * monitors.
+ * 
+ * None of the parameter may have side-effects.
+ * 
+ * Requires linking with '-lm'.
+ * 
+ * Intended for internal use.
+ * 
+ * @param  clut  Pointer to the gamma ramps, must have the arrays
+ *               `red`, `green`, and `blue`, and the scalars
+ *               `red_size`, `green_size`, and `blue_size`. Ramp
+ *               structures from libgamma or libcoopgamma can be used.
+ * @param  max   The maximum value on each stop in the ramps.
+ * @param  type  The data type used for each stop in the ramps.
+ * @param  channel  The channel, must be either "red", "green", or "blue".
+ */
+#define libclut_sigmoid__(clut, max, type, channel)			\
+  do									\
+    {									\
+      double s__ = *gcc_6_1_1_workaround, l__;				\
+      size_t i__;							\
+      for (i__ = 0; i__ < (clut)->channel##_size; i__++)		\
+	{								\
+	  l__ = log(m__ / (clut)->red[i__] - 1);			\
+	  if (isnan(l__) || isinf(l__))					\
+	    l__ = 37.024483 * (isinf(l__) > 0 ? +1 : -1);		\
+	  (clut)->red[i__] = (type)(m__ * (h__ - l__ / s__));		\
+	}								\
+    }									\
   while (0)
 
 

@@ -252,6 +252,8 @@ int main(int argc, char *argv[])
       t2.blue[i] = t2.green[i] = t2.red[i] = (uint16_t)(x * UINT16_MAX);
     }
   libclut_sigmoid(&t1, UINT16_MAX, uint16_t, &param, &param, &param);
+  t1.blue[0]   = t1.green[0]   = t1.red[0]   = t2.red[0];
+  t1.blue[255] = t1.green[255] = t1.red[255] = t2.red[255];
   if (clutcmp(&t1, &t2, 0))
     printf("libclut_sigmoid failed\n"), rc = 1;
   
