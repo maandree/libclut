@@ -23,7 +23,9 @@
 
 
 
-/* This is to avoid warnings about comparing double, which is safe in our case. { */
+/* This is to avoid warnings about comparing double, These are only
+ * used when it is safe, for example to test whether optimisations
+ * are possible. { */
 #if defined(__GNUC__) || defined(__clang__)
 # pragma GCC diagnostic push
 # pragma GCC diagnostic ignored "-Wfloat-equal"
@@ -357,6 +359,11 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
  * this to adjust the blackpoint as that is the
  * only way to adjust the blackpoint on many LCD
  * monitors.
+ * 
+ * Warning. Stops that is too close 0 when using
+ * floating-point values, get generate overly
+ * large results. Values too close to `max` when
+ * using floating-point values, get generate `nan`.
  * 
  * None of the parameter may have side-effects.
  * 
