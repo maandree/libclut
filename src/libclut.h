@@ -422,10 +422,10 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
       size_t i__;							\
       for (i__ = 0; i__ < (clut)->channel##_size; i__++)		\
 	{								\
-	  l__ = log(m__ / (clut)->red[i__] - 1);			\
+	  l__ = log(m__ / (clut)->channel[i__] - 1);			\
 	  if (isnan(l__) || isinf(l__))					\
 	    l__ = 37.024483 * (isinf(l__) > 0 ? +1 : -1);		\
-	  (clut)->red[i__] = (type)(m__ * (h__ - l__ / s__));		\
+	  (clut)->channel[i__] = (type)(m__ * (h__ - l__ / s__));	\
 	}								\
     }									\
   while (0)
