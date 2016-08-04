@@ -305,7 +305,7 @@ int main(int argc, char *argv[])
   
   for (i = 0; i < 256; i++)
     {
-      t1.blue[i] = t1.green[i] = t1.red[i] = (uint16_t)(UINT16_MAX - ((i << 8) | i));
+      t1.blue[i] = t1.green[i] = t1.red[i] = (uint16_t)(((255 - i) << 8) | (255 - i));
       t2.blue[i] = t2.green[i] = t2.red[i] = (uint16_t)(pow((double)i / 255, (double)10 / 11) * UINT16_MAX);
     }
   for (i = 0; i < 256; i++)
