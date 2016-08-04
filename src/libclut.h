@@ -859,7 +859,7 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
 #define libclut_apply__(clut, max, type, filter, fmax, ftype, channel)				\
   do												\
     {												\
-      size_t i__, rn__ = (clut)->channel##_size - 1, fn__ = (filter)->channel##_size - 1;	\
+      size_t i__, rn__ = (clut)->channel##_size, fn__ = (filter)->channel##_size - 1;		\
       double x__, rm__ = (double)(max), m__ = (double)(max) / (double)(fmax);			\
       for (i__ = 0; i__ < rn__; i__++)								\
 	{											\
