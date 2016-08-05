@@ -786,12 +786,12 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
       size_t sn__ = (sclut)->channel##_size;					\
       double dm__ = (double)(dmax);						\
       double sm__ = (double)(smax);						\
-      double smdm__ = sm__ / dm__;						\
+      double dmsm__ = dm__ / sm__;						\
       double x__, y__;								\
       if (dn__ == sn__)								\
 	for (di__ = 0; di__ < dn__; di__++)					\
 	  {									\
-	    y__ = (double)((sclut)->channel[si__]) * smdm__;			\
+	    y__ = (double)((sclut)->channel[di__]) * dmsm__;			\
 	    (dclut)->channel[di__] = (dtype)y__;				\
 	  }									\
       else									\
@@ -803,7 +803,7 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
 	    x__ -= (double)si__;						\
 	    y__  = (double)((sclut)->channel[si__]) * (1 - x__);		\
 	    y__ += (double)((sclut)->channel[sj__]) * (x__);			\
-	    y__ *= smdm__;							\
+	    y__ *= dmsm__;							\
 	    (dclut)->channel[di__] = (dtype)y__;				\
 	  }									\
     }										\
@@ -1007,7 +1007,7 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
 		}									\
 	      if (btest)								\
 		{									\
-		  libclut_model_ciexyy_to_srgb(x__, y__, nexpr, &r__, &g__, &b__);	\
+		  libclut_model_ciexyy_to_srgb(x__, y__, bexpr, &r__, &g__, &b__);	\
 		  bs__[i__] = (type)(b__ * m__);					\
 		}									\
 	    }										\
@@ -1016,17 +1016,17 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
 	{										\
 	  if (rtest)									\
 	    for (i__ = 0; i__ < rn__; i__++)						\
-	    libclut_cie___(clut, max, type, rexpr, i__,					\
+	    libclut_cie___(clut, max, type, r, rexpr, i__,				\
 			   libclut_i__(i__, rn__, gn__),				\
 			   libclut_i__(i__, rn__, bn__));				\
 	  if (gtest)									\
 	    for (i__ = 0; i__ < rn__; i__++)						\
-	    libclut_cie___(clut, max, type, gexpr,					\
+	    libclut_cie___(clut, max, type, g, gexpr,					\
 			   libclut_i__(i__, gn__, rn__), i__,				\
 			   libclut_i__(i__, gn__, bn__));				\
 	  if (btest)									\
 	    for (i__ = 0; i__ < rn__; i__++)						\
-	    libclut_cie___(clut, max, type, bexpr, i__,					\
+	    libclut_cie___(clut, max, type, b, bexpr,					\
 			   libclut_i__(i__, bn__, rn__),				\
 			   libclut_i__(i__, bn__, gn__), i__);				\
 	}										\
