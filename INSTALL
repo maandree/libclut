@@ -66,13 +66,12 @@ to install. This rules are available:
 ├─────────────┼─────────────────────┼────────────────────────────────────────────┤
 │ base        │ install-base        │ Install the basics:                        │
 │             │   install-lib       │   Install the libclut library.             │
-│             │   install-copyright │   Install the Expat License.               │
+│             │   install-copyright │   Install the the GPL v3 license.          │
 │ doc         │ install-doc         │ Include all manuals:                       │
 │   info      │   install-info      │   Include info manual. (Texinfo)           │
 │   dvi       │   install-dvi       │   Include DVI manual. (Texinfo)            │
 │   pdf       │   install-pdf       │   Include PDF manual. (Texinfo)            │
 │   ps        │   install-ps        │   Include PostScript manual. (Texinfo)     │
 │   html      │   install-html      │   Include multifile HTML manual. (Texinfo) │
-│             │   install-man       │   Include man pages.                       │
 └─────────────┴─────────────────────┴────────────────────────────────────────────┘
 
