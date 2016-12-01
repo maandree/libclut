@@ -1,9 +1,9 @@
 The sRGB gamut expressed in CIE xyY:
 
-	Chromaticity	Red	Green	Blue	White point
-	x 		0.6400 	0.3000 	0.1500 	0.3127
-	y 		0.3300 	0.6000 	0.0600 	0.3290
-	Y 		0.2126 	0.7152 	0.0722 	1.0000
+	Chromaticity	Red       Green	    Blue      White point
+	x 		0.6400    0.3000    0.1500    0.31271
+	y 		0.3300    0.6000    0.0600    0.32902
+	Y 		0.212656  0.715158  0.072186  1.0000
 
 A function is needed that given the values (sans Y) of a
 monitor's gamut, converts from sRGB to the monitor's RGB.
