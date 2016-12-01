@@ -23,6 +23,94 @@
 
 
 
+/**
+ * Initialiser for `struct libclut_rgb_colourspace` with the values
+ * of the sRGB colour space.
+ */
+#define LIBCLUT_RGB_COLOURSPACE_SRGB_INITIALISER			\
+  {									\
+    .red_x   = 0.6400,   .red_y   = 0.3300,   .red_Y   = 0.212656,	\
+    .green_x = 0.3000,   .green_y = 0.6000,   .green_Y = 0.715158,	\
+    .blue_x  = 0.1500,   .blue_y  = 0.0600,   .blue_Y  = 0.072186,	\
+    .white_x = 0.31271,  .white_y = 0.32902,  .white_Y = 1.0000		\
+  }
+
+
+
+/**
+ * RGB colour space structure.
+ */
+typedef struct libclut_rgb_colourspace
+{
+  /**
+   * The x-component of the red colour's xyY value.
+   */
+  double red_x;
+  
+  /**
+   * The y-component of the red colour's xyY value.
+   */
+  double red_y;
+  
+  /**
+   * The Y-component of the red colour's xyY value.
+   */
+  double red_Y;
+  
+  /**
+   * The x-component of the green colour's xyY value.
+   */
+  double green_x;
+  
+  /**
+   * The y-component of the green colour's xyY value.
+   */
+  double green_y;
+  
+  /**
+   * The Y-component of the green colour's xyY value.
+   */
+  double green_Y;
+  
+  /**
+   * The x-component of the blue colour's xyY value.
+   */
+  double blue_x;
+  
+  /**
+   * The y-component of the blue colour's xyY value.
+   */
+  double blue_y;
+  
+  /**
+   * The Y-component of the blue colour's xyY value.
+   */
+  double blue_Y;
+  
+  /**
+   * The x-component of the white point's xyY value.
+   */
+  double white_x;
+  
+  /**
+   * The y-component of the white point's xyY value.
+   */
+  double white_y;
+  
+  /**
+   * The Y-component of the white point's xyY value.
+   */
+  double white_Y;
+} libclut_rgb_colourspace_t;
+
+
+/**
+ * Matrix date-type for colourspace conversion.
+ */
+typedef double libclut_colourspace_conversion_matrix_t[3][3];
+
+
+
 /* This is to avoid warnings about comparing double, These are only
  * used when it is safe, for example to test whether optimisations
  * are possible. { */
@@ -1082,6 +1170,9 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
   (size_t)((double)(i) * (double)(out) / (double)(in))
 
 
+/* TODO libclut_convert_rgb */
+
+
 
 #if defined(__GNUC__) && !defined(__clang__)
 # define LIBCLUT_GCC_ONLY__(x)  x
@@ -1388,6 +1479,60 @@ void (libclut_model_cielab_to_ciexyz)(double, double, double, double*, double*, 
   while (0)
 #define LIBCLUT_MODEL_CIELAB_TO_CIEXYZ__(C)  \
   (((C)*(C)*(C) > 0.00885642) ? ((C)*(C)*(C)) : (((C) - 0.1379310) / (7.78 + 703.0 / 99900)))
+
+
+/**
+ * Create a matrix for converting values between
+ * two RGB colourspaces.
+ * 
+ * @param   from  The input colourspace, the Y-component is only necessary for the whitepoint.
+ * @param   to    The output colourspace, the Y-component is only necessary for the whitepoint.
+ * @param   M     Output matrix for conversion from `from` to `to`.
+ * @param   Minv  Output matrix for conversion from `to` to `from`, may be `NULL`.
+ * @return        Zero on success, -1 on error.
+ * 
+ * @throws  EINVAL  The colourspace cannot be used.
+ */
+LIBCLUT_GCC_ONLY__(__attribute__((__leaf__)))
+int libclut_model_get_rgb_conversion_matrix(const libclut_rgb_colourspace_t*,
+					    const libclut_rgb_colourspace_t*,
+					    libclut_colourspace_conversion_matrix_t,
+					    libclut_colourspace_conversion_matrix_t);
+/* TODO doc libclut_model_get_rgb_conversion_matrix */
+
+
+/**
+ * Convert an RGB colour into another RGB colourspace.
+ * None of the parameter may have side-effects.
+ * 
+ * Requires linking with '-lclut', or '-lm' if
+ * `libclut_model_standard_to_linear1` or
+ * `libclut_model_linear_to_standard1` is not undefined.
+ * 
+ * @param  r      The red component of the colour to convert.
+ * @param  g      The green component of the colour to convert.
+ * @param  b      The blue component of the colour to convert.
+ * @param  M      Conversion matrix, create with `libclut_model_get_rgb_conversion_matrix`,
+ *                must not have side-effects (unless libclut_model_convert_rgb1 is undefined).
+ * @param  out_r  Output parameter for the new red component.
+ * @param  out_g  Output parameter for the new green component.
+ * @param  out_b  Output parameter for the new blue component.
+ */
+LIBCLUT_GCC_ONLY__(__attribute__((__leaf__)))
+void (libclut_model_convert_rgb)(double, double, double, libclut_colourspace_conversion_matrix_t,
+				  double *, double *, double *);
+#define libclut_model_convert_rgb(r, g, b, M, out_r, out_g, out_b)						\
+  do														\
+    {														\
+      double r__ = libclut_model_standard_to_linear1(r);							\
+      double g__ = libclut_model_standard_to_linear1(g);							\
+      double b__ = libclut_model_standard_to_linear1(b);							\
+      *(out_r) = libclut_model_linear_to_standard1((M)[0][0] * r__ + (M)[0][1] * g__ + (M)[0][2] * b__);	\
+      *(out_g) = libclut_model_linear_to_standard1((M)[1][0] * r__ + (M)[1][1] * g__ + (M)[1][2] * b__);	\
+      *(out_b) = libclut_model_linear_to_standard1((M)[2][0] * r__ + (M)[2][1] * g__ + (M)[2][2] * b__);	\
+    }														\
+  while (0)
+/* TODO libclut_model_convert_rgb */
 
 
 
