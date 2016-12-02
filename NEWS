@@ -1,6 +1,6 @@
 libclut NEWS                                          -*- outline -*-
 
-* Noteworthy changes in release 1.1 (TBA) [stable]
+* Noteworthy changes in release 1.1 (2016-(12)Dec-03) [stable]
 
   Support for CIELUV, CIELCh, YIQ, YDbDr, YPbPr, YCgCo,
   CIE 1960 USC, and CIE U*V*W* added.
