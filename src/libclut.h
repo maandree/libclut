@@ -1988,7 +1988,7 @@ int libclut_model_get_rgb_conversion_matrix(const libclut_rgb_colour_space_t*,
  */
 LIBCLUT_GCC_ONLY__(__attribute__((__leaf__)))
 void (libclut_model_convert_rgb)(double, double, double, libclut_colour_space_conversion_matrix_t,
-				  double *, double *, double *);
+				 double *, double *, double *);
 #define libclut_model_convert_rgb(r, g, b, M, out_r, out_g, out_b)						\
   do														\
     {														\

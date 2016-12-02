@@ -138,11 +138,14 @@ int main(int argc, char *argv[])
 #define HALF       ((double)5 / 10)
 #define TENTHS(x)  ((double)x / 10)
   
+  libclut_colour_space_conversion_matrix_t M, Minv;
+  libclut_rgb_colour_space_t srgb  = LIBCLUT_RGB_COLOUR_SPACE_SRGB_INITIALISER;
+  libclut_rgb_colour_space_t wgrgb = LIBCLUT_RGB_COLOUR_SPACE_WIDE_GAMUT_RGB_INITIALISER;
   struct clut t1, t2, t3;
   struct dclut d1, d2;
   size_t i, j;
   int rc = 0;
-  double param;
+  double param, r, g, b;
   
   t1.  red_size = t2.  red_size = t3.  red_size = d1.  red_size = d2.  red_size = 256;
   t1.green_size = t2.green_size = t3.green_size = d1.green_size = d2.green_size = 256;
@@ -315,6 +318,53 @@ int main(int argc, char *argv[])
     printf("libclut_apply failed\n"), rc = 1;
   
   
+  if (libclut_model_get_rgb_conversion_matrix(&srgb, &wgrgb, M, Minv))
+    {
+      printf("libclut_model_get_rgb_conversion_matrix failed\n"), rc = 1;
+      goto rgb_conversion_done;
+    }
+  if (0.5587 > M[0][0] || M[0][0] > 0.5589 ||
+      0.3587 > M[0][1] || M[0][1] > 0.3588 ||
+      -.0101 > M[0][2] || M[0][2] > -.0099 ||
+      0.0938 > M[1][0] || M[1][0] > 0.0939 ||
+      0.8564 > M[1][1] || M[1][1] > 0.8566 ||
+      0.0746 > M[1][2] || M[1][2] > 0.0747 ||
+      0.0186 > M[2][0] || M[2][0] > 0.0188 ||
+      0.0967 > M[2][1] || M[2][1] > 0.0968 ||
+      1.2237 > M[2][2] || M[2][2] > 1.2239)
+    {
+      printf("libclut_model_get_rgb_conversion_matrix failed\n"), rc = 1;
+      goto rgb_conversion_done;
+    }
+  
+  
+  libclut_model_convert_rgb(0.1, 0.5, 0.9, M, &r, &g, &b);
+  if (0.3024 > r || r > 0.3025 ||
+      0.5301 > g || g > 0.5302 ||
+      0.9931 > b || b > 0.9932)
+    {
+      printf("libclut_model_convert_rgb failed\n"), rc = 1;
+      goto rgb_conversion_done;
+    }
+  
+  
+  libclut_model_convert_rgb(0.1, 0.5, 0.9, Minv, &r, &g, &b);
+  if (-1.3341 > r || r > -1.3339 ||
+       0.4916 > g || g >  0.4917 ||
+       0.8144 > b || b >  0.8145)
+    {
+      printf("libclut_model_convert_rgb failed\n"), rc = 1;
+      goto rgb_conversion_done;
+    }
+  
+  
+  libclut_convert_rgb_inplace(&t1, 1, double, M, trunc);
+  libclut_convert_rgb(&t1, 1, double, M, trunc, &t2);
+  
+  
+ rgb_conversion_done:
+  
+  
   if (!rc)
     printf("everything is fine\n");
   free(t1.red);
@@ -343,5 +393,7 @@ int main(int argc, char *argv[])
   libclut_cie_limits
   libclut_cie_manipulate
   libclut_cie_apply
+  libclut_convert_rgb_inplace
+  libclut_convert_rgb
 */
 
