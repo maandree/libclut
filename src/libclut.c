@@ -21,9 +21,9 @@
 
 
 /**
- * Convert one component from [0, 1] linear RGB to [0, 1] sRGB.
+ * Convert one component from [0, 1] linear sRGB to [0, 1] sRGB.
  * 
- * @param   c  The linear RGB value.
+ * @param   c  The linear sRGB value.
  * @return     Corresponding sRGB value.
  */
 double (libclut_model_linear_to_standard1)(double c)
@@ -33,7 +33,7 @@ double (libclut_model_linear_to_standard1)(double c)
 
 
 /**
- * Convert [0, 1] linear RGB to [0, 1] sRGB.
+ * Convert [0, 1] linear sRGB to [0, 1] sRGB.
  * 
  * @param  r  Pointer to the linear red component,
  *            and output parameter for the red component.
@@ -49,10 +49,10 @@ void (libclut_model_linear_to_standard)(double* r, double* g, double* b)
 
 
 /**
- * Convert one component from [0, 1] sRGB to [0, 1] linear RGB.
+ * Convert one component from [0, 1] sRGB to [0, 1] linear sRGB.
  * 
  * @param   c  The sRGB value.
- * @return     Corresponding linear RGB value.
+ * @return     Corresponding linear sRGB value.
  */
 double (libclut_model_standard_to_linear1)(double c)
 {
@@ -61,7 +61,7 @@ double (libclut_model_standard_to_linear1)(double c)
 
 
 /**
- * Convert [0, 1] sRGB to [0, 1] linear RGB.
+ * Convert [0, 1] sRGB to [0, 1] linear sRGB.
  * 
  * @param  r  Pointer to the red component, and output
  *            parameter for the linear red component.
@@ -107,7 +107,7 @@ void (libclut_model_ciexyz_to_ciexyy)(double X, double Y, double Z, double* x, d
 
 
 /**
- * Convert CIE XYZ to [0, 1] linear RGB.
+ * Convert CIE XYZ to [0, 1] linear sRGB.
  * 
  * @param  X  The X parameter.
  * @param  Y  The Y parameter.
@@ -123,7 +123,7 @@ void (libclut_model_ciexyz_to_linear)(double X, double Y, double Z, double* r, d
 
 
 /**
- * Convert [0, 1] linear RGB to CIE XYZ.
+ * Convert [0, 1] linear sRGB to CIE XYZ.
  * 
  * @param  r  The red component.
  * @param  g  The green component.
@@ -139,7 +139,7 @@ void (libclut_model_linear_to_ciexyz)(double r, double g, double b, double* X, d
 
 
 /**
- * Convert [0, 1] linear RGB to CIE xyY.
+ * Convert [0, 1] linear sRGB to CIE xyY.
  * 
  * @param  r  The red component.
  * @param  g  The green component.
@@ -199,6 +199,303 @@ void (libclut_model_ciexyz_to_cielab)(double X, double Y, double Z, double* L, d
 void (libclut_model_cielab_to_ciexyz)(double L, double a, double b, double* X, double* Y, double* Z)
 {
   libclut_model_cielab_to_ciexyz(L, a, b, X, Y, Z);
+}
+
+
+/**
+ * Convert from CIE XYZ to CIE L*u*v*.
+ * 
+ * @param  X  The X parameter.
+ * @param  Y  The Y parameter.
+ * @param  Z  The Z parameter.
+ * @param  Xn  The X component of the specified white object (white point).
+ * @param  Yn  The Y component of the specified white object (white point).
+ * @param  Zn  The Z component of the specified white object (white point).
+ * @param  L  Output parameter for the L* component.
+ * @param  u  Output parameter for the u* component.
+ * @param  v  Output parameter for the v* component.
+ */
+void (libclut_model_ciexyz_to_cieluv)(double X, double Y, double Z, double Xn, double Yn, double Zn,
+				      double* L, double* u, double* v)
+{
+  libclut_model_ciexyz_to_cieluv(X, Y, Z, Xn, Yn, Zn, L, u, v);
+}
+
+
+/**
+ * Convert from CIE L*u*v* to CIE XYZ.
+ * 
+ * @param  L   The L* component.
+ * @param  u   The u* component.
+ * @param  v   The v* component.
+ * @param  Xn  The X component of the specified white object (white point).
+ * @param  Yn  The Y component of the specified white object (white point).
+ * @param  Zn  The Z component of the specified white object (white point).
+ * @param  X   Output parameter for the X parameter.
+ * @param  Y   Output parameter for the Y parameter.
+ * @param  Z   Output parameter for the Z parameter.
+ */
+void (libclut_model_cieluv_to_ciexyz)(double L, double u, double v, double Xn, double Yn, double Zn,
+				      double* X, double* Y, double* Z)
+{
+  libclut_model_cieluv_to_ciexyz(L, u, v, Xn, Yn, Zn, X, Y, Z);
+}
+
+
+/**
+ * Convert from CIELCh to CIE L*u*v*.
+ * 
+ * @param  L  The L* component.
+ * @param  C  The C*_uv component.
+ * @param  h  The h_uv component.
+ * @param  u  Output parameter for the u* parameter.
+ * @param  v  Output parameter for the v* parameter.
+ */
+void (libclut_model_cielch_to_cieluv)(double C, double h, double* u, double* v)
+{
+  libclut_model_cielch_to_cieluv(C, h, u, v);
+}
+
+
+/**
+ * Convert from CIE L*u*v* to CIELCh.
+ * 
+ * @param  L  The L* component.
+ * @param  u  The u* component.
+ * @param  v  The v* component.
+ * @param  C  Output parameter for the C*_uv parameter.
+ * @param  h  Output parameter for the h_uv parameter.
+ */
+void (libclut_model_cieluv_to_cielch)(double u, double v, double* C, double* h)
+{
+  libclut_model_cieluv_to_cielch(u, v, C, h);
+}
+
+
+/**
+ * Convert from sRGB to YIQ.
+ * 
+ * @param  r  The R component.
+ * @param  g  The G component.
+ * @param  b  The B component.
+ * @param  y  Output parameter for the Y parameter.
+ * @param  i  Output parameter for the I parameter.
+ * @param  q  Output parameter for the Q parameter.
+ */
+void (libclut_model_srgb_to_yiq)(double r, double g, double b, double* y, double* i, double* q)
+{
+  libclut_model_srgb_to_yiq(r, g, b, y, i, q);
+}
+
+
+/**
+ * Convert from YIQ to sRGB.
+ * 
+ * @param  y  The Y component.
+ * @param  i  The I component.
+ * @param  q  The Q component.
+ * @param  r  Output parameter for the R parameter.
+ * @param  g  Output parameter for the G parameter.
+ * @param  b  Output parameter for the B parameter.
+ */
+void (libclut_model_yiq_to_srgb)(double y, double i, double q, double* r, double* g, double* b)
+{
+  libclut_model_yiq_to_srgb(y, i, q, r, g, b);
+}
+
+
+/**
+ * Convert from sRGB to YDbDr.
+ * 
+ * @param  r   The R component.
+ * @param  g   The G component.
+ * @param  b   The B component.
+ * @param  y   Output parameter for the Y parameter.
+ * @param  db  Output parameter for the Db parameter.
+ * @param  dr  Output parameter for the Dr parameter.
+ */
+void (libclut_model_srgb_to_ydbdr)(double r, double g, double b, double* y, double* db, double* dr)
+{
+  libclut_model_srgb_to_ydbdr(r, g, b, y, db, dr);
+}
+
+
+/**
+ * Convert from YDbDr to sRGB.
+ * 
+ * @param  y   The Y component.
+ * @param  db  The Db component.
+ * @param  dr  The Dr component.
+ * @param  r   Output parameter for the R parameter.
+ * @param  g   Output parameter for the G parameter.
+ * @param  b   Output parameter for the B parameter.
+ */
+void (libclut_model_ydbdr_to_srgb)(double y, double db, double dr, double* r, double* g, double* b)
+{
+  libclut_model_ydbdr_to_srgb(y, db, dr, r, g, b);
+}
+
+/**
+ * Convert from YUV to YDbDr.
+ * 
+ * @param  u   The U component.
+ * @param  v   The V component.
+ * @param  db  Output parameter for the Db parameter.
+ * @param  dr  Output parameter for the Dr parameter.
+ */
+void (libclut_model_yuv_to_ydbdr)(double u, double v, double* db, double* dr)
+{
+  libclut_model_yuv_to_ydbdr(u, v, db, dr);
+}
+
+
+/**
+ * Convert from YDbDr to YUV.
+ * 
+ * @param  db  The Db component.
+ * @param  dr  The Dr component.
+ * @param  u   Output parameter for the U parameter.
+ * @param  v   Output parameter for the V parameter.
+ */
+void (libclut_model_ydbdr_to_yuv)(double db, double dr, double* u, double* v)
+{
+  libclut_model_ydbdr_to_yuv(db, dr, u, v);
+}
+
+
+/**
+ * Convert from sRGB to YPbPr.
+ * 
+ * @param  r   The R component.
+ * @param  g   The G component.
+ * @param  b   The B component.
+ * @param  y   Output parameter for the Y parameter.
+ * @param  pb  Output parameter for the Pb parameter.
+ * @param  pr  Output parameter for the Pr parameter.
+ */
+void (libclut_model_srgb_to_ypbpr)(double r, double g, double b, double* y, double* pb, double* pr)
+{
+  libclut_model_srgb_to_ypbpr(r, g, b, y, pb, pr);
+}
+
+
+/**
+ * Convert from YPbPr to sRGB.
+ * 
+ * @param  y   The Y component.
+ * @param  pb  The Pb component.
+ * @param  pr  The Pr component.
+ * @param  r   Output parameter for the R parameter.
+ * @param  g   Output parameter for the G parameter.
+ * @param  b   Output parameter for the B parameter.
+ */
+void (libclut_model_ypbpr_to_srgb)(double y, double pb, double pr, double* r, double* g, double* b)
+{
+  libclut_model_ypbpr_to_srgb(y, pb, pr, r, g, b);
+}
+
+
+/**
+ * Convert from sRGB to YCgCo.
+ * 
+ * @param  r   The R component.
+ * @param  g   The G component.
+ * @param  b   The B component.
+ * @param  y   Output parameter for the Y parameter.
+ * @param  cg  Output parameter for the Cg parameter.
+ * @param  co  Output parameter for the Co parameter.
+ */
+void (libclut_model_srgb_to_ycgco)(double r, double g, double b, double* y, double* cg, double* co)
+{
+  libclut_model_srgb_to_ycgco(r, g, b, y, cg, co);
+}
+
+
+/**
+ * Convert from YCgCo to sRGB.
+ * 
+ * @param  y   The Y component.
+ * @param  cg  The Cg component.
+ * @param  co  The Co component.
+ * @param  r   Output parameter for the R parameter.
+ * @param  g   Output parameter for the G parameter.
+ * @param  b   Output parameter for the B parameter.
+ */
+void (libclut_model_ycgco_to_srgb)(double y, double cg, double co, double* r, double* g, double* b)
+{
+  libclut_model_ycgco_to_srgb(y, cg, co, r, g, b);
+}
+
+
+/**
+ * Convert from CIE 1960 UCS to CIE XYZ.
+ * 
+ * @param  u  The u component.
+ * @param  v  The v component.
+ * @param  Y  The Y component.
+ * @param  x  Output parameter for the X parameter.
+ * @param  y  Output parameter for the Y parameter.
+ * @param  z  Output parameter for the Z parameter.
+ */
+void (libclut_model_cie_1960_ucs_to_ciexyz)(double u, double v, double Y, double* x, double* y, double* z)
+{
+  libclut_model_cie_1960_ucs_to_ciexyz(u, v, Y, x, y, z);
+}
+
+
+/**
+ * Convert from CIE XYZ to CIE 1960 UCS.
+ * 
+ * @param  x  The X component.
+ * @param  y  The Y component.
+ * @param  z  The Z component.
+ * @param  u  Output parameter for the u parameter.
+ * @param  v  Output parameter for the v parameter.
+ * @param  Y  Output parameter for the Y parameter.
+ */
+void (libclut_model_ciexyz_to_cie_1960_ucs)(double x, double y, double z, double* u, double* v, double* Y)
+{
+  libclut_model_ciexyz_to_cie_1960_ucs(x, y, z, u, v, Y);
+}
+
+
+/**
+ * Convert from CIEUVW to CIE 1960 UCS.
+ * 
+ * @param  U   The U* component.
+ * @param  V   The V* component.
+ * @param  W   The W* component.
+ * @param  u0  The u parameter for the white point.
+ * @param  v0  The v parameter for the white point.
+ * @param  u   Output parameter for the u parameter.
+ * @param  v   Output parameter for the v parameter.
+ * @param  Y   Output parameter for the Y parameter.
+ */
+void (libclut_model_cieuvw_to_cie_1960_ucs)(double U, double V, double W, double u0, double v0,
+					    double* u, double* v, double* Y)
+{
+  libclut_model_cieuvw_to_cie_1960_ucs(U, V, W, u0, v0, u, v, Y);
+}
+
+
+/**
+ * Convert from CIE 1960 UCS to CIEUVW.
+ * 
+ * Requires linking with `-lm`.
+ * 
+ * @param  u   The u component.
+ * @param  v   The v component.
+ * @param  Y   The Y component.
+ * @param  u0  The u parameter for the white point.
+ * @param  v0  The v parameter for the white point.
+ * @param  U   Output parameter for the U* parameter.
+ * @param  V   Output parameter for the V* parameter.
+ * @param  W   Output parameter for the W* parameter.
+ */
+void (libclut_model_cie_1960_ucs_to_cieuvw)(double u, double v, double Y, double u0, double v0,
+					    double* U, double* V, double* W)
+{
+  libclut_model_cie_1960_ucs_to_cieuvw(u, v, Y, u0, v0, U, V, W);
 }
 
 
@@ -410,7 +707,7 @@ int libclut_model_get_rgb_conversion_matrix(const libclut_rgb_colour_space_t* fr
  * @param  out_b  Output parameter for the new blue component.
  */
 void (libclut_model_convert_rgb)(double r, double g, double b, libclut_colour_space_conversion_matrix_t M,
-				  double *out_r, double *out_g, double *out_b)
+				  double* out_r, double* out_g, double* out_b)
 {
   libclut_model_convert_rgb(r, g, b, M, out_r, out_g, out_b);
 }

@@ -1,5 +1,12 @@
 libclut NEWS                                          -*- outline -*-
 
+* Noteworthy changes in release 1.1 (TBA) [stable]
+
+  Support for CIELUV, CIELCh, YIQ, YDbDr, YPbPr, YCgCo,
+  CIE 1960 USC, and CIE U*V*W* added.
+
+  New RGB colour spaces added: ITU-R BT.709 and Lightroom RGB.
+
 * Noteworthy changes in release 1.0 (2016-(12)Dec-02) [stable]
 
   RGB colour space conversion added.

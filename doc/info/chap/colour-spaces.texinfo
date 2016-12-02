@@ -8,7 +8,10 @@
 
 @command{libclut} has a number of functions for converting
 between colour space models. The supported colour space models
-are [0, 1] sRGB, [0, 1] linear RGB, CIE xyY, CIE XYZ, and CIE Lab.
+are [0, 1] sRGB, [0, 1] linear sRGB, CIE xyY, CIE XYZ, CIE L*a*b*,
+CIE 1976 (L*, u*, v*), CIELCh@sub{uv}, YIQ, YD@sub{b}D@sub{r},
+YP@sub{b}P@sub{r}, YCgCo, CIE 1960 USC, CIE U*V*W*,
+
 These functions are implemented as macros, but regular functions
 are available either by putting the name in the function is
 brackets, taking the address of the function, or by undefining
@@ -21,9 +24,9 @@ linking with @option{-lm}.
 
 @table @code
 @item double libclut_model_linear_to_standard1(double c)
-Convert one component from [0, 1] linear RGB to [0, 1] sRGB.
+Convert one component from [0, 1] linear sRGB to [0, 1] sRGB.
 @item double libclut_model_standard_to_linear1(double c)
-Convert one component from [0, 1] sRGB to [0, 1] linear RGB.
+Convert one component from [0, 1] sRGB to [0, 1] linear sRGB.
 @end table
 
 @command{libclut} has ten functions that are intended for the
@@ -33,7 +36,7 @@ type @code{double}, and they do not have a return value.
 
 @table @code
 @item libclut_model_linear_to_standard(*r. *g, *b)
-Convert [0, 1] linear RGB to [0, 1] sRGB.
+Convert [0, 1] linear sRGB to [0, 1] sRGB.
 
 The macro variant requires linking with @option{-lm}, if
 the @code{libclut_model_linear_to_standard1} is defined,
@@ -54,7 +57,7 @@ for the blue component.
 
 
 @item libclut_model_standard_to_linear(*r, *g, *b)
-Convert [0, 1] sRGB to [0, 1] linear RGB.
+Convert [0, 1] sRGB to [0, 1] linear sRGB.
 
 The macro variant requires linking with @option{-lm}, if
 the @code{libclut_model_standard_to_linear1} is defined,
@@ -113,7 +116,7 @@ Output parameter for the y parameter.
 
 
 @item libclut_model_ciexyz_to_linear(X, Y, Z, *r, *g, *b)
-Convert CIE XYZ to [0, 1] linear RGB.
+Convert CIE XYZ to [0, 1] linear sRGB.
 
 Parameters:
 @table @code
@@ -133,7 +136,7 @@ Output parameter for the blue component.
 
 
 @item libclut_model_linear_to_ciexyz(r, g, b, *X, *Y, *Z)
-Convert [0, 1] linear RGB to CIE XYZ.
+Convert [0, 1] linear sRGB to CIE XYZ.
 
 Parameters:
 @table @code
@@ -153,13 +156,13 @@ Output parameter for the Z parameter.
 
 
 @item libclut_model_srgb_to_ciexyy(r, g, b, *x, *y, *Y)
-Convert [0, 1] linear RGB to CIE xyY.
+Convert [0, 1] linear sRGB to CIE xyY.
 
 The macro variant requires linking with @option{-lclut}
 if any of @code{libclut_model_ciexyz_to_ciexyy},
 @code{libclut_model_linear_to_ciexyz}, and
 @code{libclut_model_standard_to_linear} are undefined.
-The macro variant requires linking with @code{-lm} if
+The macro variant requires linking with @option{-lm} if
 neither @code{libclut_model_standard_to_linear} nor
 @code{libclut_model_standard_to_linear1} are undefined.
 
@@ -247,6 +250,426 @@ Output parameter for the X parameter.
 Output parameter for the Y parameter.
 @item Z
 Output parameter for the Z parameter.
+@end table
+
+
+@item libclut_model_ciexyz_to_cieluv(X, Y, Z, Xn, Yn, Zn, *L, *u, *v)
+Convert from CIE XYZ to CIE 1976 (L*, u*, v*).
+
+The macro variant requires linking with @option{-lm}.
+
+Parameters:
+@table @code
+@item L
+The X component.
+@item a
+The Y component.
+@item b
+The Z component.
+@item Xn
+The X component of the specified white object (white point).
+@item Yn
+The Y component of the specified white object (white point).
+@item Zn
+The Z component of the specified white object (white point).
+@item X
+Output parameter for the L* parameter.
+@item Y
+Output parameter for the u* parameter.
+@item Z
+Output parameter for the v* parameter.
+@end table
+
+
+@item libclut_model_cieluv_to_ciexyz(L, u, v, Xn, Yn, Zn, *X, *Y, *Z)
+Convert from CIE 1976 (L*, u*, v*) to CIE XYZ.
+
+Parameters:
+@table @code
+@item L
+The L* component.
+@item a
+The u* component.
+@item b
+The v* component.
+@item Xn
+The X component of the specified white object (white point).
+@item Yn
+The Y component of the specified white object (white point).
+@item Zn
+The Z component of the specified white object (white point).
+@item X
+Output parameter for the X parameter.
+@item Y
+Output parameter for the Y parameter.
+@item Z
+Output parameter for the Z parameter.
+@end table
+
+
+@item libclut_model_cielch_to_cieluv(C, h, *u, *v)
+Convert from CIE LCh@sub{uv} to CIE 1976 (L*, u*, v*).
+
+The L* component remains unchanged.
+
+The macro variant requires linking with @option{-lm}.
+
+Parameters:
+@table @code
+@item C
+The C*@sub{uv} component.
+@item h
+The h@sub{uv} component.
+@item u
+Output parameter for the u* parameter.
+@item v
+Output parameter for the v* parameter.
+@end table
+
+
+@item libclut_model_cieluv_to_cielch(u, v, *C, *h)
+Convert from CIE 1976 (L*, u*, v*) to CIE LCh@sub{uv}.
+
+The L* component remains unchanged.
+
+The macro variant requires linking with @option{-lm}.
+
+Parameters:
+@table @code
+@item a
+The u* component.
+@item b
+The v* component.
+@item C
+Output parameter for the C*@sub{uv} parameter.
+@item h
+Output parameter for the h@sub{uv} parameter.
+@end table
+
+
+@item libclut_model_srgb_to_yiq(r, g, b, *Y, *I, *Q)
+Convert from [0, 1] sRGB to YIQ.
+
+The macro variant requires linking with @option{-lm},
+or if @option{-lclut} if the macro
+@code{libclut_model_standard_to_linear1} has been
+undefined.
+
+Parameters:
+@table @code
+@item r
+The red component.
+@item g
+The green component.
+@item b
+The blue component.
+@item Y
+Output parameter for the Y parameter.
+@item I
+Output parameter for the I parameter.
+@item Q
+Output parameter for the Q parameter.
+@end table
+
+
+@item libclut_model_yiq_to_srgb(Y, I, Q, *r, *g, *b)
+Convert from YIQ to [0, 1] sRGB.
+
+The macro variant requires linking with @option{-lm},
+or if @option{-lclut} if the macro
+@code{libclut_model_linear_to_standard1} has been
+undefined.
+
+Parameters:
+@table @code
+@item Y
+The Y component.
+@item I
+The I component.
+@item Q
+The Q component.
+@item r
+Output parameter for the red parameter.
+@item g
+Output parameter for the green parameter.
+@item b
+Output parameter for the blue parameter.
+@end table
+
+
+@item libclut_model_srgb_to_ydbdr(r, g, b, *Y, *Db, *Dr)
+Convert from [0, 1] sRGB to YD@sub{b}D@sub{r}.
+
+The macro variant requires linking with @option{-lm},
+or if @option{-lclut} if the macro
+@code{libclut_model_standard_to_linear1} has been
+undefined.
+
+Parameters:
+@table @code
+@item r
+The red component.
+@item g
+The green component.
+@item b
+The blue component.
+@item Y
+Output parameter for the Y parameter.
+@item Db
+Output parameter for the D@sub{b} parameter.
+@item Dr
+Output parameter for the D@sub{r} parameter.
+@end table
+
+
+@item libclut_model_ydbdr_to_srgb(Y, Db, Dr, *r, *g, *b)
+Convert from YD@sub{b}D@sub{r} to [0, 1] sRGB.
+
+The macro variant requires linking with @option{-lm},
+or if @option{-lclut} if the macro
+@code{libclut_model_linear_to_standard1} has been
+undefined.
+
+Parameters:
+@table @code
+@item Y
+The Y component.
+@item Db
+The D@sub{b} component.
+@item Dr
+The D@sub{r} component.
+@item r
+Output parameter for the red parameter.
+@item g
+Output parameter for the green parameter.
+@item b
+Output parameter for the blue parameter.
+@end table
+
+
+@item libclut_model_yuv_to_ydbdr(U, V, *Db, *Dr)
+Convert from YUV to YD@sub{b}D@sub{r}.
+
+The Y component remains unchanged.
+
+Parameters:
+@table @code
+@item Y
+The U component.
+@item V
+The V component.
+@item Db
+Output parameter for the D@sub{b} parameter.
+@item Dr
+Output parameter for the D@sub{r} parameter.
+@end table
+
+
+@item libclut_model_ydbdr_to_yuv(Db, Dr, *U, *V)
+Convert from YD@sub{b}D@sub{r} to YUV.
+
+The Y component remains unchanged.
+
+Parameters:
+@table @code
+@item Db
+The D@sub{b} component.
+@item Dr
+The D@sub{r} component.
+@item U
+Output parameter for the U parameter.
+@item V
+Output parameter for the V parameter.
+@end table
+
+
+@item libclut_model_srgb_to_ypbpr(r, g, b, *Y, *Pb, *Pr)
+Convert from [0, 1] sRGB to YP@sub{b}P@sub{r}.
+
+The macro variant requires linking with @option{-lm},
+or if @option{-lclut} if the macro
+@code{libclut_model_standard_to_linear1} has been
+undefined.
+
+Parameters:
+@table @code
+@item r
+The red component.
+@item g
+The green component.
+@item b
+The blue component.
+@item Y
+Output parameter for the Y parameter.
+@item Pb
+Output parameter for the P@sub{b} parameter.
+@item Pr
+Output parameter for the P@sub{r} parameter.
+@end table
+
+
+@item libclut_model_ypbpr_to_srgb(Y, Pb, Pr, *r, *g, *b)
+Convert from YP@sub{b}P@sub{r} to [0, 1] sRGB.
+
+The macro variant requires linking with @option{-lm},
+or if @option{-lclut} if the macro
+@code{libclut_model_linear_to_standard1} has been
+undefined.
+
+Parameters:
+@table @code
+@item Y
+The Y component.
+@item Pb
+The P@sub{b} component.
+@item Pr
+The P@sub{r} component.
+@item r
+Output parameter for the red parameter.
+@item g
+Output parameter for the green parameter.
+@item b
+Output parameter for the blue parameter.
+@end table
+
+
+@item libclut_model_srgb_to_ycgco(r, g, b, *Y, *Cg, *Co)
+Convert from [0, 1] sRGB to YCgCo.
+
+The macro variant requires linking with @option{-lm},
+or if @option{-lclut} if the macro
+@code{libclut_model_standard_to_linear1} has been
+undefined.
+
+Parameters:
+@table @code
+@item r
+The red component.
+@item g
+The green component.
+@item b
+The blue component.
+@item Y
+Output parameter for the Y parameter.
+@item Cg
+Output parameter for the Cg parameter.
+@item Co
+Output parameter for the Co parameter.
+@end table
+
+
+@item libclut_model_ycgco_to_srgb(Y, Cg, Co, *r, *g, *b)
+Convert from YCgCo to [0, 1] sRGB.
+
+The macro variant requires linking with @option{-lm},
+or if @option{-lclut} if the macro
+@code{libclut_model_linear_to_standard1} has been
+undefined.
+
+Parameters:
+@table @code
+@item Y
+The Y component.
+@item Cg
+The Cg component.
+@item Co
+The Co component.
+@item r
+Output parameter for the red parameter.
+@item g
+Output parameter for the green parameter.
+@item b
+Output parameter for the blue parameter.
+@end table
+
+
+@item libclut_model_cie_1960_ucs_to_ciexyz(u, v, Y, *x, *y, *z)
+Convert from CIE 1960 UCS to CIE XYZ.
+
+Parameters:
+@table @code
+@item u
+The u component.
+@item v
+The v component.
+@item Y
+The Y component.
+@item x
+Output parameter for the X parameter.
+@item y
+Output parameter for the Y parameter.
+@item z
+Output parameter for the Z parameter.
+@end table
+
+
+@item libclut_model_ciexyz_to_cie_1960_ucs(x, y, z, *u, *v, *Y)
+Convert from CIE XYZ to CIE 1960 UCS.
+
+Parameters:
+@table @code
+@item x
+The X component.
+@item y
+The Y component.
+@item z
+The Z component.
+@item u
+Output parameter for the u parameter.
+@item v
+Output parameter for the v parameter.
+@item Y
+Output parameter for the Y parameter.
+@end table
+
+
+@item libclut_model_cie_1960_ucs_to_cieuvw(U, V, W, u0, v0, *x, *y, *z)
+Convert from CIE 1960 UCS to CIE U*V*W*.
+
+Parameters:
+@table @code
+@item U
+The U* component.
+@item V
+The V* component.
+@item W
+The W* component.
+@item u0
+The u parameter for the white point.
+@item v0
+The v parameter for the white point.
+@item x
+Output parameter for the X parameter.
+@item y
+Output parameter for the Y parameter.
+@item z
+Output parameter for the Z parameter.
+@end table
+
+
+@item libclut_model_cieuvw_to_cie_1960_ucs(x, y, z, u0, v0, *U, *V, *W)
+Convert from CIE U*V*W* to CIE 1960 UCS.
+
+The macro variant requires linking with @option{-lm}.
+
+Parameters:
+@table @code
+@item x
+The X component.
+@item y
+The Y component.
+@item z
+The Z component.
+@item u0
+The u parameter for the white point.
+@item v0
+The v parameter for the white point.
+@item U*
+Output parameter for the u parameter.
+@item V*
+Output parameter for the v parameter.
+@item W*
+Output parameter for the Y parameter.
 @end table
 @end table
 
@@ -371,6 +794,18 @@ Ekta Space PS5
 @tab
 @code{LIBCLUT_RGB_COLOUR_SPACE_EKTA_SPACE_PS5_INITIALISER}
 @item
+ITU-R BT.709@footnote{ITU-R Recommendation BT.709}
+@tab
+2.4
+@tab
+@code{LIBCLUT_RGB_COLOUR_SPACE_ITU_R_BT_709_INITIALISER}
+@item
+Lightroom RGB
+@tab
+1.0
+@tab
+@code{LIBCLUT_RGB_COLOUR_SPACE_LIGHTROOM_RGB_INITIALISER}
+@item
 NTSC RGB
 @tab
 2.2
@@ -455,7 +890,7 @@ Returns 0 on success, and -1 on error. The only possible error is
 the colour spaces and a conversion matrix cannot be created.
 
 This function is not available as a macro, thus, linking with
-@code{-lclut} is required.
+@option{-lclut} is required.
 
 Parameters:
 @table @code
@@ -491,8 +926,8 @@ Convert a single RGB colour into another RGB colour space.
 The colour space must have same gamma functions as RGB.
 
 This macro is also available a function. If the function is
-used, linking with @code{-lclut} is required, otherwise,
-linking with @code{-lm} is required, or @code{-lclut} if
+used, linking with @option{-lclut} is required, otherwise,
+linking with @option{-lm} is required, or @option{-lclut} if
 @code{libclut_model_standard_to_linear1} or
 @code{libclut_model_linear_to_standard1} is undefined.
 
@@ -521,7 +956,7 @@ The red, green, and blue ramps must be of the same size.
 
 None of the parameter may have side-effects.
 
-Requires linking with @code{-lm}, or @code{-lclut} if
+Requires linking with @option{-lm}, or @option{-lclut} if
 @code{libclut_model_standard_to_linear1},
 @code{libclut_model_linear_to_standard1}, or
 @code{libclut_model_convert_rgb}  is undefined.
@@ -560,11 +995,11 @@ are not of the same size.
 
 None of the parameter may have side-effects.
 
-Requires linking with @code{-lm}. If
+Requires linking with @option{-lm}. If
 @code{libclut_model_linear_to_standard1},
 @code{libclut_model_standard_to_linear1}, or
 @code{libclut_model_convert_rgb} has been undefined,
-linking with @code{-lclut} is also required.
+linking with @option{-lclut} is also required.
 
 Parameters:
 @table @code

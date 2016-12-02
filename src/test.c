@@ -358,11 +358,31 @@ int main(int argc, char *argv[])
     }
   
   
-  libclut_convert_rgb_inplace(&t1, 1, double, M, trunc);
-  libclut_convert_rgb(&t1, 1, double, M, trunc, &t2);
+  libclut_convert_rgb_inplace(&t1, 1, double, M, trunc); /* TODO test */
+  libclut_convert_rgb(&t1, 1, double, M, trunc, &t2);    /* TODO test */
   
   
  rgb_conversion_done:
+
+  
+  libclut_model_ciexyz_to_cieluv(1, 1, 1, 1, 1, 1, &r, &g, &b); /* TODO test */
+  libclut_model_cieluv_to_ciexyz(1, 1, 1, 1, 1, 1, &r, &g, &b); /* TODO test */
+  libclut_model_cielch_to_cieluv(1, 1, &r, &g); /* TODO test */
+  libclut_model_cieluv_to_cielch(1, 1, &r, &g); /* TODO test */
+  libclut_model_srgb_to_yiq(1, 1, 1, &r, &g, &b); /* TODO test */
+  libclut_model_yiq_to_srgb(1, 1, 1, &r, &g, &b); /* TODO test */
+  libclut_model_srgb_to_ydbdr(1, 1, 1, &r, &g, &b); /* TODO test */
+  libclut_model_ydbdr_to_srgb(1, 1, 1, &r, &g, &b); /* TODO test */
+  libclut_model_yuv_to_ydbdr(1, 1, &r, &g); /* TODO test */
+  libclut_model_ydbdr_to_yuv(1, 1, &r, &g); /* TODO test */
+  libclut_model_srgb_to_ypbpr(1, 1, 1, &r, &g, &b); /* TODO test */
+  libclut_model_ypbpr_to_srgb(1, 1, 1, &r, &g, &b); /* TODO test */
+  libclut_model_srgb_to_ycgco(1, 1, 1, &r, &g, &b); /* TODO test */
+  libclut_model_ycgco_to_srgb(1, 1, 1, &r, &g, &b); /* TODO test */
+  libclut_model_cie_1960_ucs_to_ciexyz(1, 1, 1, &r, &g, &b); /* TODO test */
+  libclut_model_ciexyz_to_cie_1960_ucs(1, 1, 1, &r, &g, &b); /* TODO test */
+  libclut_model_cieuvw_to_cie_1960_ucs(1, 1, 1, 1, 1, &r, &g, &b); /* TODO test */
+  libclut_model_cie_1960_ucs_to_cieuvw(1, 1, 1, 1, 1, &r, &g, &b); /* TODO test */
   
   
   if (!rc)
@@ -393,7 +413,5 @@ int main(int argc, char *argv[])
   libclut_cie_limits
   libclut_cie_manipulate
   libclut_cie_apply
-  libclut_convert_rgb_inplace
-  libclut_convert_rgb
 */
 
