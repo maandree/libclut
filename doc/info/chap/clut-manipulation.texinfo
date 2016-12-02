@@ -10,8 +10,8 @@ colour lookup table that shall be manipulated.
 Pointer to the gamma ramps. This must be a pointer
 to an instance of a @code{struct} that must at least
 have the array members @code{red}, @code{green}, and
-@code{blue}, whose elements shall be of the time
-specified by the parameter @code{type}. The struct
+@code{blue}, whose elements shall be of the type
+specified by the parameter @code{type}. The @code{struct}
 must also have the scalar members @code{red_size},
 @code{green_size}, and @code{blue_size}, and shall be
 of the type @code{size_t}; they shall specify the

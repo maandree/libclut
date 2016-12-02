@@ -1,6 +1,11 @@
 @node Colour Spaces
 @chapter Colour Spaces
 
+@menu
+* RGB Conversion::                          RGB colour space conversion functions.
+@end menu
+
+
 @command{libclut} has a number of functions for converting
 between colour space models. The supported colour space models
 are [0, 1] sRGB, [0, 1] linear RGB, CIE xyY, CIE XYZ, and CIE Lab.
@@ -245,3 +250,349 @@ Output parameter for the Z parameter.
 @end table
 @end table
 
+
+@node RGB Conversion
+@section RGB Conversion
+
+@command{libclut} provides a functions for converting
+RGB values between RGB colour spaces. An RGB colour space
+is described using @code{struct libclut_rgb_colour_space}
+(also known as @code{libclut_rgb_colour_space_t}). It
+describes the colour of the red, green, and blue,
+stimuli as well as the white point, in CIE xyY. It does
+however not describe the colour space's gamma function,
+because sRGB uses a irregular gamma function, and
+ECI@tie{}RGB@tie{}v2 uses L*. The structure contains
+the following @code{double}:s:
+
+@table @code
+@item red_x
+The CIE xyY x-value of the red stimulus.
+@item red_y
+The CIE xyY y-value of the red stimulus.
+@item red_Y
+The CIE xyY Y-value of the red stimulus.
+@item green_x
+The CIE xyY x-value of the green stimulus.
+@item green_y
+The CIE xyY y-value of the green stimulus.
+@item green_Y
+The CIE xyY Y-value of the green stimulus.
+@item blue_x
+The CIE xyY x-value of the blue stimulus.
+@item blue_y
+The CIE xyY y-value of the blue stimulus.
+@item blue_Y
+The CIE xyY Y-value of the blue stimulus.
+@item white_x
+The CIE xyY x-value of the white point.
+@item white_y
+The CIE xyY y-value of the white point.
+@item white_Y
+The CIE xyY Y-value of the white point.
+@end table
+
+@code{libclut} provides macros used to initialise a
+@code{struct libclut_rgb_colour_space} with values
+for a number of RGB colour spaces. These are listed
+below, along with the gamma each colour space uses.
+
+@multitable {PAL/SECAM RGB} {@b{Gamma}} {@code{LIBCLUT_RGB_COLOUR_SPACE_WIDE_GAMUT_RGB_INITIALISER}}
+@item
+@b{Model}
+@tab
+@b{Gamma}
+@tab
+@b{Initialiser}
+@item
+sRGB
+@tab
+sRGB
+@tab
+@code{LIBCLUT_RGB_COLOUR_SPACE_SRGB_INITIALISER}
+@item
+Adobe RGB (1998)
+@tab
+2.2
+@tab
+@code{LIBCLUT_RGB_COLOUR_SPACE_ADOBE_RGB_INITIALISER}
+@item
+Apple RGB
+@tab
+1.8
+@tab
+@code{LIBCLUT_RGB_COLOUR_SPACE_APPLE_RGB_INITIALISER}
+@item
+Best RGB
+@tab
+2.2
+@tab
+@code{LIBCLUT_RGB_COLOUR_SPACE_BEST_RGB_INITIALISER}
+@item
+Beta RGB
+@tab
+2.2
+@tab
+@code{LIBCLUT_RGB_COLOUR_SPACE_BETA_RGB_INITIALISER}
+@item
+Bruce RGB
+@tab
+2.2
+@tab
+@code{LIBCLUT_RGB_COLOUR_SPACE_BRUCE_RGB_INITIALISER}
+@item
+CIE RGB
+@tab
+2.2
+@tab
+@code{LIBCLUT_RGB_COLOUR_SPACE_CIE_RGB_INITIALISER}
+@item
+ColorMatch RGB
+@tab
+1.8
+@tab
+@code{LIBCLUT_RGB_COLOUR_SPACE_COLORMATCH_RGB_INITIALISER}
+@item
+Don RGB 4
+@tab
+2.2
+@tab
+@code{LIBCLUT_RGB_COLOUR_SPACE_DON_RGB_4_INITIALISER}
+@item
+ECI RGB v2
+@tab
+L*
+@tab
+@code{LIBCLUT_RGB_COLOUR_SPACE_ECI_RGB_V2_INITIALISER}
+@item
+Ekta Space PS5
+@tab
+2.2
+@tab
+@code{LIBCLUT_RGB_COLOUR_SPACE_EKTA_SPACE_PS5_INITIALISER}
+@item
+NTSC RGB
+@tab
+2.2
+@tab
+@code{LIBCLUT_RGB_COLOUR_SPACE_NTSC_RGB_INITIALISER}
+@item
+PAL/SECAM RGB
+@tab
+2.2
+@tab
+@code{LIBCLUT_RGB_COLOUR_SPACE_PAL_SECAM_RGB_INITIALISER}
+@item
+ProPhoto RGB
+@tab
+1.8
+@tab
+@code{LIBCLUT_RGB_COLOUR_SPACE_PROPHOTO_RGB_INITIALISER}
+@item
+SMPTE-C RGB
+@tab
+2.2
+@tab
+@code{LIBCLUT_RGB_COLOUR_SPACE_SMPTE_C_RGB_INITIALISER}
+@item
+Wide Gamut RGB
+@tab
+2.2
+@tab
+@code{LIBCLUT_RGB_COLOUR_SPACE_WIDE_GAMUT_RGB_INITIALISER}
+@end multitable
+
+To create a description for the sRGB colour space write:
+
+@example
+struct libclut_rgb_colour_space srgb = \
+        LIBCLUT_RGB_COLOUR_SPACE_SRGB_INITIALISER;
+@end example
+
+@command{libgamma} and @command{libcoopgamma} can be used
+to get the x and y values of the user's monitors' red,
+green, and blue stimuli. Otherwise, all values specified
+by @code{LIBCLUT_RGB_COLOUR_SPACE_SRGB_INITIALISER} can
+be used, and the sRGB gamma function can be used. However,
+the Y values of the stimuli may be off, however, this does
+not affect conversion.
+
+sRGB uses an irregular gamma function. @command{libclut}
+assumes that the colour spaces uses this gamma function
+when converting between RGB colour spaces. If you want to
+convert from a colour space with another gamma function,
+you must first convert the gamma function. This can be
+done by linearising the values and then use
+@code{libclut_model_linear_to_standard1},
+@code{libclut_model_linear_to_standard}, or
+@code{libclut_standardise}. If you want to convert to a
+colour spce with another gamma function, you must after
+the conversion also convert the gamma function. This can
+be done by using @code{libclut_model_standard_to_linear1},
+@code{libclut_model_standard_to_linear}, or
+@code{libclut_linearise}, and then converting from linear
+to the proper gamma function. Note that even if you are
+converting between two colour spaces with the same gamma
+function, gamma function conversion must be done (before
+and after) unless they use the sRGB gamma function.
+
+Before RGB colour space conversion can be done, you need
+to create a conversion matrix. It has the type
+
+@example
+typedef double libclut_colour_space_conversion_matrix_t[3][3];
+@end example
+
+@noindent
+and can be created with
+@table @code
+@item int libclut_model_get_rgb_conversion_matrix(*from, *to, M, Minv)
+Create a conversion matrix from one RGB colour space to another
+RGB colour space, and optionally a matrix for an inverse conversion.
+
+Returns 0 on success, and -1 on error. The only possible error is
+@code{EINVAL}, which indicates that there is something wrong with
+the colour spaces and a conversion matrix cannot be created.
+
+This function is not available as a macro, thus, linking with
+@code{-lclut} is required.
+
+Parameters:
+@table @code
+@item const libclut_rgb_colour_space_t* from
+Description of the input colour space.
+@item const libclut_rgb_colour_space_t* to
+Description of the output colour space.
+@item libclut_colour_space_conversion_matrix_t M
+Matrix to fill with values so it can be used for
+converting from the input colour space to the
+output colour space.
+@item libclut_colour_space_conversion_matrix_t Minv
+Matrix to fill with values so it can be used for
+converting from the output colour space to the
+input colour space. (That is, inverse conversion.)
+This parameter may be @code{NULL}.
+@end table
+@end table
+
+You can also create the matrix manually. If you for example
+have a @code{libclut_colour_space_conversion_matrix_t} named
+@code{M}, and want to set the cell at row 1 and column 3, to
+0.5, you make the assignment @code{M[0][2] = 0.5}.
+
+Once you have your conversion matrix, @command{libclut} has
+three macro functions you can used to convert colours between
+RGB colour space. Remember that they require the sRGB gamma
+function.
+
+@table @code
+@item libclut_model_convert_rgb(r, g, b, M, *out_r, *out_g, *out_b)
+Convert a single RGB colour into another RGB colour space.
+The colour space must have same gamma functions as RGB.
+
+This macro is also available a function. If the function is
+used, linking with @code{-lclut} is required, otherwise,
+linking with @code{-lm} is required, or @code{-lclut} if
+@code{libclut_model_standard_to_linear1} or
+@code{libclut_model_linear_to_standard1} is undefined.
+
+Parameters:
+@table @code
+@item double r
+The red value of the colour to convert.
+@item double g
+The green value of the colour to convert.
+@item double b
+The blue value of the colour to convert.
+@item libclut_colour_space_conversion_matrix_t M
+The conversion matrix.
+@item double* out_r
+Output parameter for the red value of the colour after conversion.
+@item double* out_g
+Output parameter for the green value of the colour after conversion.
+@item double* out_b
+Output parameter for the blue value of the colour after conversion.
+@end table
+
+@item libclut_convert_rgb_inplace(clut, max, type, m, trunc)
+Convert the curves between two RGB colour spaces.
+
+The red, green, and blue ramps must be of the same size.
+
+None of the parameter may have side-effects.
+
+Requires linking with @code{-lm}, or @code{-lclut} if
+@code{libclut_model_standard_to_linear1},
+@code{libclut_model_linear_to_standard1}, or
+@code{libclut_model_convert_rgb}  is undefined.
+
+Parameters:
+@table @code
+@item clut
+Pointer to the gamma ramps to convert. This must be a pointer to
+an instance of a struct that must at least have the array members
+@code{red}, @code{green}, and @code{blue}, whose elements shall be
+of the type specified by the parameter @code{type}. The @code{struct}
+must also have the scalar members @code{red_size}, @code{green_size},
+and @code{blue_size}, and shall be of the type @code{size_t}; they
+shall specify the number of stops (elements) in the arrays @code{.red},
+@code{.green}, and @code{.blue}, respectively, which shall be the
+gamma ramp for the red, green, and blue channels respectively. Its
+values will be modified to the new values.
+@item max
+The maximum value on each stop in the ramps.
+@item type
+The data type used for each stop in the ramps.
+@item libclut_colour_space_conversion_matrix_t m
+Conversion matrix.
+@item int trunc
+If this is a non-zero value, resulting colours that are
+out of gamut are truncated. (Not necessarily the best
+approximation.)
+@end table
+
+@item libclut_convert_rgb(clut, max, type, m, trunc, out)
+Convert the curves between two RGB colour spaces.
+
+This is a slower version of @code{libclut_convert_rgb_inplace}
+that supports clut:s where the red, green, and blue ramps
+are not of the same size.
+
+None of the parameter may have side-effects.
+
+Requires linking with @code{-lm}. If
+@code{libclut_model_linear_to_standard1},
+@code{libclut_model_standard_to_linear1}, or
+@code{libclut_model_convert_rgb} has been undefined,
+linking with @code{-lclut} is also required.
+
+Parameters:
+@table @code
+@item clut
+Pointer to the gamma ramps to convert. This must be a pointer to
+an instance of a struct that must at least have the array members
+@code{red}, @code{green}, and @code{blue}, whose elements shall be
+of the type specified by the parameter @code{type}. The @code{struct}
+must also have the scalar members @code{red_size}, @code{green_size},
+and @code{blue_size}, and shall be of the type @code{size_t}; they
+shall specify the number of stops (elements) in the arrays @code{.red},
+@code{.green}, and @code{.blue}, respectively, which shall be the
+gamma ramp for the red, green, and blue channels respectively. Its
+values are not modified.
+@item max
+The maximum value on each stop in the ramps.
+@item type
+The data type used for each stop in the ramps.
+@item libclut_colour_space_conversion_matrix_t m
+Conversion matrix.
+@item int trunc
+If this is a non-zero value, resulting colours that are
+out of gamut are truncated. (Not necessarily the best
+approximation.)
+@item clut
+Pointer to the gamma ramps of the output values. Shall be of
+the same data type as @code{clut}. And have the same values on
+@code{.red_size}, @code{.green_size}, and @code{.blue_size} as
+@code{clut}.
+@end table
+@end table

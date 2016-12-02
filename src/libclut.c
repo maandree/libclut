@@ -241,10 +241,10 @@ static void subrow(double a1[3], double a2[3], double b1[3], double b2[3], doubl
  * @param   A  The inversion of M (as input).
  * @return     1 on success, 0 if the matrix is not invertible.
  */
-static int invert(libclut_colourspace_conversion_matrix_t M, libclut_colourspace_conversion_matrix_t A)
+static int invert(libclut_colour_space_conversion_matrix_t M, libclut_colour_space_conversion_matrix_t A)
 {
   int r0 = 0, r1 = 1, r2 = 2, t, swapped = 0;
-  libclut_colourspace_conversion_matrix_t T;
+  libclut_colour_space_conversion_matrix_t T;
   
   A[0][0] = A[1][1] = A[2][2] = 1;
   A[0][1] = A[0][2] = A[1][0] = A[1][2] = A[2][0] = A[2][1] = 0;
@@ -306,9 +306,9 @@ static int invert(libclut_colourspace_conversion_matrix_t M, libclut_colourspace
  * @param   M   The output matrix.
  * @return      Zero on success, -1 on error.
  * 
- * @throws  EINVAL  The colourspace cannot be used.
+ * @throws  EINVAL  The colour space cannot be used.
  */
-static int get_conversion_matrix(const libclut_rgb_colourspace_t* cs, libclut_colourspace_conversion_matrix_t M)
+static int get_conversion_matrix(const libclut_rgb_colour_space_t* cs, libclut_colour_space_conversion_matrix_t M)
 {
 #define XYY_TO_XYZ(x, y, Y, Xp, Yp, Zp)		\
   (libclut_0__(Y)) ?				\
@@ -318,7 +318,7 @@ static int get_conversion_matrix(const libclut_rgb_colourspace_t* cs, libclut_co
      *(Zp) = (1 - (x) - (y)) * (Y) / (y))
   
   double Xr, Yr, Zr, Xg, Yg, Zg, Xb, Yb, Zb, Xw, Yw, Zw, Sr, Sg, Sb;
-  libclut_colourspace_conversion_matrix_t M2;
+  libclut_colour_space_conversion_matrix_t M2;
   
   XYY_TO_XYZ(cs->red_x,   cs->red_y,   1,           &Xr, &Yr, &Zr);
   XYY_TO_XYZ(cs->green_x, cs->green_y, 1,           &Xg, &Yg, &Zg);
@@ -348,22 +348,22 @@ static int get_conversion_matrix(const libclut_rgb_colourspace_t* cs, libclut_co
 
 /**
  * Create a matrix for converting values between
- * two RGB colourspaces.
+ * two RGB colour spaces.
  * 
- * @param   from  The input colourspace, the Y-component is only necessary for the whitepoint.
- * @param   to    The output colourspace, the Y-component is only necessary for the whitepoint.
+ * @param   from  The input colour space, the Y-component is only necessary for the whitepoint.
+ * @param   to    The output colour space, the Y-component is only necessary for the whitepoint.
  * @param   M     Output matrix for conversion from `from` to `to`.
  * @param   Minv  Output matrix for conversion from `to` to `from`, may be `NULL`.
  * @return        Zero on success, -1 on error.
  * 
- * @throws  EINVAL  The colourspace cannot be used.
+ * @throws  EINVAL  The colour space cannot be used.
  */
-int libclut_model_get_rgb_conversion_matrix(const libclut_rgb_colourspace_t* from,
-					    const libclut_rgb_colourspace_t* to,
-					    libclut_colourspace_conversion_matrix_t M,
-					    libclut_colourspace_conversion_matrix_t Minv)
+int libclut_model_get_rgb_conversion_matrix(const libclut_rgb_colour_space_t* from,
+					    const libclut_rgb_colour_space_t* to,
+					    libclut_colour_space_conversion_matrix_t M,
+					    libclut_colour_space_conversion_matrix_t Minv)
 {
-  libclut_colourspace_conversion_matrix_t A, B;
+  libclut_colour_space_conversion_matrix_t A, B;
 
   if (get_conversion_matrix(from, A))
     return -1;
@@ -396,8 +396,10 @@ int libclut_model_get_rgb_conversion_matrix(const libclut_rgb_colourspace_t* fro
 
 
 /**
- * Convert an RGB colour into another RGB colourspace.
+ * Convert an RGB colour into another RGB colour space.
  * None of the parameter may have side-effects.
+ * 
+ * Both RGB colour space must have same gamma functions as RGB.
  * 
  * @param  r      The red component of the colour to convert.
  * @param  g      The green component of the colour to convert.
@@ -407,7 +409,7 @@ int libclut_model_get_rgb_conversion_matrix(const libclut_rgb_colourspace_t* fro
  * @param  out_g  Output parameter for the new green component.
  * @param  out_b  Output parameter for the new blue component.
  */
-void (libclut_model_convert_rgb)(double r, double g, double b, libclut_colourspace_conversion_matrix_t M,
+void (libclut_model_convert_rgb)(double r, double g, double b, libclut_colour_space_conversion_matrix_t M,
 				  double *out_r, double *out_g, double *out_b)
 {
   libclut_model_convert_rgb(r, g, b, M, out_r, out_g, out_b);

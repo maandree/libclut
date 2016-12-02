@@ -7,7 +7,7 @@ the header @file{<libclut.h>}. Some functionality also
 requires that the objects be linked with @option{-lclut}.
 
 @command{libclut} is designed to work well with
-@command{libgamma} @command{libcoopgamma}, but does not
-require that either is used for any of its
+@command{libgamma} and @command{libcoopgamma}, but does
+not require that either is used for any of its
 [@command{libclut}'s] functionality.
 
