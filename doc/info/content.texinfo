@@ -15,6 +15,25 @@
 * Free Software Needs Free Documentation::  Why free documentation is important.
 * GNU General Public License::              Copying and sharing @command{libclut}.
 * GNU Free Documentation License::          Copying and sharing this manual.
+
+@detailmenu
+ --- The Detailed Node Listing ---
+
+Overview
+
+CLUT Manipulation
+
+Colour Spaces
+
+* RGB Conversion::                          RGB colour space conversion functions.
+
+
+Free Software Needs Free Documentation
+
+GNU General Public License
+
+GNU Free Documentation License
+@end detailmenu
 @end menu
 @c In GNU Emacs a @detailmenu can be created with `C-c C-u m`.
 

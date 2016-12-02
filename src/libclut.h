@@ -23,16 +23,283 @@
 
 
 
+/* Not documented, may be removed or modified in the future. */
+#define LIBCLUT_ILLUMINANT_A    .white_x = 0.44757, .white_y = 0.40745, .white_Y = 1
+#define LIBCLUT_ILLUMINANT_B    .white_x = 0.34842, .white_y = 0.35161, .white_Y = 1
+#define LIBCLUT_ILLUMINANT_C    .white_x = 0.31006, .white_y = 0.31616, .white_Y = 1
+#define LIBCLUT_ILLUMINANT_D50  .white_x = 0.34567, .white_y = 0.35850, .white_Y = 1
+#define LIBCLUT_ILLUMINANT_D55  .white_x = 0.33242, .white_y = 0.34743, .white_Y = 1
+#define LIBCLUT_ILLUMINANT_D65  .white_x = 0.31271, .white_y = 0.32902, .white_Y = 1
+#define LIBCLUT_ILLUMINANT_D75  .white_x = 0.29902, .white_y = 0.31485, .white_Y = 1
+#define LIBCLUT_ILLUMINANT_E    .white_x = 1. / 3,  .white_y = 1. / 3,  .white_Y = 1
+#define LIBCLUT_ILLUMINANT_F1   .white_x = 0.31310, .white_y = 0.33727, .white_Y = 1
+#define LIBCLUT_ILLUMINANT_F2   .white_x = 0.37208, .white_y = 0.37529, .white_Y = 1
+#define LIBCLUT_ILLUMINANT_F3   .white_x = 0.40910, .white_y = 0.39430, .white_Y = 1
+#define LIBCLUT_ILLUMINANT_F4   .white_x = 0.44018, .white_y = 0.40329, .white_Y = 1
+#define LIBCLUT_ILLUMINANT_F5   .white_x = 0.31379, .white_y = 0.34531, .white_Y = 1
+#define LIBCLUT_ILLUMINANT_F6   .white_x = 0.37790, .white_y = 0.38835, .white_Y = 1
+#define LIBCLUT_ILLUMINANT_F7   .white_x = 0.31292, .white_y = 0.32933, .white_Y = 1
+#define LIBCLUT_ILLUMINANT_F8   .white_x = 0.34588, .white_y = 0.35875, .white_Y = 1
+#define LIBCLUT_ILLUMINANT_F9   .white_x = 0.37417, .white_y = 0.37281, .white_Y = 1
+#define LIBCLUT_ILLUMINANT_F10  .white_x = 0.34609, .white_y = 0.35986, .white_Y = 1
+#define LIBCLUT_ILLUMINANT_F11  .white_x = 0.38052, .white_y = 0.37713, .white_Y = 1
+#define LIBCLUT_ILLUMINANT_F12  .white_x = 0.43695, .white_y = 0.40441, .white_Y = 1
+
 /**
- * Initialiser for `struct libclut_rgb_colourspace` with the values
+ * Initialiser for `struct libclut_rgb_colour_space` with the values
  * of the sRGB colour space.
+ * 
+ * sRGB does not use a regular gamma function, but rather two different
+ * functions. `libclut_model_linear_to_standard1` and
+ * and `libclut_model_standard_to_linear1` can be used so to convert
+ * between sRGB and linear sRGB.
  */
-#define LIBCLUT_RGB_COLOURSPACE_SRGB_INITIALISER			\
-  {									\
-    .red_x   = 0.6400,   .red_y   = 0.3300,   .red_Y   = 0.212656,	\
-    .green_x = 0.3000,   .green_y = 0.6000,   .green_Y = 0.715158,	\
-    .blue_x  = 0.1500,   .blue_y  = 0.0600,   .blue_Y  = 0.072186,	\
-    .white_x = 0.31271,  .white_y = 0.32902,  .white_Y = 1.0000		\
+#define LIBCLUT_RGB_COLOUR_SPACE_SRGB_INITIALISER		\
+  {								\
+    .red_x   = 0.6400, .red_y   = 0.3300, .red_Y   = 0.212656,	\
+    .green_x = 0.3000, .green_y = 0.6000, .green_Y = 0.715158,	\
+    .blue_x  = 0.1500, .blue_y  = 0.0600, .blue_Y  = 0.072186,	\
+    LIBCLUT_ILLUMINANT_D65					\
+  }
+
+/**
+ * Initialiser for `struct libclut_rgb_colour_space` with the values
+ * of the Adobe RGB (1998) colour space.
+ * 
+ * This gamma colour space's gamma is 2.2. It cannot be used with
+ * RGB colour space conversion unless the values are tranlated into
+ * using the sRGB gamma function.
+ */
+#define LIBCLUT_RGB_COLOUR_SPACE_ADOBE_RGB_INITIALISER		\
+  {								\
+    .red_x   = 0.6400, .red_y   = 0.3300, .red_Y   = 0.297361,	\
+    .green_x = 0.2100, .green_y = 0.7100, .green_Y = 0.627355,	\
+    .blue_x  = 0.1500, .blue_y  = 0.0600, .blue_Y  = 0.075285,	\
+    LIBCLUT_ILLUMINANT_D65					\
+  }
+
+/**
+ * Initialiser for `struct libclut_rgb_colour_space` with the values
+ * of the Apple RGB colour space.
+ * 
+ * This gamma colour space's gamma is 1.8. It cannot be used with
+ * RGB colour space conversion unless the values are tranlated into
+ * using the sRGB gamma function.
+ */
+#define LIBCLUT_RGB_COLOUR_SPACE_APPLE_RGB_INITIALISER		\
+  {								\
+    .red_x   = 0.6250, .red_y   = 0.3400, .red_Y   = 0.244634,	\
+    .green_x = 0.2800, .green_y = 0.5950, .green_Y = 0.672034,	\
+    .blue_x  = 0.1550, .blue_y  = 0.0700, .blue_Y  = 0.083332,	\
+    LIBCLUT_ILLUMINANT_D65					\
+  }
+
+/**
+ * Initialiser for `struct libclut_rgb_colour_space` with the values
+ * of the Best RGB colour space.
+ * 
+ * This gamma colour space's gamma is 2.2. It cannot be used with
+ * RGB colour space conversion unless the values are tranlated into
+ * using the sRGB gamma function.
+ */
+#define LIBCLUT_RGB_COLOUR_SPACE_BEST_RGB_INITIALISER		\
+  {								\
+    .red_x   = 0.7347, .red_y   = 0.2653, .red_Y   = 0.228457,	\
+    .green_x = 0.2150, .green_y = 0.7750, .green_Y = 0.737352,	\
+    .blue_x  = 0.1300, .blue_y  = 0.0350, .blue_Y  = 0.034191,	\
+    LIBCLUT_ILLUMINANT_D50					\
+  }
+
+/**
+ * Initialiser for `struct libclut_rgb_colour_space` with the values
+ * of the Beta RGB colour space.
+ * 
+ * This gamma colour space's gamma is 2.2. It cannot be used with
+ * RGB colour space conversion unless the values are tranlated into
+ * using the sRGB gamma function.
+ */
+#define LIBCLUT_RGB_COLOUR_SPACE_BETA_RGB_INITIALISER		\
+  {								\
+    .red_x   = 0.6888, .red_y   = 0.3112, .red_Y   = 0.303273,	\
+    .green_x = 0.1986, .green_y = 0.7551, .green_Y = 0.663786,	\
+    .blue_x  = 0.1265, .blue_y  = 0.0352, .blue_Y  = 0.032941,	\
+    LIBCLUT_ILLUMINANT_D50					\
+  }
+
+/**
+ * Initialiser for `struct libclut_rgb_colour_space` with the values
+ * of the Bruce RGB colour space.
+ * 
+ * This gamma colour space's gamma is 2.2. It cannot be used with
+ * RGB colour space conversion unless the values are tranlated into
+ * using the sRGB gamma function.
+ */
+#define LIBCLUT_RGB_COLOUR_SPACE_BRUCE_RGB_INITIALISER		\
+  {								\
+    .red_x   = 0.6400, .red_y   = 0.3300, .red_Y   = 0.240995,	\
+    .green_x = 0.2800, .green_y = 0.6500, .green_Y = 0.683554,	\
+    .blue_x  = 0.1500, .blue_y  = 0.0600, .blue_Y  = 0.075452,	\
+    LIBCLUT_ILLUMINANT_D65					\
+  }
+
+/**
+ * Initialiser for `struct libclut_rgb_colour_space` with the values
+ * of the CIE RGB colour space.
+ * 
+ * This gamma colour space's gamma is 2.2. It cannot be used with
+ * RGB colour space conversion unless the values are tranlated into
+ * using the sRGB gamma function.
+ */
+#define LIBCLUT_RGB_COLOUR_SPACE_CIE_RGB_INITIALISER		\
+  {								\
+    .red_x   = 0.7350, .red_y   = 0.2650, .red_Y   = 0.176204,	\
+    .green_x = 0.2740, .green_y = 0.7170, .green_Y = 0.812985,	\
+    .blue_x  = 0.1670, .blue_y  = 0.0090, .blue_Y  = 0.010811,	\
+    LIBCLUT_ILLUMINANT_E					\
+  }
+
+/**
+ * Initialiser for `struct libclut_rgb_colour_space` with the values
+ * of the ColorMatch RGB colour space.
+ * 
+ * This gamma colour space's gamma is 1.8. It cannot be used with
+ * RGB colour space conversion unless the values are tranlated into
+ * using the sRGB gamma function.
+ */
+#define LIBCLUT_RGB_COLOUR_SPACE_COLORMATCH_RGB_INITIALISER	\
+  {								\
+    .red_x   = 0.6300, .red_y   = 0.3400, .red_Y   = 0.274884,	\
+    .green_x = 0.2950, .green_y = 0.6050, .green_Y = 0.658132,	\
+    .blue_x  = 0.1500, .blue_y  = 0.0750, .blue_Y  = 0.066985,	\
+    LIBCLUT_ILLUMINANT_D50					\
+  }
+
+/**
+ * Initialiser for `struct libclut_rgb_colour_space` with the values
+ * of the Don RGB 4 colour space.
+ * 
+ * This gamma colour space's gamma is 2.2. It cannot be used with
+ * RGB colour space conversion unless the values are tranlated into
+ * using the sRGB gamma function.
+ */
+#define LIBCLUT_RGB_COLOUR_SPACE_DON_RGB_4_INITIALISER		\
+  {								\
+    .red_x   = 0.6960, .red_y   = 0.3000, .red_Y   = 0.278350,	\
+    .green_x = 0.2150, .green_y = 0.7650, .green_Y = 0.687970,	\
+    .blue_x  = 0.1300, .blue_y  = 0.0350, .blue_Y  = 0.033680,	\
+    LIBCLUT_ILLUMINANT_D50					\
+  }
+
+/**
+ * Initialiser for `struct libclut_rgb_colour_space` with the values
+ * of the ECI RGB v2 colour space.
+ * 
+ * This gamma colour space's used the L* gamma function. It cannot
+ * be used with RGB colour space conversion unless the values are
+ * tranlated into using the sRGB gamma function.
+ */
+#define LIBCLUT_RGB_COLOUR_SPACE_ECI_RGB_V2_INITIALISER		\
+  {								\
+    .red_x   = 0.6700, .red_y   = 0.3300, .red_Y   = 0.320250,	\
+    .green_x = 0.2100, .green_y = 0.7100, .green_Y = 0.602071,	\
+    .blue_x  = 0.1400, .blue_y  = 0.0800, .blue_Y  = 0.077679,	\
+    LIBCLUT_ILLUMINANT_D50					\
+  }
+
+/**
+ * Initialiser for `struct libclut_rgb_colour_space` with the values
+ * of the Ekta Space PS5 colour space.
+ * 
+ * This gamma colour space's gamma is 2.2. It cannot be used with
+ * RGB colour space conversion unless the values are tranlated into
+ * using the sRGB gamma function.
+ */
+#define LIBCLUT_RGB_COLOUR_SPACE_EKTA_SPACE_PS5_INITIALISER	\
+  {								\
+    .red_x   = 0.6950, .red_y   = 0.3050, .red_Y   = 0.260629,	\
+    .green_x = 0.2600, .green_y = 0.7000, .green_Y = 0.734946,	\
+    .blue_x  = 0.1100, .blue_y  = 0.0050, .blue_Y  = 0.004425,	\
+    LIBCLUT_ILLUMINANT_D50					\
+  }
+
+/**
+ * Initialiser for `struct libclut_rgb_colour_space` with the values
+ * of the NTSC RGB colour space.
+ * 
+ * This gamma colour space's gamma is 2.2. It cannot be used with
+ * RGB colour space conversion unless the values are tranlated into
+ * using the sRGB gamma function.
+ */
+#define LIBCLUT_RGB_COLOUR_SPACE_NTSC_RGB_INITIALISER		\
+  {								\
+    .red_x   = 0.6700, .red_y   = 0.3300, .red_Y   = 0.298839,	\
+    .green_x = 0.2100, .green_y = 0.7100, .green_Y = 0.586811,	\
+    .blue_x  = 0.1400, .blue_y  = 0.0800, .blue_Y  = 0.114350,	\
+    LIBCLUT_ILLUMINANT_C					\
+  }
+
+/**
+ * Initialiser for `struct libclut_rgb_colour_space` with the values
+ * of the PAL/SECAM RGB colour space.
+ * 
+ * This gamma colour space's gamma is 2.2. It cannot be used with
+ * RGB colour space conversion unless the values are tranlated into
+ * using the sRGB gamma function.
+ */
+#define LIBCLUT_RGB_COLOUR_SPACE_PAL_SECAM_RGB_INITIALISER	\
+  {								\
+    .red_x   = 0.6400, .red_y   = 0.3300, .red_Y   = 0.222021,	\
+    .green_x = 0.2900, .green_y = 0.6000, .green_Y = 0.706645,	\
+    .blue_x  = 0.1500, .blue_y  = 0.0600, .blue_Y  = 0.071334,	\
+    LIBCLUT_ILLUMINANT_D65					\
+  }
+
+/**
+ * Initialiser for `struct libclut_rgb_colour_space` with the values
+ * of the ProPhoto RGB colour space.
+ * 
+ * This gamma colour space's gamma is 1.8. It cannot be used with
+ * RGB colour space conversion unless the values are tranlated into
+ * using the sRGB gamma function.
+ */
+#define LIBCLUT_RGB_COLOUR_SPACE_PROPHOTO_RGB_INITIALISER	\
+  {								\
+    .red_x   = 0.7347, .red_y   = 0.2653, .red_Y   = 0.288040,	\
+    .green_x = 0.1596, .green_y = 0.8404, .green_Y = 0.711874,	\
+    .blue_x  = 0.0366, .blue_y  = 0.0001, .blue_Y  = 0.000086,	\
+    LIBCLUT_ILLUMINANT_D50					\
+  }
+
+/**
+ * Initialiser for `struct libclut_rgb_colour_space` with the values
+ * of the SMPTE-C RGB colour space.
+ * 
+ * This gamma colour space's gamma is 2.2. It cannot be used with
+ * RGB colour space conversion unless the values are tranlated into
+ * using the sRGB gamma function.
+ */
+#define LIBCLUT_RGB_COLOUR_SPACE_SMPTE_C_RGB_INITIALISER	\
+  {								\
+    .red_x   = 0.6300, .red_y   = 0.3400, .red_Y   = 0.212395,	\
+    .green_x = 0.3100, .green_y = 0.5950, .green_Y = 0.701049,	\
+    .blue_x  = 0.1550, .blue_y  = 0.0700, .blue_Y  = 0.086556,	\
+    LIBCLUT_ILLUMINANT_D65					\
+  }
+
+/**
+ * Initialiser for `struct libclut_rgb_colour_space` with the values
+ * of the Wide Gamut RGB colour space.
+ * 
+ * This gamma colour space's gamma is 2.2. It cannot be used with
+ * RGB colour space conversion unless the values are tranlated into
+ * using the sRGB gamma function.
+ */
+#define LIBCLUT_RGB_COLOUR_SPACE_WIDE_GAMUT_RGB_INITIALISER	\
+  {								\
+    .red_x   = 0.7350, .red_y   = 0.2650, .red_Y   = 0.258187,	\
+    .green_x = 0.1150, .green_y = 0.8260, .green_Y = 0.724938,	\
+    .blue_x  = 0.1570, .blue_y  = 0.0180, .blue_Y  = 0.016875,	\
+    LIBCLUT_ILLUMINANT_D50					\
   }
 
 
@@ -40,7 +307,7 @@
 /**
  * RGB colour space structure.
  */
-typedef struct libclut_rgb_colourspace
+typedef struct libclut_rgb_colour_space
 {
   /**
    * The x-component of the red colour's xyY value.
@@ -101,13 +368,13 @@ typedef struct libclut_rgb_colourspace
    * The Y-component of the white point's xyY value.
    */
   double white_Y;
-} libclut_rgb_colourspace_t;
+} libclut_rgb_colour_space_t;
 
 
 /**
- * Matrix date-type for colourspace conversion.
+ * Matrix date-type for colour space conversion.
  */
-typedef double libclut_colourspace_conversion_matrix_t[3][3];
+typedef double libclut_colour_space_conversion_matrix_t[3][3];
 
 
 
@@ -312,6 +579,210 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
       if (b)												\
 	libclut__(clut, blue,  type, m__ * libclut_model_linear_to_standard1(LIBCLUT_VALUE / m__));	\
     }													\
+  while (0)
+
+
+/**
+ * Convert the curves between two RGB colour spaces.
+ * 
+ * Both RGB colour space must have same gamma functions as sRGB.
+ * 
+ * Requires that `clut->red_size`, `clut->green_size`
+ * and `clut->blue_size` are equal.
+ * 
+ * None of the parameter may have side-effects.
+ * 
+ * Requires linking with '-lclut', or '-lm' if
+ * `libclut_model_linear_to_standard1`,
+ * `libclut_model_standard_to_linear1`, or
+ * `libclut_model_convert_rgb` is not undefined.
+ * 
+ * @param  clut   Pointer to the gamma ramps, must have the arrays
+ *                `red`, `green`, and `blue`, and the scalars
+ *                `red_size`, `green_size`, and `blue_size`. Ramp
+ *                structures from libgamma or libcoopgamma can be used.
+ * @param  max    The maximum value on each stop in the ramps.
+ * @param  type   The data type used for each stop in the ramps.
+ * @param  m      Conversion matrix. Can be created with
+ *                `libclut_model_get_rgb_conversion_matrix`.
+ * @param  trunc  Truncate values that are out of gamut.
+ */
+#define libclut_convert_rgb_inplace(clut, max, type, m, trunc)			\
+  do										\
+    {										\
+      double m__ = (double)(max), r__, g__, b__;				\
+      size_t i__, n__ = (clut)->red_size;					\
+      for (i__ = 0; i__ < n__; i__++)						\
+	{									\
+	  r__ = (clut)->red[i__] / m__;						\
+	  g__ = (clut)->green[i__] / m__;					\
+	  b__ = (clut)->blue[i__] / m__;					\
+	  libclut_model_convert_rgb(r__, g__, b__, m, &r__, &g__, &b__);	\
+	  r__ *= m__;								\
+	  g__ *= m__;								\
+	  b__ *= m__;								\
+	  if (trunc)								\
+	    {									\
+	      if (r__ < 0)							\
+		r__ = 0;							\
+	      else if (r__ > m__)						\
+		r__ = m__;							\
+	      if (g__ < 0)							\
+		g__ = 0;							\
+	      else if (g__ > m__)						\
+		g__ = m__;							\
+	      if (b__ < 0)							\
+		b__ = 0;							\
+	      else if (b__ > m__)						\
+		b__ = m__;							\
+	    }									\
+	  (clut)->red[i__] = (type)r__;						\
+	  (clut)->green[i__] = (type)g__;					\
+	  (clut)->blue[i__] = (type)b__;					\
+	}									\
+    }										\
+  while (0)
+
+
+/**
+ * Convert the curves between two RGB colour spaces.
+ * 
+ * Both RGB colour space must have same gamma functions as sRGB.
+ * 
+ * None of the parameter may have side-effects.
+ * 
+ * Requires linking with '-lclut' if
+ * `libclut_model_linear_to_standard1`,
+ * `libclut_model_standard_to_linear1`, or
+ * `libclut_model_convert_rgb` is not undefined.
+ * Always requires linking with '-lm'.
+ * 
+ * @param  clut   Pointer to the input gamma ramps, must have the
+ *                arrays `red`, `green`, and `blue`, and the scalars
+ *                `red_size`, `green_size`, and `blue_size`. Ramp
+ *                structures from libgamma or libcoopgamma can be used.
+ * @param  max    The maximum value on each stop in the ramps.
+ * @param  type   The data type used for each stop in the ramps.
+ * @param  m      Conversion matrix. Can be created with
+ *                `libclut_model_get_rgb_conversion_matrix`.
+ * @param  trunc  Truncate values that are out of gamut.
+ * @param  out    Pointer to the output gamma ramps, must have the
+ *                arrays `red`, `green`, and `blue`, and the scalars
+ *                `red_size`, `green_size`, and `blue_size`. Ramp
+ *                structures from libgamma or libcoopgamma can be used.
+ */
+#define libclut_convert_rgb(clut, max, type, m, trunc, out)		\
+  do									\
+    {									\
+      double m__ = (double)(max), r__, g__, b__, x__, y__;		\
+      size_t rn__ = (clut)->red_size;					\
+      size_t gn__ = (clut)->green_size;					\
+      size_t bn__ = (clut)->blue_size;					\
+      double w__;							\
+      size_t i__, j__, jj__;						\
+      for (i__ = 0; i__ < rn__; i__++)					\
+	{								\
+	  w__ = (double)i__ * gn__ / rn__;				\
+	  j__ = (size_t)w__;						\
+	  jj__ = j__ == gn__ ? j__ : (j__ + 1);				\
+	  w__ = fmod(j__, (double)1);					\
+	  x__ = (clut)->green[j__] / m__;				\
+	  y__ = (clut)->green[jj__] / m__;				\
+	  x__ = libclut_model_standard_to_linear1(x__);			\
+	  y__ = libclut_model_standard_to_linear1(y__);			\
+	  g__ = x__ * (1 - w__) + y__ * w__;				\
+									\
+	  w__ = (double)i__ * bn__ / rn__;				\
+	  j__ = (size_t)w__;						\
+	  jj__ = j__ == bn__ ? j__ : (j__ + 1);				\
+	  w__ = fmod(j__, (double)1);					\
+	  x__ = (clut)->blue[j__] / m__;				\
+	  y__ = (clut)->blue[jj__] / m__;				\
+	  x__ = libclut_model_standard_to_linear1(x__);			\
+	  y__ = libclut_model_standard_to_linear1(y__);			\
+	  b__ = x__ * (1 - w__) + y__ * w__;				\
+									\
+	  r__ = (M)[0][0] * r__ + (M)[0][1] * g__ + (M)[0][2] * b__;	\
+	  r__ = libclut_model_linear_to_standard1(r__);			\
+	  r__ *= m__;							\
+	  if (trunc)							\
+	    {								\
+	      if (r__ < 0)						\
+		r__ = 0;						\
+	      else if (r__ > m__)					\
+		r__ = m__;						\
+	    }								\
+	  (out)->red[i__] = (type)r__;					\
+	}								\
+      for (i__ = 0; i__ < gn__; i__++)					\
+	{								\
+	  w__ = (double)i__ * rn__ / gn__;				\
+	  j__ = (size_t)w__;						\
+	  jj__ = j__ == rn__ ? j__ : (j__ + 1);				\
+	  w__ = fmod(j__, (double)1);					\
+	  x__ = (clut)->red[j__] / m__;					\
+	  y__ = (clut)->red[jj__] / m__;				\
+	  x__ = libclut_model_standard_to_linear1(x__);			\
+	  y__ = libclut_model_standard_to_linear1(y__);			\
+	  r__ = x__ * (1 - w__) + y__ * w__;				\
+									\
+	  w__ = (double)i__ * bn__ / gn__;				\
+	  j__ = (size_t)w__;						\
+	  jj__ = j__ == bn__ ? j__ : (j__ + 1);				\
+	  w__ = fmod(j__, (double)1);					\
+	  x__ = (clut)->blue[j__] / m__;				\
+	  y__ = (clut)->blue[jj__] / m__;				\
+	  x__ = libclut_model_standard_to_linear1(x__);			\
+	  y__ = libclut_model_standard_to_linear1(y__);			\
+	  b__ = x__ * (1 - w__) + y__ * w__;				\
+									\
+	  g__ = (M)[1][0] * r__ + (M)[0][1] * g__ + (M)[1][2] * b__;	\
+	  g__ = libclut_model_linear_to_standard1(g__);			\
+	  g__ *= m__;							\
+	  if (trunc)							\
+	    {								\
+	      if (g__ < 0)						\
+		g__ = 0;						\
+	      else if (g__ > m__)					\
+		g__ = m__;						\
+	    }								\
+	  (out)->green[i__] = (type)g__;				\
+	}								\
+      for (i__ = 0; i__ < bn__; i__++)					\
+	{								\
+	  w__ = (double)i__ * rn__ / bn__;				\
+	  j__ = (size_t)w__;						\
+	  jj__ = j__ == rn__ ? j__ : (j__ + 1);				\
+	  w__ = fmod(j__, (double)1);					\
+	  x__ = (clut)->red[j__] / m__;					\
+	  y__ = (clut)->red[jj__] / m__;				\
+	  x__ = libclut_model_standard_to_linear1(x__);			\
+	  y__ = libclut_model_standard_to_linear1(y__);			\
+	  r__ = x__ * (1 - w__) + y__ * w__;				\
+									\
+	  w__ = (double)i__ * gn__ / bn__;				\
+	  j__ = (size_t)w__;						\
+	  jj__ = j__ == gn__ ? j__ : (j__ + 1);				\
+	  w__ = fmod(j__, (double)1);					\
+	  x__ = (clut)->green[j__] / m__;				\
+	  y__ = (clut)->green[jj__] / m__;				\
+	  x__ = libclut_model_standard_to_linear1(x__);			\
+	  y__ = libclut_model_standard_to_linear1(y__);			\
+	  g__ = x__ * (1 - w__) + y__ * w__;				\
+									\
+	  b__ = (M)[2][0] * r__ + (M)[2][1] * g__ + (M)[2][2] * b__;	\
+	  b__ = libclut_model_linear_to_standard1(b__);			\
+	  b__ *= m__;							\
+	  if (trunc)							\
+	    {								\
+	      if (b__ < 0)						\
+		b__ = 0;						\
+	      else if (b__ > m__)					\
+		b__ = m__;						\
+	    }								\
+	  (out)->blue[i__] = (type)b__;					\
+	}								\
+    }									\
   while (0)
 
 
@@ -1170,9 +1641,6 @@ static inline int libclut_0__(double x)  {  return libclut_eq__(x, 0);  }
   (size_t)((double)(i) * (double)(out) / (double)(in))
 
 
-/* TODO libclut_convert_rgb */
-
-
 
 #if defined(__GNUC__) && !defined(__clang__)
 # define LIBCLUT_GCC_ONLY__(x)  x
@@ -1483,27 +1951,27 @@ void (libclut_model_cielab_to_ciexyz)(double, double, double, double*, double*, 
 
 /**
  * Create a matrix for converting values between
- * two RGB colourspaces.
+ * two RGB colour spaces.
  * 
- * @param   from  The input colourspace, the Y-component is only necessary for the whitepoint.
- * @param   to    The output colourspace, the Y-component is only necessary for the whitepoint.
+ * @param   from  The input colour space, the Y-component is only necessary for the whitepoint.
+ * @param   to    The output colour space, the Y-component is only necessary for the whitepoint.
  * @param   M     Output matrix for conversion from `from` to `to`.
  * @param   Minv  Output matrix for conversion from `to` to `from`, may be `NULL`.
  * @return        Zero on success, -1 on error.
  * 
- * @throws  EINVAL  The colourspace cannot be used.
+ * @throws  EINVAL  The colour space cannot be used.
  */
 LIBCLUT_GCC_ONLY__(__attribute__((__leaf__)))
-int libclut_model_get_rgb_conversion_matrix(const libclut_rgb_colourspace_t*,
-					    const libclut_rgb_colourspace_t*,
-					    libclut_colourspace_conversion_matrix_t,
-					    libclut_colourspace_conversion_matrix_t);
-/* TODO doc libclut_model_get_rgb_conversion_matrix */
+int libclut_model_get_rgb_conversion_matrix(const libclut_rgb_colour_space_t*,
+					    const libclut_rgb_colour_space_t*,
+					    libclut_colour_space_conversion_matrix_t,
+					    libclut_colour_space_conversion_matrix_t);
 
 
 /**
- * Convert an RGB colour into another RGB colourspace.
- * None of the parameter may have side-effects.
+ * Convert an RGB colour into another RGB colour space.
+ * 
+ * Both RGB colour space must have same gamma functions as RGB.
  * 
  * Requires linking with '-lclut', or '-lm' if
  * `libclut_model_standard_to_linear1` or
@@ -1519,7 +1987,7 @@ int libclut_model_get_rgb_conversion_matrix(const libclut_rgb_colourspace_t*,
  * @param  out_b  Output parameter for the new blue component.
  */
 LIBCLUT_GCC_ONLY__(__attribute__((__leaf__)))
-void (libclut_model_convert_rgb)(double, double, double, libclut_colourspace_conversion_matrix_t,
+void (libclut_model_convert_rgb)(double, double, double, libclut_colour_space_conversion_matrix_t,
 				  double *, double *, double *);
 #define libclut_model_convert_rgb(r, g, b, M, out_r, out_g, out_b)						\
   do														\
@@ -1532,7 +2000,6 @@ void (libclut_model_convert_rgb)(double, double, double, libclut_colourspace_con
       *(out_b) = libclut_model_linear_to_standard1((M)[2][0] * r__ + (M)[2][1] * g__ + (M)[2][2] * b__);	\
     }														\
   while (0)
-/* TODO libclut_model_convert_rgb */
 
 
 
