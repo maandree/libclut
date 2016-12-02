@@ -1,5 +1,9 @@
 libclut NEWS                                          -*- outline -*-
 
+* Noteworthy changes in release 1.0 (TBA) [stable]
+
+  RGB colour space conversion added.
+
 * Noteworthy changes in release 0.3 (2016-(08)Aug-06) [beta]
 
   No significant changes.
