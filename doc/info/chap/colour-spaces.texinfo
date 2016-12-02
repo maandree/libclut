@@ -895,9 +895,11 @@ This function is not available as a macro, thus, linking with
 Parameters:
 @table @code
 @item const libclut_rgb_colour_space_t* from
-Description of the input colour space.
+Description of the input colour space. CIE XYZ is
+used use if this parameter is @code{NULL}.
 @item const libclut_rgb_colour_space_t* to
-Description of the output colour space.
+Description of the output colour space. CIE XYZ is
+used use if this parameter is @code{NULL}.
 @item libclut_colour_space_conversion_matrix_t M
 Matrix to fill with values so it can be used for
 converting from the input colour space to the
@@ -923,7 +925,7 @@ function.
 @table @code
 @item libclut_model_convert_rgb(r, g, b, M, *out_r, *out_g, *out_b)
 Convert a single RGB colour into another RGB colour space.
-The colour space must have same gamma functions as RGB.
+The colour space must have same gamma functions as sRGB.
 
 This macro is also available a function. If the function is
 used, linking with @option{-lclut} is required, otherwise,
@@ -948,6 +950,7 @@ Output parameter for the green value of the colour after conversion.
 @item double* out_b
 Output parameter for the blue value of the colour after conversion.
 @end table
+
 
 @item libclut_convert_rgb_inplace(clut, max, type, m, trunc)
 Convert the curves between two RGB colour spaces.
@@ -985,6 +988,7 @@ If this is a non-zero value, resulting colours that are
 out of gamut are truncated. (Not necessarily the best
 approximation.)
 @end table
+
 
 @item libclut_convert_rgb(clut, max, type, m, trunc, out)
 Convert the curves between two RGB colour spaces.
@@ -1029,5 +1033,70 @@ Pointer to the gamma ramps of the output values. Shall be of
 the same data type as @code{clut}. And have the same values on
 @code{.red_size}, @code{.green_size}, and @code{.blue_size} as
 @code{clut}.
+@end table
+@end table
+
+There is also two functions for converting between a custom RGB
+colour space and CIE XYZ, one function in each direction. Note
+that the three functions above do not work if one of the colour
+spaces is CIE XYZ.
+
+@table @code
+@item libclut_model_rgb_to_ciexyz(r, g, b, M, *X, *Y, *Z)
+Convert a single RGB colour if a custom RGB colour space
+to CIE XYZ.
+
+The RGB colour space must have the same gamma function as sRGB.
+
+This macro is also available a function. If the function is
+used, linking with @option{-lclut} is required, otherwise,
+linking with @option{-lm} is required, or @option{-lclut} if
+@code{libclut_model_standard_to_linear1} is undefined.
+
+Parameters:
+@table @code
+@item double r
+The red component.
+@item double g
+The green component.
+@item double b
+The blue component.
+@item libclut_colour_space_conversion_matrix_t M
+The conversion matrix.
+@item double* X
+Output parameter for the X component.
+@item double* Y
+Output parameter for the Y component.
+@item double* Z
+Output parameter for the Z component.
+@end table
+
+
+@item libclut_model_rgb_to_ciexyz(X, Y, Z, M, *r, *g, *b)
+Convert a single colour from CIE XYZ to a custom RGB colour space.
+
+The RGB colour space must have the same gamma function as sRGB.
+
+This macro is also available a function. If the function is
+used, linking with @option{-lclut} is required, otherwise,
+linking with @option{-lm} is required, or @option{-lclut} if
+@code{libclut_model_linear_to_standard1} is undefined.
+
+Parameters:
+@table @code
+@item double X
+The X component.
+@item double Y
+The Y component.
+@item double Z
+The Z component.
+@item libclut_colour_space_conversion_matrix_t M
+The conversion matrix.
+@item double* r
+Output parameter for the red component.
+@item double* g
+Output parameter for the green component.
+@item double* b
+Output parameter for the blue component.
 @end table
 @end table

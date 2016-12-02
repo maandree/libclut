@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
   struct dclut d1, d2;
   size_t i, j;
   int rc = 0;
-  double param, r, g, b;
+  double param, r, g, b, x, y, z;
   
   t1.  red_size = t2.  red_size = t3.  red_size = d1.  red_size = d2.  red_size = 256;
   t1.green_size = t2.green_size = t3.green_size = d1.green_size = d2.green_size = 256;
@@ -360,10 +360,83 @@ int main(int argc, char *argv[])
   
   libclut_convert_rgb_inplace(&t1, 1, double, M, trunc); /* TODO test */
   libclut_convert_rgb(&t1, 1, double, M, trunc, &t2);    /* TODO test */
-  
-  
- rgb_conversion_done:
 
+  
+  if (libclut_model_get_rgb_conversion_matrix(&srgb, NULL, M, Minv))
+    {
+      printf("libclut_model_get_rgb_conversion_matrix failed\n"), rc = 1;
+      goto rgb_conversion_done;
+    }
+  libclut_model_rgb_to_ciexyz(0.1, 0.5, 0.9, M, &x, &y, &z);
+  if (0.2227 > x || x > 0.2228 ||
+      0.2120 > y || y > 0.2121 ||
+      0.7739 > z || z > 0.7741)
+    {
+      printf("libclut_model_get_rgb_conversion_matrix or libclut_model_rgb_to_ciexyz failed\n"), rc = 1;
+      goto rgb_conversion_done;
+    }
+  libclut_model_ciexyz_to_rgb(x, y, z, Minv, &r, &g, &b);
+  if (0.0999 > r || r > 1.0001 ||
+      0.4999 > g || g > 0.5001 ||
+      0.8999 > b || b > 0.9001)
+    {
+      printf("libclut_model_get_rgb_conversion_matrix or libclut_model_ciexyz_to_rgb failed\n"), rc = 1;
+      goto rgb_conversion_done;
+    }
+  
+  
+  if (libclut_model_get_rgb_conversion_matrix(NULL, &srgb, Minv, M))
+    {
+      printf("libclut_model_get_rgb_conversion_matrix failed\n"), rc = 1;
+      goto rgb_conversion_done;
+    }
+  libclut_model_rgb_to_ciexyz(0.1, 0.5, 0.9, M, &r, &g, &b);
+  libclut_model_ciexyz_to_rgb(r, g, b, Minv, &r, &g, &b);
+  if (0.0999 > r || r > 1.0001 ||
+      0.4999 > g || g > 0.5001 ||
+      0.8999 > b || b > 0.9001)
+    {
+      printf("libclut_model_get_rgb_conversion_matrix failed\n"), rc = 1;
+      goto rgb_conversion_done;
+    }
+
+  
+  if (libclut_model_get_rgb_conversion_matrix(NULL, NULL, M, Minv))
+    {
+      printf("libclut_model_get_rgb_conversion_matrix failed\n"), rc = 1;
+      goto rgb_conversion_done;
+    }
+  if (0.999999 > M[0][0] || M[0][0] > 1.000001 ||
+      -.999999 > M[0][1] || M[0][1] > 0.000001 ||
+      -.999999 > M[0][2] || M[0][2] > 0.000001 ||
+      -.999999 > M[1][0] || M[1][0] > 0.000001 ||
+      0.999999 > M[1][1] || M[1][1] > 1.000001 ||
+      -.999999 > M[1][2] || M[1][2] > 0.000001 ||
+      -.999999 > M[2][0] || M[2][0] > 0.000001 ||
+      -.999999 > M[2][1] || M[2][1] > 0.000001 ||
+      0.999999 > M[2][2] || M[2][2] > 1.000001)
+    {
+      printf("libclut_model_get_rgb_conversion_matrix failed\n"), rc = 1;
+      goto rgb_conversion_done;
+    }
+  if (0.999999 > Minv[0][0] || Minv[0][0] > 1.000001 ||
+      -.999999 > Minv[0][1] || Minv[0][1] > 0.000001 ||
+      -.999999 > Minv[0][2] || Minv[0][2] > 0.000001 ||
+      -.999999 > Minv[1][0] || Minv[1][0] > 0.000001 ||
+      0.999999 > Minv[1][1] || Minv[1][1] > 1.000001 ||
+      -.999999 > Minv[1][2] || Minv[1][2] > 0.000001 ||
+      -.999999 > Minv[2][0] || Minv[2][0] > 0.000001 ||
+      -.999999 > Minv[2][1] || Minv[2][1] > 0.000001 ||
+      0.999999 > Minv[2][2] || Minv[2][2] > 1.000001)
+    {
+      printf("libclut_model_get_rgb_conversion_matrix failed\n"), rc = 1;
+      goto rgb_conversion_done;
+    }
+  
+  
+  libclut_model_get_rgb_conversion_matrix(&srgb, &wgrgb, M, NULL); /* Just testing that we don't get a segfault. */
+ rgb_conversion_done:
+  
   
   libclut_model_ciexyz_to_cieluv(1, 1, 1, 1, 1, 1, &r, &g, &b); /* TODO test */
   libclut_model_cieluv_to_ciexyz(1, 1, 1, 1, 1, 1, &r, &g, &b); /* TODO test */

@@ -647,8 +647,10 @@ static int get_conversion_matrix(const libclut_rgb_colour_space_t* cs, libclut_c
  * Create a matrix for converting values between
  * two RGB colour spaces.
  * 
- * @param   from  The input colour space, the Y-component is only necessary for the whitepoint.
- * @param   to    The output colour space, the Y-component is only necessary for the whitepoint.
+ * @param   from  The input colour space, the Y-component is only necessary
+ *                for the white point, `NULL` for CIE XYZ.
+ * @param   to    The output colour space, the Y-component is only necessary
+ *                for the white point, `NULL` for CIE XYZ.
  * @param   M     Output matrix for conversion from `from` to `to`.
  * @param   Minv  Output matrix for conversion from `to` to `from`, may be `NULL`.
  * @return        Zero on success, -1 on error.
@@ -662,24 +664,44 @@ int libclut_model_get_rgb_conversion_matrix(const libclut_rgb_colour_space_t* fr
 {
   libclut_colour_space_conversion_matrix_t A, B;
 
-  if (get_conversion_matrix(from, A))
-    return -1;
-  if (get_conversion_matrix(to, M))
-    return -1;
-  if (!invert(M, B))
-    return errno = EINVAL, -1;
+  if (from != NULL)
+    {
+      if (get_conversion_matrix(from, A))
+	return -1;
+    }
+  else
+    {
+      A[0][0] = A[1][1] = A[2][2] = 1;
+      A[0][1] = A[1][0] = A[2][0] = 0;
+      A[0][2] = A[1][2] = A[2][1] = 0;
+    }
   
-  M[0][0] = B[0][0] * A[0][0] + B[0][1] * A[1][0] + B[0][2] * A[2][0];
-  M[0][1] = B[0][0] * A[0][1] + B[0][1] * A[1][1] + B[0][2] * A[2][1];
-  M[0][2] = B[0][0] * A[0][2] + B[0][1] * A[1][2] + B[0][2] * A[2][2];
-  
-  M[1][0] = B[1][0] * A[0][0] + B[1][1] * A[1][0] + B[1][2] * A[2][0];
-  M[1][1] = B[1][0] * A[0][1] + B[1][1] * A[1][1] + B[1][2] * A[2][1];
-  M[1][2] = B[1][0] * A[0][2] + B[1][1] * A[1][2] + B[1][2] * A[2][2];
-  
-  M[2][0] = B[2][0] * A[0][0] + B[2][1] * A[1][0] + B[2][2] * A[2][0];
-  M[2][1] = B[2][0] * A[0][1] + B[2][1] * A[1][1] + B[2][2] * A[2][1];
-  M[2][2] = B[2][0] * A[0][2] + B[2][1] * A[1][2] + B[2][2] * A[2][2];
+  if (to != NULL)
+    {
+      if (get_conversion_matrix(to, M))
+	return -1;
+      if (!invert(M, B))
+	return errno = EINVAL, -1;
+      
+      if (from != NULL)
+	{
+	  M[0][0] = B[0][0] * A[0][0] + B[0][1] * A[1][0] + B[0][2] * A[2][0];
+	  M[0][1] = B[0][0] * A[0][1] + B[0][1] * A[1][1] + B[0][2] * A[2][1];
+	  M[0][2] = B[0][0] * A[0][2] + B[0][1] * A[1][2] + B[0][2] * A[2][2];
+	  
+	  M[1][0] = B[1][0] * A[0][0] + B[1][1] * A[1][0] + B[1][2] * A[2][0];
+	  M[1][1] = B[1][0] * A[0][1] + B[1][1] * A[1][1] + B[1][2] * A[2][1];
+	  M[1][2] = B[1][0] * A[0][2] + B[1][1] * A[1][2] + B[1][2] * A[2][2];
+	  
+	  M[2][0] = B[2][0] * A[0][0] + B[2][1] * A[1][0] + B[2][2] * A[2][0];
+	  M[2][1] = B[2][0] * A[0][1] + B[2][1] * A[1][1] + B[2][2] * A[2][1];
+	  M[2][2] = B[2][0] * A[0][2] + B[2][1] * A[1][2] + B[2][2] * A[2][2];
+	}
+      else
+	memcpy(M, B, sizeof(B));
+    }
+  else
+    memcpy(M, A, sizeof(A));
   
   if (Minv != NULL)
     {
@@ -694,9 +716,8 @@ int libclut_model_get_rgb_conversion_matrix(const libclut_rgb_colour_space_t* fr
 
 /**
  * Convert an RGB colour into another RGB colour space.
- * None of the parameter may have side-effects.
  * 
- * Both RGB colour space must have same gamma functions as RGB.
+ * Both RGB colour spaces must have same gamma functions as sRGB.
  * 
  * @param  r      The red component of the colour to convert.
  * @param  g      The green component of the colour to convert.
@@ -710,5 +731,45 @@ void (libclut_model_convert_rgb)(double r, double g, double b, libclut_colour_sp
 				  double* out_r, double* out_g, double* out_b)
 {
   libclut_model_convert_rgb(r, g, b, M, out_r, out_g, out_b);
+}
+
+
+/**
+ * Convert an RGB colour of a custom RGB colour space to CIE XYZ.
+ * 
+ * The RGB colour space must have same gamma functions as sRGB.
+ * 
+ * @param  r  The red component.
+ * @param  g  The green component.
+ * @param  b  The blue component.
+ * @param  M  Conversion matrix, create with `libclut_model_get_rgb_conversion_matrix`.
+ * @param  x  Output parameter for the X component.
+ * @param  y  Output parameter for the Y component.
+ * @param  z  Output parameter for the Z component.
+ */
+void (libclut_model_rgb_to_ciexyz)(double r, double g, double b, libclut_colour_space_conversion_matrix_t M,
+				   double* x, double* y, double* z)
+{
+  libclut_model_rgb_to_ciexyz(r, g, b, M, x, y, z);
+}
+
+
+/**
+ * Convert a CIE XYZ colour to a custom RGB colour space.
+ * 
+ * The RGB colour space must have same gamma functions as sRGB.
+ * 
+ * @param  x  The X component.
+ * @param  y  The Y component.
+ * @param  z  The Z component.
+ * @param  M  Conversion matrix, create with `libclut_model_get_rgb_conversion_matrix`.
+ * @param  r  Output parameter for the red component.
+ * @param  g  Output parameter for the green component
+ * @param  b  Output parameter for the blue component.
+ */
+void (libclut_model_ciexyz_to_rgb)(double x, double y, double z, libclut_colour_space_conversion_matrix_t M,
+				   double* r, double* g, double* b)
+{
+  libclut_model_ciexyz_to_rgb(x, y, z, M, r, g, b);
 }
 

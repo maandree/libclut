@@ -7,6 +7,12 @@ libclut NEWS                                          -*- outline -*-
 
   New RGB colour spaces added: ITU-R BT.709 and Lightroom RGB.
 
+  libclut_model_get_rgb_conversion_matrix accepts NULL as
+  as the first and second argument.
+
+  Add the functions libclut_model_rgb_to_xyz and
+  libclut_model_rgb_to_xyz.
+
 * Noteworthy changes in release 1.0 (2016-(12)Dec-02) [stable]
 
   RGB colour space conversion added.
