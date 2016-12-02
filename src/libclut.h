@@ -2091,8 +2091,8 @@ void (libclut_model_cielch_to_cieluv)(double, double, double*, double*);
   do							\
     {							\
       double h__ = (h), C__ = (C);			\
-      *(u) = sin(h__) * C__;				\
-      *(v) = cos(h__) * C__;				\
+      *(v) = sin(h__) * C__;				\
+      *(u) = cos(h__) * C__;				\
     }							\
   while (0)
 
@@ -2112,9 +2112,9 @@ void (libclut_model_cieluv_to_cielch)(double, double, double*, double*);
 #define libclut_model_cieluv_to_cielch(u, v, C, h)	\
   do							\
     {							\
-      double u__ = (u), v__ = (v__);			\
+      double u__ = (u), v__ = (v);			\
       *(C) = sqrt(u__ * u__ + v__ * v__);		\
-      *(h) = atan2(u__, v__);				\
+      *(h) = atan2(v__, u__);				\
     }							\
   while (0)
 
@@ -2134,16 +2134,16 @@ void (libclut_model_cieluv_to_cielch)(double, double, double*, double*);
  */
 LIBCLUT_GCC_ONLY__(__attribute__((__leaf__)))
 void (libclut_model_srgb_to_yiq)(double, double, double, double*, double*, double*);
-#define libclut_model_srgb_to_yiq(r, g, b, y, i, q)			\
-  do									\
-    {									\
-      double r__ = libclut_model_standard_to_linear1(r);		\
-      double g__ = libclut_model_standard_to_linear1(g);		\
-      double b__ = libclut_model_standard_to_linear1(b);		\
-      *(y) = r__ * 299 / 1000 + g__ * 587 / 1000 + b__ * 114 / 1000;	\
-      *(i) = r__ * 596 / 1000 - g__ * 247 / 1000 - b__ * 322 / 1000;	\
-      *(q) = r__ * 211 / 1000 - g__ * 523 / 1000 + b__ * 312 / 1000;	\
-    }									\
+#define libclut_model_srgb_to_yiq(r, g, b, y, i, q)							\
+  do													\
+    {													\
+      double r__ = libclut_model_standard_to_linear1(r) / 100000000000000000ULL;			\
+      double g__ = libclut_model_standard_to_linear1(g) / 10000000000000000ULL;				\
+      double b__ = libclut_model_standard_to_linear1(b) / 100000000000000000ULL;			\
+      *(y) = r__ * 29893602129377540ULL + g__ * 5870430744511212ULL + b__ * 11402090425510336ULL;	\
+      *(i) = r__ * 59594574307079930ULL - g__ * 2743886357457892ULL - b__ * 32155710732501010ULL;	\
+      *(q) = r__ * 21149734030682846ULL - g__ * 5229106903029739ULL + b__ * 31141334999614540ULL;	\
+    }													\
   while (0)
 
 
@@ -2166,7 +2166,7 @@ void (libclut_model_yiq_to_srgb)(double, double, double, double*, double*, doubl
   do								\
     {								\
       double y__ = (y), i__ = (i), q__ = (q), r__, g__, b__;	\
-      r__ = y__ + i__ *  596 / 1000 + q__ *  621 / 1000;	\
+      r__ = y__ + i__ *  956 / 1000 + q__ *  621 / 1000;	\
       g__ = y__ - i__ *  272 / 1000 - q__ *  647 / 1000;	\
       b__ = y__ - i__ * 1106 / 1000 + q__ * 1703 / 1000;	\
       *(r) = libclut_model_linear_to_standard1(r__);		\
@@ -2404,14 +2404,14 @@ void (libclut_model_ycgco_to_srgb)(double, double, double, double*, double*, dou
  */
 LIBCLUT_GCC_ONLY__(__attribute__((__leaf__)))
 void (libclut_model_cie_1960_ucs_to_ciexyz)(double, double, double, double*, double*, double*);
-#define libclut_model_cie_1960_ucs_to_ciexyz(u, v, Y, x, y, z)	\
-  do								\
-    {								\
-      double u__ = (u), v__ = (v), y__ = (Y);			\
-      *(y) = y__;						\
-      *(x) = 3 * y__ * u__ / (2 * v__);				\
-      *(z) = y__ * ((4 - u__) / (2 * v__) - 1) / 5;		\
-    }								\
+#define libclut_model_cie_1960_ucs_to_ciexyz(u, v, Y, x, y, z)		\
+  do									\
+    {									\
+      double u__ = (u), v__ = (v), y__ = (Y);				\
+      *(y) = y__;							\
+      *(x) = 3 * y__ * u__ / (2 * v__);					\
+      *(z) = (4 * y__ - y__ * u__ - 10 * y__ * v__) / (2 * v__);	\
+    }									\
   while (0)
 
 
