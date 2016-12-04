@@ -609,7 +609,7 @@ static int get_conversion_matrix(const libclut_rgb_colour_space_t* cs, libclut_c
 {
 #define XYY_TO_XYZ(x, y, Y, Xp, Yp, Zp)		\
   (libclut_0__(Y)) ?				\
-    (*(Xp) = *(Zp) = 0, *(Yp) = (Y)) :		\
+    (*(Xp) = *(Zp) = *(Yp) = (Y)) :		\
     (*(Xp) = (x) * (Y) / (y),			\
      *(Yp) = (Y),				\
      *(Zp) = (1 - (x) - (y)) * (Y) / (y))

@@ -2132,7 +2132,6 @@ void (libclut_model_cieluv_to_cielch)(double, double, double*, double*);
  * @param  i  Output parameter for the I parameter.
  * @param  q  Output parameter for the Q parameter.
  */
-LIBCLUT_GCC_ONLY__(__attribute__((__leaf__)))
 void (libclut_model_srgb_to_yiq)(double, double, double, double*, double*, double*);
 #define libclut_model_srgb_to_yiq(r, g, b, y, i, q)							\
   do													\
@@ -2160,7 +2159,6 @@ void (libclut_model_srgb_to_yiq)(double, double, double, double*, double*, doubl
  * @param  g  Output parameter for the G parameter.
  * @param  b  Output parameter for the B parameter.
  */
-LIBCLUT_GCC_ONLY__(__attribute__((__leaf__)))
 void (libclut_model_yiq_to_srgb)(double, double, double, double*, double*, double*);
 #define libclut_model_yiq_to_srgb(y, i, q, r, g, b)		\
   do								\
@@ -2189,7 +2187,6 @@ void (libclut_model_yiq_to_srgb)(double, double, double, double*, double*, doubl
  * @param  db  Output parameter for the Db parameter.
  * @param  dr  Output parameter for the Dr parameter.
  */
-LIBCLUT_GCC_ONLY__(__attribute__((__leaf__)))
 void (libclut_model_srgb_to_ydbdr)(double, double, double, double*, double*, double*);
 #define libclut_model_srgb_to_ydbdr(r, g, b, y, db, dr)				\
   do										\
@@ -2217,7 +2214,6 @@ void (libclut_model_srgb_to_ydbdr)(double, double, double, double*, double*, dou
  * @param  g   Output parameter for the G parameter.
  * @param  b   Output parameter for the B parameter.
  */
-LIBCLUT_GCC_ONLY__(__attribute__((__leaf__)))
 void (libclut_model_ydbdr_to_srgb)(double, double, double, double*, double*, double*);
 #define libclut_model_ydbdr_to_srgb(y, db, dr, r, g, b)				\
   do										\
@@ -2286,7 +2282,6 @@ void (libclut_model_ydbdr_to_yuv)(double, double, double*, double*);
  * @param  pb  Output parameter for the Pb parameter.
  * @param  pr  Output parameter for the Pr parameter.
  */
-LIBCLUT_GCC_ONLY__(__attribute__((__leaf__)))
 void (libclut_model_srgb_to_ypbpr)(double, double, double, double*, double*, double*);
 #define libclut_model_srgb_to_ypbpr(r, g, b, y, pb, pr)		\
   do								\
@@ -2319,7 +2314,6 @@ void (libclut_model_srgb_to_ypbpr)(double, double, double, double*, double*, dou
  * @param  g   Output parameter for the G parameter.
  * @param  b   Output parameter for the B parameter.
  */
-LIBCLUT_GCC_ONLY__(__attribute__((__leaf__)))
 void (libclut_model_ypbpr_to_srgb)(double, double, double, double*, double*, double*);
 #define libclut_model_ypbpr_to_srgb(y, pb, pr, r, g, b)			\
   do									\
@@ -2348,7 +2342,6 @@ void (libclut_model_ypbpr_to_srgb)(double, double, double, double*, double*, dou
  * @param  cg  Output parameter for the Cg parameter.
  * @param  co  Output parameter for the Co parameter.
  */
-LIBCLUT_GCC_ONLY__(__attribute__((__leaf__)))
 void (libclut_model_srgb_to_ycgco)(double, double, double, double*, double*, double*);
 #define libclut_model_srgb_to_ycgco(r, g, b, y, cg, co)		\
   do								\
@@ -2376,7 +2369,6 @@ void (libclut_model_srgb_to_ycgco)(double, double, double, double*, double*, dou
  * @param  g   Output parameter for the G parameter.
  * @param  b   Output parameter for the B parameter.
  */
-LIBCLUT_GCC_ONLY__(__attribute__((__leaf__)))
 void (libclut_model_ycgco_to_srgb)(double, double, double, double*, double*, double*);
 #define libclut_model_ycgco_to_srgb(y, cg, co, r, g, b)	\
   do							\
@@ -2480,7 +2472,6 @@ void (libclut_model_cieuvw_to_cie_1960_ucs)(double, double, double, double, doub
  * @param  V:double*  Output parameter for the V* parameter.
  * @param  W:double*  Output parameter for the W* parameter.
  */
-LIBCLUT_GCC_ONLY__(__attribute__((__leaf__)))
 void (libclut_model_cie_1960_ucs_to_cieuvw)(double, double, double, double, double,
 					    double*, double*, double*);
 #define libclut_model_cie_1960_ucs_to_cieuvw(u, v, Y, u0, v0, U, V, W)	\
@@ -2509,7 +2500,6 @@ void (libclut_model_cie_1960_ucs_to_cieuvw)(double, double, double, double, doub
  * 
  * @throws  EINVAL  The colour space cannot be used.
  */
-LIBCLUT_GCC_ONLY__(__attribute__((__leaf__)))
 int libclut_model_get_rgb_conversion_matrix(const libclut_rgb_colour_space_t*,
 					    const libclut_rgb_colour_space_t*,
 					    libclut_colour_space_conversion_matrix_t,
@@ -2534,7 +2524,6 @@ int libclut_model_get_rgb_conversion_matrix(const libclut_rgb_colour_space_t*,
  * @param  out_g  Output parameter for the new green component.
  * @param  out_b  Output parameter for the new blue component.
  */
-LIBCLUT_GCC_ONLY__(__attribute__((__leaf__)))
 void (libclut_model_convert_rgb)(double, double, double, libclut_colour_space_conversion_matrix_t,
 				 double*, double*, double*);
 #define libclut_model_convert_rgb(r, g, b, M, out_r, out_g, out_b)						\
@@ -2567,7 +2556,6 @@ void (libclut_model_convert_rgb)(double, double, double, libclut_colour_space_co
  * @param  y  Output parameter for the Y component
  * @param  z  Output parameter for the Z component.
  */
-LIBCLUT_GCC_ONLY__(__attribute__((__leaf__)))
 void (libclut_model_rgb_to_ciexyz)(double, double, double, libclut_colour_space_conversion_matrix_t,
 				   double*, double*, double*);
 #define libclut_model_rgb_to_ciexyz(r, g, b, M, x, y, z)		\
@@ -2600,7 +2588,6 @@ void (libclut_model_rgb_to_ciexyz)(double, double, double, libclut_colour_space_
  * @param  g  Output parameter for the green component
  * @param  b  Output parameter for the blue component.
  */
-LIBCLUT_GCC_ONLY__(__attribute__((__leaf__)))
 void (libclut_model_ciexyz_to_rgb)(double, double, double, libclut_colour_space_conversion_matrix_t,
 				   double*, double*, double*);
 #define libclut_model_ciexyz_to_rgb(x, y, z, M, r, g, b)						\
