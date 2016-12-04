@@ -2015,15 +2015,15 @@ void (libclut_model_ciexyz_to_cieluv)(double, double, double, double, double,
 #define libclut_model_ciexyz_to_cieluv(X, Y, Z, Xn, Yn, Zn, L, u, v)	\
   do									\
     {									\
-      double x__ = (Xn), y__ = (Yn);					\
-      double t__ = x__ + 15 * y__ + 3 * (Zn);				\
-      double u__ = 4 * x__ / t__;					\
-      double v__ = 9 * y__ / t__;					\
-      x__ = (X), y__ = (Y);						\
+      double xn__ = (Xn), yn__ = (Yn);					\
+      double t__ = xn__ + 15 * yn__ + 3 * (Zn);				\
+      double u__ = 4 * xn__ / t__;					\
+      double v__ = 9 * yn__ / t__;					\
+      double x__ = (X), y__ = (Y);					\
       t__ = x__ + 15 * y__ + 3 * (Z);					\
       u__ = 4 * x__ / t__ - u__;					\
       v__ = 9 * y__ / t__ - v__;					\
-      y__ = (Y) / y__;							\
+      y__ /= yn__;							\
       if (y__ * 24389 <= (double)216)					\
 	y__ *= 24389, y__ /= 27;					\
       else								\
