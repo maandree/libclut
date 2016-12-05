@@ -1,5 +1,11 @@
 libclut NEWS                                          -*- outline -*-
 
+* Noteworthy changes in release 1.2 (TBA) [stable]
+
+  New RGB colour spaces added: ITU-R BT.2020, ITU-R BT.2100,
+  ITU-R BT.601 625 line, ITU-R BT.601 525 line, DCI-P3 D65,
+  and DCI-P3 Theater.
+
 * Noteworthy changes in release 1.1 (2016-(12)Dec-03) [stable]
 
   Support for CIELUV, CIELCh, YIQ, YDbDr, YPbPr, YCgCo,

@@ -66,7 +66,7 @@
  * Initialiser for `struct libclut_rgb_colour_space` with the values
  * of the Adobe RGB (1998) colour space.
  * 
- * This gamma colour space's gamma is 2.2. It cannot be used with
+ * This colour space's gamma is 2.2. It cannot be used with
  * RGB colour space conversion unless the values are tranlated into
  * using the sRGB gamma function.
  */
@@ -82,7 +82,7 @@
  * Initialiser for `struct libclut_rgb_colour_space` with the values
  * of the Apple RGB colour space.
  * 
- * This gamma colour space's gamma is 1.8. It cannot be used with
+ * This colour space's gamma is 1.8. It cannot be used with
  * RGB colour space conversion unless the values are tranlated into
  * using the sRGB gamma function.
  */
@@ -98,7 +98,7 @@
  * Initialiser for `struct libclut_rgb_colour_space` with the values
  * of the Best RGB colour space.
  * 
- * This gamma colour space's gamma is 2.2. It cannot be used with
+ * This colour space's gamma is 2.2. It cannot be used with
  * RGB colour space conversion unless the values are tranlated into
  * using the sRGB gamma function.
  */
@@ -114,7 +114,7 @@
  * Initialiser for `struct libclut_rgb_colour_space` with the values
  * of the Beta RGB colour space.
  * 
- * This gamma colour space's gamma is 2.2. It cannot be used with
+ * This colour space's gamma is 2.2. It cannot be used with
  * RGB colour space conversion unless the values are tranlated into
  * using the sRGB gamma function.
  */
@@ -130,7 +130,7 @@
  * Initialiser for `struct libclut_rgb_colour_space` with the values
  * of the Bruce RGB colour space.
  * 
- * This gamma colour space's gamma is 2.2. It cannot be used with
+ * This colour space's gamma is 2.2. It cannot be used with
  * RGB colour space conversion unless the values are tranlated into
  * using the sRGB gamma function.
  */
@@ -146,7 +146,7 @@
  * Initialiser for `struct libclut_rgb_colour_space` with the values
  * of the CIE RGB colour space.
  * 
- * This gamma colour space's gamma is 2.2. It cannot be used with
+ * This colour space's gamma is 2.2. It cannot be used with
  * RGB colour space conversion unless the values are tranlated into
  * using the sRGB gamma function.
  */
@@ -162,7 +162,7 @@
  * Initialiser for `struct libclut_rgb_colour_space` with the values
  * of the ColorMatch RGB colour space.
  * 
- * This gamma colour space's gamma is 1.8. It cannot be used with
+ * This colour space's gamma is 1.8. It cannot be used with
  * RGB colour space conversion unless the values are tranlated into
  * using the sRGB gamma function.
  */
@@ -176,9 +176,41 @@
 
 /**
  * Initialiser for `struct libclut_rgb_colour_space` with the values
+ * of the DCI-P3 D65 colour space.
+ * 
+ * This colour space's gamma is 2.6. It cannot be used with
+ * RGB colour space conversion unless the values are tranlated into
+ * using the sRGB gamma function.
+ */
+#define LIBCLUT_RGB_COLOUR_SPACE_DCI_P3_D65_INITIALISER	\
+  {								\
+    .red_x   = 0.680, .red_y   = 0.320, .red_Y   = 0.22897344,	\
+    .green_x = 0.265, .green_y = 0.690, .green_Y = 0.69175166,	\
+    .blue_x  = 0.150, .blue_y  = 0.060, .blue_Y  = 0.07927490,	\
+    LIBCLUT_ILLUMINANT_D50					\
+  }
+
+/**
+ * Initialiser for `struct libclut_rgb_colour_space` with the values
+ * of the DCI-P3 Theater colour space.
+ * 
+ * This colour space's gamma is 2.6. It cannot be used with
+ * RGB colour space conversion unless the values are tranlated into
+ * using the sRGB gamma function.
+ */
+#define LIBCLUT_RGB_COLOUR_SPACE_DCI_P3_THEATER_INITIALISER	\
+  {								\
+    .red_x   = 0.680, .red_y   = 0.320, .red_Y   = 0.20949168,	\
+    .green_x = 0.265, .green_y = 0.690, .green_Y = 0.72159525,	\
+    .blue_x  = 0.150, .blue_y  = 0.060, .blue_Y  = 0.06891307,	\
+    .white_x = 0.314, .white_y = 0.351, .white_Y = 1		\
+  }
+
+/**
+ * Initialiser for `struct libclut_rgb_colour_space` with the values
  * of the Don RGB 4 colour space.
  * 
- * This gamma colour space's gamma is 2.2. It cannot be used with
+ * This colour space's gamma is 2.2. It cannot be used with
  * RGB colour space conversion unless the values are tranlated into
  * using the sRGB gamma function.
  */
@@ -194,7 +226,7 @@
  * Initialiser for `struct libclut_rgb_colour_space` with the values
  * of the ECI RGB v2 colour space.
  * 
- * This gamma colour space's used the L* gamma function. It cannot
+ * This colour space's used the L* gamma function. It cannot
  * be used with RGB colour space conversion unless the values are
  * tranlated into using the sRGB gamma function.
  */
@@ -210,7 +242,7 @@
  * Initialiser for `struct libclut_rgb_colour_space` with the values
  * of the Ekta Space PS5 colour space.
  * 
- * This gamma colour space's gamma is 2.2. It cannot be used with
+ * This colour space's gamma is 2.2. It cannot be used with
  * RGB colour space conversion unless the values are tranlated into
  * using the sRGB gamma function.
  */
@@ -224,9 +256,43 @@
 
 /**
  * Initialiser for `struct libclut_rgb_colour_space` with the values
+ * of the ITU-R Recommendation BT.601 (ITU-R BT.601), 625 line colour
+ * space.
+ * 
+ * This colour space uses a custom gamma function. It cannot be used
+ * with RGB colour space conversion unless the values are tranlated
+ * into using the sRGB gamma function.
+ */
+#define LIBCLUT_RGB_COLOUR_SPACE_ITU_R_BT_601_625_LINE_INITIALISER	\
+  {									\
+    .red_x   = 0.640, .red_y   = 0.330, .red_Y   = 0.2220023,		\
+    .green_x = 0.290, .green_y = 0.600, .green_Y = 0.7066689,		\
+    .blue_x  = 0.150, .blue_y  = 0.060, .blue_Y  = 0.0713288,		\
+    LIBCLUT_ILLUMINANT_D65						\
+  }
+
+/**
+ * Initialiser for `struct libclut_rgb_colour_space` with the values
+ * of the ITU-R Recommendation BT.601 (ITU-R BT.601), 525 line colour
+ * space.
+ * 
+ * This colour space uses a custom gamma function. It cannot be used
+ * with RGB colour space conversion unless the values are tranlated
+ * into using the sRGB gamma function.
+ */
+#define LIBCLUT_RGB_COLOUR_SPACE_ITU_R_BT_601_525_LINE_INITIALISER	\
+  {									\
+    .red_x   = 0.630, .red_y   = 0.340, .red_Y   = 0.2220023,		\
+    .green_x = 0.310, .green_y = 0.595, .green_Y = 0.7066689,		\
+    .blue_x  = 0.155, .blue_y  = 0.070, .blue_Y  = 0.0713288,		\
+    LIBCLUT_ILLUMINANT_D65						\
+  }
+
+/**
+ * Initialiser for `struct libclut_rgb_colour_space` with the values
  * of the ITU-R Recommendation BT.709 (ITU-R BT.709) colour space.
  * 
- * This gamma colour space's gamma is 2.4. It cannot be used with
+ * This colour space's gamma is 2._. It cannot be used with
  * RGB colour space conversion unless the values are tranlated into
  * using the sRGB gamma function.
  */
@@ -240,9 +306,41 @@
 
 /**
  * Initialiser for `struct libclut_rgb_colour_space` with the values
+ * of the ITU-R Recommendation BT.2020 (ITU-R BT.2020) colour space.
+ * 
+ * This colour space uses a custom gamma function. It cannot be used
+ * with RGB colour space conversion unless the values are tranlated
+ * into using the sRGB gamma function.
+ */
+#define LIBCLUT_RGB_COLOUR_SPACE_ITU_R_BT_2020_INITIALISER	\
+  {								\
+    .red_x   = 0.7080, .red_y   = 0.2920, .red_Y   = 0.2627296,	\
+    .green_x = 0.1700, .green_y = 0.7970, .green_Y = 0.6767483,	\
+    .blue_x  = 0.1310, .blue_y  = 0.0460, .blue_Y  = 0.0605221,	\
+    LIBCLUT_ILLUMINANT_D65					\
+  }
+
+/**
+ * Initialiser for `struct libclut_rgb_colour_space` with the values
+ * of the ITU-R Recommendation BT.2100 (ITU-R BT.2100) colour space.
+ * 
+ * This colour space uses a custom gamma function. It cannot be used
+ * with RGB colour space conversion unless the values are tranlated
+ * into using the sRGB gamma function.
+ */
+#define LIBCLUT_RGB_COLOUR_SPACE_ITU_R_BT_2100_INITIALISER	\
+  {								\
+    .red_x   = 0.7080, .red_y   = 0.2920, .red_Y   = 0.2627296,	\
+    .green_x = 0.1700, .green_y = 0.7970, .green_Y = 0.6767483,	\
+    .blue_x  = 0.1310, .blue_y  = 0.0460, .blue_Y  = 0.0605221,	\
+    LIBCLUT_ILLUMINANT_D65					\
+  }
+
+/**
+ * Initialiser for `struct libclut_rgb_colour_space` with the values
  * of the Lightroom RGB colour space.
  * 
- * This gamma colour space's gamma is 1.0. It cannot be used with
+ * This colour space's gamma is 1 (linear). It cannot be used with
  * RGB colour space conversion unless the values are tranlated into
  * using the sRGB gamma function.
  */
@@ -258,7 +356,7 @@
  * Initialiser for `struct libclut_rgb_colour_space` with the values
  * of the NTSC RGB colour space.
  * 
- * This gamma colour space's gamma is 2.2. It cannot be used with
+ * This colour space's gamma is 2.2. It cannot be used with
  * RGB colour space conversion unless the values are tranlated into
  * using the sRGB gamma function.
  */
@@ -274,7 +372,7 @@
  * Initialiser for `struct libclut_rgb_colour_space` with the values
  * of the PAL/SECAM RGB colour space.
  * 
- * This gamma colour space's gamma is 2.2. It cannot be used with
+ * This colour space's gamma is 2.2. It cannot be used with
  * RGB colour space conversion unless the values are tranlated into
  * using the sRGB gamma function.
  */
@@ -290,7 +388,7 @@
  * Initialiser for `struct libclut_rgb_colour_space` with the values
  * of the ProPhoto RGB colour space.
  * 
- * This gamma colour space's gamma is 1.8. It cannot be used with
+ * This colour space's gamma is 1.8. It cannot be used with
  * RGB colour space conversion unless the values are tranlated into
  * using the sRGB gamma function.
  */
@@ -306,7 +404,7 @@
  * Initialiser for `struct libclut_rgb_colour_space` with the values
  * of the SMPTE-C RGB colour space.
  * 
- * This gamma colour space's gamma is 2.2. It cannot be used with
+ * This colour space's gamma is 2.2. It cannot be used with
  * RGB colour space conversion unless the values are tranlated into
  * using the sRGB gamma function.
  */
@@ -322,7 +420,7 @@
  * Initialiser for `struct libclut_rgb_colour_space` with the values
  * of the Wide Gamut RGB colour space.
  * 
- * This gamma colour space's gamma is 2.2. It cannot be used with
+ * This colour space's gamma is 2.2. It cannot be used with
  * RGB colour space conversion unless the values are tranlated into
  * using the sRGB gamma function.
  */
@@ -335,15 +433,10 @@
   }
 
 /*
- * name                                          gamma  xw     yw     xr     yr     xg     yg     xb     yb
- * ITU-R Recommendation BT.2020 (ITU-R BT.2020)  *1     { D65      }  0.708  0.292  0.170  0.797  0.131  0.046
- * ITU-R Recommendation BT.2100 (ITU-R BT.2100)  *2     { D65      }  0.708  0.292  0.170  0.797  0.131  0.046
- * DCI-P3 D65                                    ?      { D65      }  0.680  0.320  0.265  0.690  0.150  0.060
- * DCI-P3 Theater                                ?      0.314  0.351  0.680  0.320  0.265  0.690  0.150  0.060
- * https://en.wikipedia.org/wiki/Rec._601
- * 
- * *1  https://en.wikipedia.org/wiki/Rec._2020#Transfer_characteristics
- * *2  http://www.itu.int/dms_pubrec/itu-r/rec/bt/R-REC-BT.2100-0-201607-I!!PDF-E.pdf
+ * TODO gamma functions:
+ *   https://en.wikipedia.org/wiki/Rec._2020#Transfer_characteristics
+ *   http://www.itu.int/dms_pubrec/itu-r/rec/bt/R-REC-BT.2100-0-201607-I!!PDF-E.pdf
+ *   https://en.wikipedia.org/wiki/Rec._601
  */
 
 

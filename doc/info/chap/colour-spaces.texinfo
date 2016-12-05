@@ -730,7 +730,7 @@ below, along with the gamma each colour space uses.
 @item
 sRGB
 @tab
-sRGB
+custom
 @tab
 @code{LIBCLUT_RGB_COLOUR_SPACE_SRGB_INITIALISER}
 @item
@@ -776,6 +776,18 @@ ColorMatch RGB
 @tab
 @code{LIBCLUT_RGB_COLOUR_SPACE_COLORMATCH_RGB_INITIALISER}
 @item
+DCI-P3 D65
+@tab
+2.6
+@tab
+@code{LIBCLUT_RGB_COLOUR_SPACE_DCI_P3_D65_INITIALISER}
+@item
+DCI-P3 Theater
+@tab
+2.6
+@tab
+@code{LIBCLUT_RGB_COLOUR_SPACE_DCI_P3_THEATER_INITIALISER}
+@item
 Don RGB 4
 @tab
 2.2
@@ -794,15 +806,39 @@ Ekta Space PS5
 @tab
 @code{LIBCLUT_RGB_COLOUR_SPACE_EKTA_SPACE_PS5_INITIALISER}
 @item
+525 line@footnote{ITU-R Recommendation BT.601 (ITU-R BT.601), 525 line}
+@tab
+custom
+@tab
+@code{LIBCLUT_RGB_COLOUR_SPACE_ITU_R_BT_601_525_LINE_INITIALISER}
+@item
+625 line@footnote{ITU-R Recommendation BT.601 (ITU-R BT.601), 625 line}
+@tab
+custom
+@tab
+@code{LIBCLUT_RGB_COLOUR_SPACE_ITU_R_BT_601_625_LINE_INITIALISER}
+@item
 ITU-R BT.709@footnote{ITU-R Recommendation BT.709}
 @tab
 2.4
 @tab
 @code{LIBCLUT_RGB_COLOUR_SPACE_ITU_R_BT_709_INITIALISER}
 @item
+ITU-R BT.2020@footnote{ITU-R Recommendation BT.2020}
+@tab
+custom
+@tab
+@code{LIBCLUT_RGB_COLOUR_SPACE_ITU_R_BT_2020_INITIALISER}
+@item
+ITU-R BT.2100@footnote{ITU-R Recommendation BT.2100}
+@tab
+custom
+@tab
+@code{LIBCLUT_RGB_COLOUR_SPACE_ITU_R_BT_2100_INITIALISER}
+@item
 Lightroom RGB
 @tab
-1.0
+linear
 @tab
 @code{LIBCLUT_RGB_COLOUR_SPACE_LIGHTROOM_RGB_INITIALISER}
 @item
@@ -837,6 +873,7 @@ Wide Gamut RGB
 @code{LIBCLUT_RGB_COLOUR_SPACE_WIDE_GAMUT_RGB_INITIALISER}
 @end multitable
 
+@page
 To create a description for the sRGB colour space write:
 
 @example
