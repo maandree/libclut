@@ -74,7 +74,7 @@ ___EVERYTHING_INFO = libclut titlepage-data content hardcopy-copying  \
                      reusable/macros reusable/paper reusable/titlepage  \
                      chap/overview chap/clut-manipulation.texinfo chap/colour-spaces.texinfo
 _EVERYTHING = $(__EVERYTHING_ALL_COMMON) DEPENDENCIES INSTALL NEWS  \
-              $(foreach F,$(___EVERYTHING_INFO),doc/info/$(F).texinfo)  clut.h
+              $(foreach F,$(___EVERYTHING_INFO),doc/info/$(F).texinfo) libclut.h
 
 # }}
 
