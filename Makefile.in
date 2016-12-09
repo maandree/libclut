@@ -40,7 +40,7 @@ PKGNAME = libclut
 
 # Package information.
 _PROJECT = libclut
-_VERSION = 0.1
+_VERSION = 1.2
 
 # Used by mk/lang-c.mk
 _C_STD = c99
@@ -69,7 +69,7 @@ _HTML_FILES = Free-Software-Needs-Free-Documentation.html  GNU-Free-Documentatio
 _COPYING = COPYING
 
 # Used by mk/dist.mk
-___EVERYTHING_INFO = autohaltd titlepage-data content hardcopy-copying  \
+___EVERYTHING_INFO = libclut titlepage-data content hardcopy-copying  \
                      appx/fdl appx/free-software-needs-free-documentation appx/gpl  \
                      reusable/macros reusable/paper reusable/titlepage  \
                      chap/overview chap/clut-manipulation.texinfo chap/colour-spaces.texinfo
