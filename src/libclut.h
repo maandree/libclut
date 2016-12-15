@@ -2079,8 +2079,8 @@ void (libclut_model_cielab_to_ciexyz)(double, double, double, double*, double*, 
       *X__ = a__ / 500 + *Y__;					\
       *Z__ = *Y__ - b__ / 200;					\
       *X__ = LIBCLUT_MODEL_CIELAB_TO_CIEXYZ__(*X__) * 0.95047;	\
-      *Y__ = LIBCLUT_MODEL_CIELAB_TO_CIEXYZ__(*Y__);		\
-      *Z__ = LIBCLUT_MODEL_CIELAB_TO_CIEXYZ__(*Z__) * 1.08883;	\
+      *Y__ = LIBCLUT_MODEL_CIELAB_TO_CIEXYZ__(*Y__) * 1.08883;	\
+      *Z__ = LIBCLUT_MODEL_CIELAB_TO_CIEXYZ__(*Z__);		\
     }								\
   while (0)
 #define LIBCLUT_MODEL_CIELAB_TO_CIEXYZ__(C)  \
