@@ -130,7 +130,7 @@ static double make_double(double x)
  * Test libclut
  * 
  * @return  0: All tests passed
- *          1: At east one test fail
+ *          1: At least one test fail
  *          2: An error occurred
  */
 int main(int argc, char *argv[])
