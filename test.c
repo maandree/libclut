@@ -441,7 +441,7 @@ rgb_conversion_done:
 }
 
 /*
-  TODO test these too: (also add this to the makefile)
+  TODO test these too:
   
   libclut_translate
   libclut_cie_contrast
