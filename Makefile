@@ -6,7 +6,8 @@ include $(CONFIGFILE)
 VERSION_MAJOR = 1
 VERSION       = 1.2
 
-all: libclut.a libclut.so
+
+all: libclut.a libclut.so test
 
 libclut.o: libclut.c libclut.h
 	$(CC) -c -o $@ libclut.c $(CPPFLAGS) $(CFLAGS)

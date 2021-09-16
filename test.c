@@ -8,6 +8,11 @@
 #include <string.h>
 #include <math.h>
 
+#if defined(__GNUC__)
+# pragma GCC diagnostic ignored "-Wunsuffixed-float-constants"
+#endif
+
+
 struct clut {
 	size_t red_size;
 	size_t green_size;
@@ -201,14 +206,14 @@ main(int argc, char *argv[])
 
 	param = 2;
 	for (i = 0; i < 256; i++) {
-		double x = (double)i / 255;
+		double t = (double)i / 255;
 		if (i % 255) {
-			x = 1 / x - 1;
-			x = log(x);
-			x = HALF - x / param;
+			t = 1 / t - 1;
+			t = log(t);
+			t = HALF - t / param;
 		}
 		t1.blue[i] = t1.green[i] = t1.red[i] = (uint16_t)((i << 8) | i);
-		t2.blue[i] = t2.green[i] = t2.red[i] = (uint16_t)(x * UINT16_MAX);
+		t2.blue[i] = t2.green[i] = t2.red[i] = (uint16_t)(t * UINT16_MAX);
 	}
 	libclut_sigmoid(&t1, UINT16_MAX, uint16_t, &param, &param, &param);
 	t1.blue[0]   = t1.green[0]   = t1.red[0]   = t2.red[0];
@@ -296,8 +301,17 @@ main(int argc, char *argv[])
 		goto rgb_conversion_done;
 	}
 
-	libclut_convert_rgb_inplace(&t1, 1, double, M, trunc); /* TODO test */
-	libclut_convert_rgb(&t1, 1, double, M, trunc, &t2);    /* TODO test */
+#if defined(__GNUC__)
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Waddress"
+#endif
+
+	libclut_convert_rgb_inplace(&d1, 1, double, M, trunc); /* TODO test */
+	libclut_convert_rgb(&d1, 1, double, M, trunc, &d2);    /* TODO test */
+
+#if defined(__GNUC__)
+# pragma GCC diagnostic pop
+#endif
 
 	if (libclut_model_get_rgb_conversion_matrix(&srgb, NULL, M, Minv)) {
 		printf("libclut_model_get_rgb_conversion_matrix failed\n"), rc = 1;

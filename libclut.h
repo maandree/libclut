@@ -6,6 +6,7 @@
 #include <string.h>
 #include <math.h>
 
+
 /* Not documented, may be removed or modified in the future. */
 #define LIBCLUT_ILLUMINANT_A    .white_x = 0.44757, .white_y = 0.40745, .white_Y = 1
 #define LIBCLUT_ILLUMINANT_B    .white_x = 0.34842, .white_y = 0.35161, .white_Y = 1
@@ -713,26 +714,27 @@ static inline int libclut_0__(double x)             { return libclut_eq__(x, 0);
 		double w__;\
 		size_t i__, j__, jj__;\
 		for (i__ = 0; i__ < rn__; i__++) {\
-			w__ = (double)i__ * gn__ / rn__;\
+			w__ = (double)i__ * (double)gn__ / (double)rn__;\
 			j__ = (size_t)w__;\
 			jj__ = j__ == gn__ ? j__ : (j__ + 1);\
-			w__ = fmod(j__, (double)1);\
+			w__ -= (double)j__;\
 			x__ = (clut)->green[j__] / m__;\
 			y__ = (clut)->green[jj__] / m__;\
 			x__ = libclut_model_standard_to_linear1(x__);\
 			y__ = libclut_model_standard_to_linear1(y__);\
 			g__ = x__ * (1 - w__) + y__ * w__;\
 			\
-			w__ = (double)i__ * bn__ / rn__;\
+			w__ = (double)i__ * (double)bn__ / (double)rn__;\
 			j__ = (size_t)w__;\
 			jj__ = j__ == bn__ ? j__ : (j__ + 1);\
-			w__ = fmod(j__, (double)1);\
+			w__ -= (double)j__;\
 			x__ = (clut)->blue[j__] / m__;\
 			y__ = (clut)->blue[jj__] / m__;\
 			x__ = libclut_model_standard_to_linear1(x__);\
 			y__ = libclut_model_standard_to_linear1(y__);\
 			b__ = x__ * (1 - w__) + y__ * w__;\
 			\
+			r__ = (clut)->red[i__] / m__;\
 			r__ = (M)[0][0] * r__ + (M)[0][1] * g__ + (M)[0][2] * b__;\
 			r__ = libclut_model_linear_to_standard1(r__);\
 			r__ *= m__;\
@@ -745,27 +747,28 @@ static inline int libclut_0__(double x)             { return libclut_eq__(x, 0);
 			(out)->red[i__] = (type)r__;\
 		}\
 		for (i__ = 0; i__ < gn__; i__++) {\
-			w__ = (double)i__ * rn__ / gn__;\
+			w__ = (double)i__ * (double)rn__ / (double)gn__;\
 			j__ = (size_t)w__;\
 			jj__ = j__ == rn__ ? j__ : (j__ + 1);\
-			w__ = fmod(j__, (double)1);\
+			w__ -= (double)j__;\
 			x__ = (clut)->red[j__] / m__;\
 			y__ = (clut)->red[jj__] / m__;\
 			x__ = libclut_model_standard_to_linear1(x__);\
 			y__ = libclut_model_standard_to_linear1(y__);\
 			r__ = x__ * (1 - w__) + y__ * w__;\
 			\
-			w__ = (double)i__ * bn__ / gn__;\
+			w__ = (double)i__ * (double)bn__ / (double)gn__;\
 			j__ = (size_t)w__;\
 			jj__ = j__ == bn__ ? j__ : (j__ + 1);\
-			w__ = fmod(j__, (double)1);\
+			w__ -= (double)j__;\
 			x__ = (clut)->blue[j__] / m__;\
 			y__ = (clut)->blue[jj__] / m__;\
 			x__ = libclut_model_standard_to_linear1(x__);\
 			y__ = libclut_model_standard_to_linear1(y__);\
 			b__ = x__ * (1 - w__) + y__ * w__;\
 			\
-			g__ = (M)[1][0] * r__ + (M)[0][1] * g__ + (M)[1][2] * b__;\
+			g__ = (clut)->green[i__] / m__;\
+			g__ = (M)[1][0] * r__ + (M)[1][1] * g__ + (M)[1][2] * b__;\
 			g__ = libclut_model_linear_to_standard1(g__);\
 			g__ *= m__;\
 			if (trunc) {\
@@ -777,26 +780,27 @@ static inline int libclut_0__(double x)             { return libclut_eq__(x, 0);
 			(out)->green[i__] = (type)g__;\
 		}\
 		for (i__ = 0; i__ < bn__; i__++) {\
-			w__ = (double)i__ * rn__ / bn__;\
+			w__ = (double)i__ * (double)rn__ / (double)bn__;\
 			j__ = (size_t)w__;\
 			jj__ = j__ == rn__ ? j__ : (j__ + 1);\
-			w__ = fmod(j__, (double)1);\
+			w__ -= (double)j__;\
 			x__ = (clut)->red[j__] / m__;\
 			y__ = (clut)->red[jj__] / m__;\
 			x__ = libclut_model_standard_to_linear1(x__);\
 			y__ = libclut_model_standard_to_linear1(y__);\
 			r__ = x__ * (1 - w__) + y__ * w__;\
 			\
-			w__ = (double)i__ * gn__ / bn__;\
+			w__ = (double)i__ * (double)gn__ / (double)bn__;\
 			j__ = (size_t)w__;\
 			jj__ = j__ == gn__ ? j__ : (j__ + 1);\
-			w__ = fmod(j__, (double)1);\
+			w__ -= (double)j__;\
 			x__ = (clut)->green[j__] / m__;\
 			y__ = (clut)->green[jj__] / m__;\
 			x__ = libclut_model_standard_to_linear1(x__);\
 			y__ = libclut_model_standard_to_linear1(y__);\
 			g__ = x__ * (1 - w__) + y__ * w__;\
 			\
+			b__ = (clut)->blue[i__] / m__;\
 			b__ = (M)[2][0] * r__ + (M)[2][1] * g__ + (M)[2][2] * b__;\
 			b__ = libclut_model_linear_to_standard1(b__);\
 			b__ *= m__;\
@@ -1983,12 +1987,12 @@ void (libclut_model_cieluv_to_cielch)(double, double, double *, double *);
 void (libclut_model_srgb_to_yiq)(double, double, double, double *, double *, double *);
 #define libclut_model_srgb_to_yiq(r, g, b, y, i, q)\
 	do {\
-		double r__ = libclut_model_standard_to_linear1(r) / 100000000000000000ULL;\
-		double g__ = libclut_model_standard_to_linear1(g) / 10000000000000000ULL;\
-		double b__ = libclut_model_standard_to_linear1(b) / 100000000000000000ULL;\
-		*(y) = r__ * 29893602129377540ULL + g__ * 5870430744511212ULL + b__ * 11402090425510336ULL;\
-		*(i) = r__ * 59594574307079930ULL - g__ * 2743886357457892ULL - b__ * 32155710732501010ULL;\
-		*(q) = r__ * 21149734030682846ULL - g__ * 5229106903029739ULL + b__ * 31141334999614540ULL;\
+		double r__ = libclut_model_standard_to_linear1(r);\
+		double g__ = libclut_model_standard_to_linear1(g);\
+		double b__ = libclut_model_standard_to_linear1(b);\
+		*(y) = r__ * 0.29893602129377540 + g__ * 0.58704307445112120 + b__ * 0.11402090425510336;\
+		*(i) = r__ * 0.59594574307079930 - g__ * 0.27438863574578920 - b__ * 0.32155710732501010;\
+		*(q) = r__ * 0.21149734030682846 - g__ * 0.52291069030297390 + b__ * 0.31141334999614540;\
 	} while (0)
 
 /**
@@ -2327,12 +2331,12 @@ int libclut_model_get_rgb_conversion_matrix(const libclut_rgb_colour_space_t *, 
 void (libclut_model_convert_rgb)(double, double, double, libclut_colour_space_conversion_matrix_t, double *, double *, double *);
 #define libclut_model_convert_rgb(r, g, b, M, out_r, out_g, out_b)\
 	do {\
-		double r__ = libclut_model_standard_to_linear1(r);\
-		double g__ = libclut_model_standard_to_linear1(g);\
-		double b__ = libclut_model_standard_to_linear1(b);\
-		*(out_r) = libclut_model_linear_to_standard1((M)[0][0] * r__ + (M)[0][1] * g__ + (M)[0][2] * b__);\
-		*(out_g) = libclut_model_linear_to_standard1((M)[1][0] * r__ + (M)[1][1] * g__ + (M)[1][2] * b__);\
-		*(out_b) = libclut_model_linear_to_standard1((M)[2][0] * r__ + (M)[2][1] * g__ + (M)[2][2] * b__);\
+		double r___ = libclut_model_standard_to_linear1(r);\
+		double g___ = libclut_model_standard_to_linear1(g);\
+		double b___ = libclut_model_standard_to_linear1(b);\
+		*(out_r) = libclut_model_linear_to_standard1((M)[0][0] * r___ + (M)[0][1] * g___ + (M)[0][2] * b___);\
+		*(out_g) = libclut_model_linear_to_standard1((M)[1][0] * r___ + (M)[1][1] * g___ + (M)[1][2] * b___);\
+		*(out_b) = libclut_model_linear_to_standard1((M)[2][0] * r___ + (M)[2][1] * g___ + (M)[2][2] * b___);\
 	} while (0)
 
 /**

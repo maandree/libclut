@@ -3,6 +3,11 @@
 
 #include <errno.h>
 
+#if defined(__GNUC__)
+# pragma GCC diagnostic ignored "-Wunsuffixed-float-constants"
+#endif
+
+
 /**
  * Convert one component from [0, 1] linear sRGB to [0, 1] sRGB
  * 
