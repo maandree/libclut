@@ -50,7 +50,7 @@ install: libclut.a libclut.$(LIBEXT)
 	mkdir -p -- "$(DESTDIR)$(PREFIX)/include"
 	cp -- libclut.a "$(DESTDIR)$(PREFIX)/lib"
 	cp -- libclut.so "$(DESTDIR)$(PREFIX)/lib/libclut.$(LIBMINOREXT)"
-	$(FIX_INSTALL_NAME) -- "$(DESTDIR)$(PREFIX)/lib/libclut.$(LIBMINOREXT)"
+	$(FIX_INSTALL_NAME) "$(DESTDIR)$(PREFIX)/lib/libclut.$(LIBMINOREXT)"
 	ln -sf -- "libclut.$(LIBMINOREXT)" "$(DESTDIR)$(PREFIX)/lib/libclut.$(LIBMAJOREXT)"
 	ln -sf -- "libclut.$(LIBMINOREXT)" "$(DESTDIR)$(PREFIX)/lib/libclut.$(LIBEXT)"
 	cp -- libclut.h "$(DESTDIR)$(PREFIX)/include"
