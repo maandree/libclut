@@ -862,9 +862,9 @@ static inline int libclut_0__(double x)             { return libclut_eq__(x, 0);
 		type t__;\
 		if (r) {\
 			for (i__ = 0, n__ = (clut)->red_size; i__ < (n__ >> 1); i__++) {\
-					t__ = (clut)->red[i__];\
-					(clut)->red[i__] = (clut)->red[n__ - i__ - 1];\
-					(clut)->red[n__ - i__ - 1] = t__;\
+				t__ = (clut)->red[i__];\
+				(clut)->red[i__] = (clut)->red[n__ - i__ - 1];\
+				(clut)->red[n__ - i__ - 1] = t__;\
 			}\
 		}\
 		if (g) {\
