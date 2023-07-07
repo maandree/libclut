@@ -446,7 +446,7 @@ rgb_conversion_done:
 	free(d1.red);
 	free(d2.red);
 	return rc;
- fail:
+fail:
 	perror(*argv);
 	return 2;
 	(void) argc;
