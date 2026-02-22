@@ -1,0 +1,19 @@
+Document the proper gamma functions for
+	ITU_R_BT_601_625_LINE
+		GAMMA = 1 / 0.45 = 2.(2)
+		OFFSET = 0.09929682680944
+		SLOPE = 4.5
+		TRANSITION = 0.018053968510807
+	ITU_R_BT_601_525_LINE (same function as above)
+	ITU_R_BT_709 (same function as above)
+	ITU_R_BT_2020 (same function as above)
+	NTSC_RGB (same function as above)
+	PAL_SECAM_RGB (same function as above)
+	SMPTE_C_RGB (same function as above)
+	SMPTE_240M_RGB
+		GAMMA = 1 / 0.45 = 2.(2)
+		OFFSET = 0.1115721957735072
+		SLOPE = 4.0
+		TRANSITION = 0.022821585552393633
+	SGI_RGB
+		simple: gamma = 1.47

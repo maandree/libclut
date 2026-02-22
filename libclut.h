@@ -35,7 +35,7 @@
  * 
  * sRGB does not use a regular gamma function, but rather two different
  * functions. `libclut_model_linear_to_standard1` and
- * and `libclut_model_standard_to_linear1` can be used so to convert
+ * `libclut_model_standard_to_linear1` can be used to convert
  * between sRGB and linear sRGB
  */
 #define LIBCLUT_RGB_COLOUR_SPACE_SRGB_INITIALISER {\
@@ -49,7 +49,7 @@
  * of the Adobe RGB (1998) colour space
  * 
  * This colour space's gamma is 2.2. It cannot be used with
- * RGB colour space conversion unless the values are tranlated into
+ * RGB colour space conversion unless the values are translated into
  * using the sRGB gamma function.
  */
 #define LIBCLUT_RGB_COLOUR_SPACE_ADOBE_RGB_INITIALISER {\
@@ -63,7 +63,7 @@
  * of the Apple RGB colour space
  * 
  * This colour space's gamma is 1.8. It cannot be used with
- * RGB colour space conversion unless the values are tranlated into
+ * RGB colour space conversion unless the values are translated into
  * using the sRGB gamma function.
  */
 #define LIBCLUT_RGB_COLOUR_SPACE_APPLE_RGB_INITIALISER {\
@@ -77,7 +77,7 @@
  * of the Best RGB colour space
  * 
  * This colour space's gamma is 2.2. It cannot be used with
- * RGB colour space conversion unless the values are tranlated into
+ * RGB colour space conversion unless the values are translated into
  * using the sRGB gamma function.
  */
 #define LIBCLUT_RGB_COLOUR_SPACE_BEST_RGB_INITIALISER {\
@@ -91,7 +91,7 @@
  * of the Beta RGB colour space
  * 
  * This colour space's gamma is 2.2. It cannot be used with
- * RGB colour space conversion unless the values are tranlated into
+ * RGB colour space conversion unless the values are translated into
  * using the sRGB gamma function.
  */
 #define LIBCLUT_RGB_COLOUR_SPACE_BETA_RGB_INITIALISER {\
@@ -105,7 +105,7 @@
  * of the Bruce RGB colour space
  * 
  * This colour space's gamma is 2.2. It cannot be used with
- * RGB colour space conversion unless the values are tranlated into
+ * RGB colour space conversion unless the values are translated into
  * using the sRGB gamma function.
  */
 #define LIBCLUT_RGB_COLOUR_SPACE_BRUCE_RGB_INITIALISER {\
@@ -119,7 +119,7 @@
  * of the CIE RGB colour space
  * 
  * This colour space's gamma is 2.2. It cannot be used with
- * RGB colour space conversion unless the values are tranlated into
+ * RGB colour space conversion unless the values are translated into
  * using the sRGB gamma function.
  */
 #define LIBCLUT_RGB_COLOUR_SPACE_CIE_RGB_INITIALISER {\
@@ -133,7 +133,7 @@
  * of the ColorMatch RGB colour space
  * 
  * This colour space's gamma is 1.8. It cannot be used with
- * RGB colour space conversion unless the values are tranlated into
+ * RGB colour space conversion unless the values are translated into
  * using the sRGB gamma function.
  */
 #define LIBCLUT_RGB_COLOUR_SPACE_COLORMATCH_RGB_INITIALISER {\
@@ -147,7 +147,7 @@
  * of the DCI-P3 D65 colour space
  * 
  * This colour space's gamma is 2.6. It cannot be used with
- * RGB colour space conversion unless the values are tranlated into
+ * RGB colour space conversion unless the values are translated into
  * using the sRGB gamma function.
  */
 #define LIBCLUT_RGB_COLOUR_SPACE_DCI_P3_D65_INITIALISER {\
@@ -161,7 +161,7 @@
  * of the DCI-P3 Theater colour space
  * 
  * This colour space's gamma is 2.6. It cannot be used with
- * RGB colour space conversion unless the values are tranlated into
+ * RGB colour space conversion unless the values are translated into
  * using the sRGB gamma function.
  */
 #define LIBCLUT_RGB_COLOUR_SPACE_DCI_P3_THEATER_INITIALISER {\
@@ -175,7 +175,7 @@
  * of the Don RGB 4 colour space
  * 
  * This colour space's gamma is 2.2. It cannot be used with
- * RGB colour space conversion unless the values are tranlated into
+ * RGB colour space conversion unless the values are translated into
  * using the sRGB gamma function.
  */
 #define LIBCLUT_RGB_COLOUR_SPACE_DON_RGB_4_INITIALISER {\
@@ -190,7 +190,7 @@
  * 
  * This colour space's used the L* gamma function. It cannot
  * be used with RGB colour space conversion unless the values are
- * tranlated into using the sRGB gamma function.
+ * translated into using the sRGB gamma function.
  */
 #define LIBCLUT_RGB_COLOUR_SPACE_ECI_RGB_V2_INITIALISER {\
 	.red_x   = 0.6700, .red_y   = 0.3300, .red_Y   = 0.320250,\
@@ -203,7 +203,7 @@
  * of the Ekta Space PS5 colour space
  * 
  * This colour space's gamma is 2.2. It cannot be used with
- * RGB colour space conversion unless the values are tranlated into
+ * RGB colour space conversion unless the values are translated into
  * using the sRGB gamma function.
  */
 #define LIBCLUT_RGB_COLOUR_SPACE_EKTA_SPACE_PS5_INITIALISER {\
@@ -218,7 +218,7 @@
  * space
  * 
  * This colour space uses a custom gamma function. It cannot be used
- * with RGB colour space conversion unless the values are tranlated
+ * with RGB colour space conversion unless the values are translated
  * into using the sRGB gamma function.
  */
 #define LIBCLUT_RGB_COLOUR_SPACE_ITU_R_BT_601_625_LINE_INITIALISER {\
@@ -233,7 +233,7 @@
  * space
  * 
  * This colour space uses a custom gamma function. It cannot be used
- * with RGB colour space conversion unless the values are tranlated
+ * with RGB colour space conversion unless the values are translated
  * into using the sRGB gamma function.
  */
 #define LIBCLUT_RGB_COLOUR_SPACE_ITU_R_BT_601_525_LINE_INITIALISER {\
@@ -246,9 +246,9 @@
  * Initialiser for `struct libclut_rgb_colour_space` with the values
  * of the ITU-R Recommendation BT.709 (ITU-R BT.709) colour space
  * 
- * This colour space's gamma is 2._. It cannot be used with
- * RGB colour space conversion unless the values are tranlated into
- * using the sRGB gamma function.
+ * This colour space uses a custom gamma function. It cannot be used
+ * with RGB colour space conversion unless the values are translated
+ * into using the sRGB gamma function.
  */
 #define LIBCLUT_RGB_COLOUR_SPACE_ITU_R_BT_709_INITIALISER {\
 	.red_x   = 0.6400, .red_y   = 0.3300, .red_Y   = 0.212656,\
@@ -261,7 +261,7 @@
  * of the ITU-R Recommendation BT.2020 (ITU-R BT.2020) colour space
  * 
  * This colour space uses a custom gamma function. It cannot be used
- * with RGB colour space conversion unless the values are tranlated
+ * with RGB colour space conversion unless the values are translated
  * into using the sRGB gamma function.
  */
 #define LIBCLUT_RGB_COLOUR_SPACE_ITU_R_BT_2020_INITIALISER {\
@@ -275,7 +275,7 @@
  * of the ITU-R Recommendation BT.2100 (ITU-R BT.2100) colour space
  * 
  * This colour space uses a custom gamma function. It cannot be used
- * with RGB colour space conversion unless the values are tranlated
+ * with RGB colour space conversion unless the values are translated
  * into using the sRGB gamma function.
  */
 #define LIBCLUT_RGB_COLOUR_SPACE_ITU_R_BT_2100_INITIALISER {\
@@ -289,7 +289,7 @@
  * of the Lightroom RGB colour space
  * 
  * This colour space's gamma is 1 (linear). It cannot be used with
- * RGB colour space conversion unless the values are tranlated into
+ * RGB colour space conversion unless the values are translated into
  * using the sRGB gamma function.
  */
 #define LIBCLUT_RGB_COLOUR_SPACE_LIGHTROOM_RGB_INITIALISER {\
@@ -302,9 +302,9 @@
  * Initialiser for `struct libclut_rgb_colour_space` with the values
  * of the NTSC RGB colour space
  * 
- * This colour space's gamma is 2.2. It cannot be used with
- * RGB colour space conversion unless the values are tranlated into
- * using the sRGB gamma function.
+ * This colour space uses a custom gamma function. It cannot be used
+ * with RGB colour space conversion unless the values are translated
+ * into using the sRGB gamma function.
  */
 #define LIBCLUT_RGB_COLOUR_SPACE_NTSC_RGB_INITIALISER {\
 	.red_x   = 0.6700, .red_y   = 0.3300, .red_Y   = 0.298839,\
@@ -316,9 +316,9 @@
  * Initialiser for `struct libclut_rgb_colour_space` with the values
  * of the PAL/SECAM RGB colour space
  * 
- * This colour space's gamma is 2.2. It cannot be used with
- * RGB colour space conversion unless the values are tranlated into
- * using the sRGB gamma function.
+ * This colour space uses a custom gamma function. It cannot be used
+ * with RGB colour space conversion unless the values are translated
+ * into using the sRGB gamma function.
  */
 #define LIBCLUT_RGB_COLOUR_SPACE_PAL_SECAM_RGB_INITIALISER {\
 	.red_x   = 0.6400, .red_y   = 0.3300, .red_Y   = 0.222021,\
@@ -331,7 +331,7 @@
  * of the ProPhoto RGB colour space
  * 
  * This colour space's gamma is 1.8. It cannot be used with
- * RGB colour space conversion unless the values are tranlated into
+ * RGB colour space conversion unless the values are translated into
  * using the sRGB gamma function.
  */
 #define LIBCLUT_RGB_COLOUR_SPACE_PROPHOTO_RGB_INITIALISER {\
@@ -340,13 +340,16 @@
 	.blue_x  = 0.0366, .blue_y  = 0.0001, .blue_Y  = 0.000086,\
 	LIBCLUT_ILLUMINANT_D50}
 
+/* TODO LIBCLUT_RGB_COLOUR_SPACE_SGI_RGB_INITIALISER */
+/* TODO LIBCLUT_RGB_COLOUR_SPACE_SMPTE_240M_RGB_INITIALISER */
+
 /**
  * Initialiser for `struct libclut_rgb_colour_space` with the values
  * of the SMPTE-C RGB colour space
  * 
- * This colour space's gamma is 2.2. It cannot be used with
- * RGB colour space conversion unless the values are tranlated into
- * using the sRGB gamma function.
+ * This colour space uses a custom gamma function. It cannot be used
+ * with RGB colour space conversion unless the values are translated
+ * into using the sRGB gamma function.
  */
 #define LIBCLUT_RGB_COLOUR_SPACE_SMPTE_C_RGB_INITIALISER {\
 	.red_x   = 0.6300, .red_y   = 0.3400, .red_Y   = 0.212395,\
@@ -358,8 +361,8 @@
  * Initialiser for `struct libclut_rgb_colour_space` with the values
  * of the Wide Gamut RGB colour space
  * 
- * This colour space's gamma is 2.2. It cannot be used with
- * RGB colour space conversion unless the values are tranlated into
+ * This colour space's gamma is 2.19921875. It cannot be used with
+ * RGB colour space conversion unless the values are translated into
  * using the sRGB gamma function.
  */
 #define LIBCLUT_RGB_COLOUR_SPACE_WIDE_GAMUT_RGB_INITIALISER {\
